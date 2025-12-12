@@ -6,6 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Snapshot as SnapshotGenerator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,8 +21,12 @@ use function ucfirst;
  *
  * * `codecept g:snapshot UserEmails`
  * * `codecept g:snapshot Products`
- * * `codecept g:snapshot acceptance UserEmails`
+ * * `codecept g:snapshot Acceptance UserEmails`
  */
+#[AsCommand(
+    name: 'generate:snapshot',
+    description: 'Generates empty Snapshot class'
+)]
 class GenerateSnapshot extends Command
 {
     use Shared\FileSystemTrait;
@@ -29,8 +34,8 @@ class GenerateSnapshot extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Generates empty Snapshot class')
-            ->addArgument('suite', InputArgument::REQUIRED, 'Suite name or snapshot name)')
+        $this
+            ->addArgument('suite', InputArgument::REQUIRED, 'Suite name or snapshot name')
             ->addArgument('snapshot', InputArgument::OPTIONAL, 'Name of snapshot');
     }
 

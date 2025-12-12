@@ -16,40 +16,27 @@ class StackTraceFilter
 
     public static function getFilteredStackTrace(Throwable $e, bool $asString = true, bool $filter = true): array|string
     {
-        $stackTrace = $asString ? '' : [];
+        $trace = ($e->getPrevious() ?? $e)->getTrace();
 
-        $trace = $e->getPrevious() instanceof Throwable ? $e->getPrevious()->getTrace() : $e->getTrace();
+        if (!self::frameExists($trace, $e->getFile(), $e->getLine())) {
+            array_unshift($trace, ['file' => $e->getFile(), 'line' => $e->getLine()]);
+        }
 
-        $eFile = $e->getFile();
-        $eLine = $e->getLine();
-
-        if (!self::frameExists($trace, $eFile, $eLine)) {
-            array_unshift(
+        if ($filter) {
+            $trace = array_values(array_filter(
                 $trace,
-                ['file' => $eFile, 'line' => $eLine]
-            );
+                static fn(array $step): bool => !self::classIsFiltered($step) && !self::fileIsFiltered($step)
+            ));
         }
 
-        foreach ($trace as $step) {
-            if (self::classIsFiltered($step) && $filter) {
-                continue;
-            }
-            if (self::fileIsFiltered($step) && $filter) {
-                continue;
-            }
-
-            if (!$asString) {
-                $stackTrace[] = $step;
-                continue;
-            }
-            if (!isset($step['file'])) {
-                continue;
-            }
-
-            $stackTrace .= $step['file'] . ':' . $step['line'] . "\n";
+        if (!$asString) {
+            return $trace;
         }
 
-        return $stackTrace;
+        return implode("\n", array_map(
+            static fn(array $step): string => $step['file'] . ':' . $step['line'],
+            array_filter($trace, static fn(array $step): bool => isset($step['file'], $step['line']))
+        ));
     }
 
     protected static function classIsFiltered(array $step): bool
@@ -57,10 +44,9 @@ class StackTraceFilter
         if (!isset($step['class'])) {
             return false;
         }
-        $className = $step['class'];
 
-        foreach (self::$filteredClassesPattern as $filteredClassName) {
-            if (str_starts_with((string) $className, (string) $filteredClassName)) {
+        foreach (self::$filteredClassesPattern as $pattern) {
+            if (str_starts_with($step['class'], $pattern)) {
                 return true;
             }
         }
@@ -74,36 +60,32 @@ class StackTraceFilter
             return false;
         }
 
-        if (str_contains($step['file'], 'codecept.phar/')) {
-            return true;
-        }
+        $file   = $step['file'];
+        $vendor = 'vendor' . DIRECTORY_SEPARATOR;
 
-        if (str_contains($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'phpunit')) {
-            return true;
-        }
-
-        if (str_contains($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'codeception')) {
+        if (
+            str_contains($file, 'codecept.phar/') ||
+            str_contains($file, $vendor . 'phpunit') ||
+            str_contains($file, $vendor . 'codeception')
+        ) {
             return true;
         }
 
         $modulePath = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
-        if (str_contains($step['file'], $modulePath)) {
-            return false; // don`t filter modules
+        if (str_contains($file, $modulePath)) {
+            return false;
         }
-        return str_contains($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR);
+
+        return str_contains($file, 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR);
     }
 
     private static function frameExists(array $trace, string $file, int $line): bool
     {
         foreach ($trace as $frame) {
-            if (
-                isset($frame['file']) && $frame['file'] == $file &&
-                isset($frame['line']) && $frame['line'] == $line
-            ) {
+            if (($frame['file'] ?? null) === $file && ($frame['line'] ?? null) === $line) {
                 return true;
             }
         }
-
         return false;
     }
 }

@@ -21,16 +21,15 @@ use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionMethod;
+use SebastianBergmann\CodeCoverage\Version as CodeCoverageVersion;
 
 use function array_slice;
 use function file;
 use function implode;
 use function is_callable;
-use function method_exists;
 use function preg_replace;
 use function sprintf;
 use function strtolower;
-use function trim;
 
 /**
  * Executes tests delivered in Cest format.
@@ -66,8 +65,8 @@ class Cest extends Test implements
         $metadata->setParamsFromAttributes($methodAnnotations->attributes());
         $this->setMetadata($metadata);
         $this->testInstance = $testInstance;
-        $this->testClass = $testInstance::class;
-        $this->testMethod = $methodName;
+        $this->testClass    = $testInstance::class;
+        $this->testMethod   = $methodName;
         $this->createScenario();
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
@@ -80,14 +79,14 @@ class Cest extends Test implements
     public function preload(): void
     {
         $this->scenario->setFeature($this->getSpecFromMethod());
-        $code = $this->getSourceCode();
-        $this->parser->parseFeature($code);
-        $this->getMetadata()->getService('di')->injectDependencies($this->testInstance);
+        $this->parser->parseFeature($this->getSourceCode());
+        $this->getDiService()->injectDependencies($this->testInstance);
 
-        // add example params to feature
-        if ($this->getMetadata()->getCurrent('example')) {
-            $step = new Comment('', $this->getMetadata()->getCurrent('example'));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | ' . $step->getArgumentsAsString(100));
+        if ($example = $this->getMetadata()->getCurrent('example')) {
+            $step = new Comment('', $example);
+            $this->scenario->setFeature(
+                $this->scenario->getFeature() . ' | ' . $step->getArgumentsAsString(100)
+            );
         }
     }
 
@@ -95,9 +94,11 @@ class Cest extends Test implements
     {
         $method = new ReflectionMethod($this->testInstance, $this->testMethod);
         $startLine = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
-        $endLine = $method->getEndLine();
-        $source = file($method->getFileName());
-        return implode("", array_slice($source, $startLine, $endLine - $startLine));
+        $lines = file($method->getFileName());
+        return implode(
+            '',
+            array_slice($lines, $startLine, $method->getEndLine() - $startLine)
+        );
     }
 
     public function getSpecFromMethod(): string
@@ -110,18 +111,14 @@ class Cest extends Test implements
 
     public function test(): void
     {
-        $actorClass = $this->getMetadata()->getCurrent('actor');
-
-        if ($actorClass === null) {
-            throw new ConfigurationException(
+        $actorClass = $this->getMetadata()->getCurrent('actor')
+            ?? throw new ConfigurationException(
                 'actor setting is missing in suite configuration. Replace `class_name` with `actor` in config to fix this'
             );
-        }
 
-        /** @var Di $di */
-        $di = $this->getMetadata()->getService('di');
+        $di = $this->getDiService();
         $di->set($this->getScenario());
-        $I = $di->instantiate($actorClass);
+        $I  = $di->instantiate($actorClass);
 
         try {
             $this->executeHook($I, 'before');
@@ -176,12 +173,12 @@ class Cest extends Test implements
         );
     }
 
-    protected function invoke($methodName, array $context): void
+    protected function invoke(string $methodName, array $context): void
     {
         foreach ($context as $class) {
-            $this->getMetadata()->getService('di')->set($class);
+            $this->getDiService()->set($class);
         }
-        $this->getMetadata()->getService('di')->injectDependencies($this->testInstance, $methodName, $context);
+        $this->getDiService()->injectDependencies($this->testInstance, $methodName, $context);
     }
 
     protected function executeTestMethod($I): void
@@ -190,14 +187,11 @@ class Cest extends Test implements
             throw new Exception("Method {$this->testMethod} can't be found in tested class");
         }
 
-        if ($this->getMetadata()->getCurrent('example')) {
-            $this->invoke(
-                $this->testMethod,
-                [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]
-            );
-            return;
+        if ($example = $this->getMetadata()->getCurrent('example')) {
+            $this->invoke($this->testMethod, [$I, $this->scenario, new Example($example)]);
+        } else {
+            $this->invoke($this->testMethod, [$I, $this->scenario]);
         }
-        $this->invoke($this->testMethod, [$I, $this->scenario]);
     }
 
     public function toString(): string
@@ -211,7 +205,7 @@ class Cest extends Test implements
 
     public function getSignature(): string
     {
-        return $this->testClass . ":" . $this->testMethod;
+        return "{$this->testClass}:{$this->testMethod}";
     }
 
     public function getTestInstance(): object
@@ -258,6 +252,11 @@ class Cest extends Test implements
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->coversTargets($this->testClass, $this->testMethod)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeCovered($this->testClass, $this->testMethod);
     }
 
@@ -266,6 +265,16 @@ class Cest extends Test implements
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeUsed($this->testClass, $this->testMethod);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->usesTargets($this->testClass, $this->testMethod)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeUsed($this->testClass, $this->testMethod);
+    }
+
+    private function getDiService(): Di
+    {
+        return $this->getMetadata()->getService('di');
     }
 }

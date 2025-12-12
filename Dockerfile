@@ -1,6 +1,6 @@
 ARG flavor=bullseye
 
-FROM php:8.1-cli-${flavor}
+FROM php:8.2-cli-${flavor}
 
 LABEL maintainer="Tobias Munk <tobias@diemeisterei.de>"
 

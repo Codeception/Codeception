@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
-use Codeception\Module\Asserts;
+use Codeception\Template\Shared\TemplateHelpersTrait;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Unit extends InitTemplate
 {
+    use TemplateHelpersTrait;
+
     protected string $configTemplate = <<<EOF
 suites:
-    unit:
+    Unit:
         path: .
 {{tester}}
 settings:
@@ -41,52 +43,37 @@ EOF;
     {
         $this->sayInfo('This will install Codeception for unit testing only');
         $this->say();
-        $dir = $this->ask("Where tests will be stored?", 'tests');
+        $dir = $this->ask('Where tests will be stored?', 'tests');
 
         if ($this->namespace === '') {
-            $this->namespace = $this->ask("Enter a default namespace for tests (or skip this step)");
+            $this->namespace = $this->ask('Enter a default namespace for tests (or skip this step)');
         }
 
         $this->say();
-        $this->say("Codeception provides additional features for integration tests");
-        $this->say("Like accessing frameworks, ORM, Database.");
-        $haveTester = $this->ask("Do you wish to enable them?", false);
+        $this->say('Codeception provides additional features for integration tests');
+        $this->say('Like accessing frameworks, ORM, Database.');
+        $haveTester = $this->ask('Do you wish to enable them?', false);
+        $this->createSuiteDirs($dir);
+        $this->sayInfo("Created test directory at {$dir}");
 
-        $this->createDirectoryFor($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
-        $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
-        $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
-        $this->gitIgnore($outputDir);
-        $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
-
-        $configFile = (new Template($this->configTemplate))
+        $config = (new Template($this->configTemplate))
             ->place('baseDir', $dir)
             ->place('tester', $haveTester ? $this->testerAndModules : '')
             ->produce();
 
-        $namespace = rtrim($this->namespace, '\\');
-        $configFile = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $configFile;
-
-        $this->createFile('codeception.yml', $configFile);
-
-        if (!class_exists(Asserts::class)) {
-            $this->addModulesToComposer(['Asserts']);
-        }
-
+        $namespace     = rtrim($this->namespace, '\\');
+        $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
+        $this->createFile('codeception.yml', $config);
+        $this->ensureModules(['Asserts']);
         if ($haveTester) {
-            $settings = Yaml::parse($configFile)['suites']['unit'];
+            $settings = Yaml::parse($config)['suites']['Unit'];
             $settings['support_namespace'] = $this->supportNamespace;
-            $this->createActor('UnitTester', $supportDir, $settings);
+            $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
         }
 
-        $this->gitIgnore($outputDir);
-        $this->sayInfo("Created test directory inside at {$dir}");
-
+        $this->saySuccess('INSTALLATION COMPLETE');
         $this->say();
-        $this->saySuccess("INSTALLATION COMPLETE");
-        $this->say();
-        $this->say('Unit tests will be executed in random order');
-        $this->say('Use @depends annotation to change the order of tests');
+        $this->say('Unit tests run in random order; use @depends to control.');
 
         if ($haveTester) {
             $this->say('To access DI, ORM, Database enable corresponding modules in codeception.yml');
@@ -95,9 +82,9 @@ EOF;
         }
 
         $this->say();
-        $this->say("<bold>Next steps:</bold>");
-        $this->say("Create the first test using <comment>codecept g:test unit MyTest</comment>");
-        $this->say("Run tests with <comment>codecept run</comment>");
-        $this->say("<bold>Happy testing!</bold>");
+        $this->say('<bold>Next steps:</bold>');
+        $this->say('1. Generate a test: <comment>codecept g:test unit MyTest</comment>');
+        $this->say('2. Run tests: <comment>codecept run</comment>');
+        $this->say('<bold>Happy testing!</bold>');
     }
 }

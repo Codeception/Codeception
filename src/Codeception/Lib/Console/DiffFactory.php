@@ -17,12 +17,7 @@ class DiffFactory
 
     private function getDiff(string $expected = '', string $actual = ''): string
     {
-        if (!$actual && !$expected) {
-            return '';
-        }
-
         $differ = new Differ(new UnifiedDiffOutputBuilder(''));
-
-        return $differ->diff($expected, $actual);
+        return ($expected || $actual) ? $differ->diff($expected, $actual) : '';
     }
 }

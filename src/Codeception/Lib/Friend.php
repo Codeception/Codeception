@@ -16,14 +16,14 @@ class Friend
 
     public function __construct(protected string $name, protected Actor $actor, array $modules = [])
     {
-        $this->multiSessionModules = array_filter($modules, fn ($m): bool => $m instanceof MultiSession);
+        $this->multiSessionModules = array_filter($modules, fn($m): bool => $m instanceof MultiSession);
 
         if ($this->multiSessionModules === []) {
             throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");
         }
     }
 
-    public function does($closure)
+    public function does(callable $closure)
     {
         $currentUserData = [];
 
@@ -39,7 +39,7 @@ class Friend
         }
 
         $this->actor->comment(strtoupper("{$this->name} does ---"));
-        $ret = $closure($this->actor);
+        $result = $closure($this->actor);
         $this->actor->comment(strtoupper("--- {$this->name} finished"));
 
         foreach ($this->multiSessionModules as $module) {
@@ -47,7 +47,8 @@ class Friend
             $this->data[$name] = $module->_backupSession();
             $module->_loadSession($currentUserData[$name]);
         }
-        return $ret;
+
+        return $result;
     }
 
     public function isGoingTo(string $argumentation): void
@@ -68,8 +69,9 @@ class Friend
     public function leave(): void
     {
         foreach ($this->multiSessionModules as $module) {
-            if (isset($this->data[$module->_getName()])) {
-                $module->_closeSession($this->data[$module->_getName()]);
+            $name = $module->_getName();
+            if (isset($this->data[$name])) {
+                $module->_closeSession($this->data[$name]);
             }
         }
     }

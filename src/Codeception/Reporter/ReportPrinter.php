@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Reporter;
 
 use Codeception\Event\FailEvent;
@@ -53,43 +55,43 @@ class ReportPrinter implements ConsolePrinter
     public function testSuccess(TestEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Ok');
-        $this->successfulCount++;
+        ++$this->successfulCount;
     }
 
     public function testError(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'ERROR');
-        $this->errorCount++;
+        ++$this->errorCount;
     }
 
     public function testFailure(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), "FAIL");
-        $this->failureCount++;
+        $this->printTestResult($event->getTest(), 'FAIL');
+        ++$this->failureCount;
     }
 
     public function testWarning(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'WARNING');
-        $this->warningCount++;
+        ++$this->warningCount;
     }
 
     public function testSkipped(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Skipped');
-        $this->skippedCount++;
+        ++$this->skippedCount;
     }
 
     public function testIncomplete(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Incomplete');
-        $this->incompleteCount++;
+        ++$this->incompleteCount;
     }
 
     public function testUseless(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Useless');
-        $this->uselessCount++;
+        ++$this->uselessCount;
     }
 
     private function printTestResult(Test $test, string $status): void
@@ -111,19 +113,19 @@ class ReportPrinter implements ConsolePrinter
             sprintf("Successful: %s", $this->successfulCount)
         ];
 
-        $failedCount = $this->errorCount + $this->errorCount + $this->warningCount;
+        $failedCount = $this->errorCount + $this->failureCount + $this->warningCount;
 
         if ($failedCount > 0) {
-            $counts [] = sprintf("Failed: %s", $failedCount);
+            $counts[] = sprintf("Failed: %s", $failedCount);
         }
         if ($this->incompleteCount > 0) {
-            $counts [] = sprintf("Incomplete: %s", $this->incompleteCount);
+            $counts[] = sprintf("Incomplete: %s", $this->incompleteCount);
         }
         if ($this->skippedCount > 0) {
-            $counts [] = sprintf("Skipped: %s", $this->skippedCount);
+            $counts[] = sprintf("Skipped: %s", $this->skippedCount);
         }
         if ($this->uselessCount > 0) {
-            $counts [] = sprintf("Useless: %s", $this->uselessCount);
+            $counts[] = sprintf("Useless: %s", $this->uselessCount);
         }
 
         $this->output->writeln("\nCodeception Results");

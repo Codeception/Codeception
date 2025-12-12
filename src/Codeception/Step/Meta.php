@@ -10,6 +10,7 @@ use Codeception\Step as CodeceptionStep;
 use function array_pop;
 use function end;
 use function is_string;
+use function str_contains;
 use function str_replace;
 
 class Meta extends CodeceptionStep
@@ -31,15 +32,16 @@ class Meta extends CodeceptionStep
 
     public function getArgumentsAsString(int $maxLength = self::DEFAULT_MAX_LENGTH): string
     {
-        $argumentBackup = $this->arguments;
-        $lastArgAsString = '';
-        $lastArg = end($this->arguments);
+        $backup = $this->arguments;
+        $lastArg  = end($this->arguments);
+        $lastArgStr   = '';
         if (is_string($lastArg) && str_contains($lastArg, "\n")) {
-            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
+            $lastArgStr = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
             array_pop($this->arguments);
         }
-        $result = parent::getArgumentsAsString($maxLength) . $lastArgAsString;
-        $this->arguments = $argumentBackup;
+        $result              = parent::getArgumentsAsString($maxLength) . $lastArgStr;
+        $this->arguments = $backup;
+
         return $result;
     }
 

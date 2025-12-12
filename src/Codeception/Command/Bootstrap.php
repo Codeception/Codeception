@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Template\Bootstrap as BootstrapTemplate;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,11 +25,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  * * `codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
  *
  */
+#[AsCommand(
+    name: 'bootstrap',
+    description: 'Creates default test suites and generates all required files'
+)]
 class Bootstrap extends Command
 {
     protected function configure(): void
     {
-        $this->setDescription('Creates default test suites and generates all required files')
+        $this
             ->addArgument('path', InputArgument::OPTIONAL, 'custom installation dir')
             ->addOption('namespace', 's', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers')
             ->addOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester')

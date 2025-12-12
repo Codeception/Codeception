@@ -20,7 +20,7 @@ use function substr;
 use function unlink;
 
 /**
- * Saves failed tests into tests/_output/failed in order to rerun failed tests.
+ * Saves failed tests into `tests/_output/failed` in order to rerun failed tests.
  *
  * To rerun failed tests just run the `failed` group:
  *
@@ -32,9 +32,9 @@ use function unlink;
  * ```
  * --override "extensions: config: Codeception\Extension\RunFailed: fail-group: another_group1"
  * ```
- * Remember: if you run tests and they generated custom-named fail group, to run this group, you should add override too
+ * Remember: If you run tests and they generated custom-named fail group, to run this group, you should add override too
  *
- * Starting from Codeception 2.1 **this extension is enabled by default**.
+ * **This extension is enabled by default.**
  *
  * ``` yaml
  * extensions:

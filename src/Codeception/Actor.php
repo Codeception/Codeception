@@ -15,7 +15,7 @@ abstract class Actor
     use Comment;
     use Pause;
 
-    public function __construct(protected Scenario $scenario)
+    public function __construct(protected readonly Scenario $scenario)
     {
     }
 
@@ -40,10 +40,9 @@ abstract class Actor
     {
     }
 
-    public function __call(string $method, array $arguments)
+    public function __call(string $method, array $arguments): mixed
     {
-        $class = static::class;
-        throw new RuntimeException("Call to undefined method {$class}::{$method}");
+        throw new RuntimeException(sprintf('Call to undefined method %s::%s', static::class, $method));
     }
 
     /**

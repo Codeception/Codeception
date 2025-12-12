@@ -9,7 +9,7 @@ use Throwable;
 
 class FailEvent extends TestEvent
 {
-    public function __construct(Test $test, private Throwable $fail, ?float $time)
+    public function __construct(Test $test, private readonly Throwable $fail, ?float $time)
     {
         parent::__construct($test, $time);
     }

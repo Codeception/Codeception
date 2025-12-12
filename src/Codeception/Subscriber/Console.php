@@ -454,7 +454,7 @@ class Console implements EventSubscriberInterface
 
     private function printStep(Step $step): void
     {
-        if ($step instanceof Comment && $step->__toString() == '') {
+        if ($step instanceof Comment && $step->__toString() === '') {
             return; // don't print empty comments
         }
         $msg = $this->message(' ');
@@ -728,7 +728,7 @@ class Console implements EventSubscriberInterface
             if (getenv('COLUMNS')) {
                 $this->width = (int)getenv('COLUMNS');
             } else {
-                $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+                $this->width = (int)shell_exec('command -v tput >> /dev/null 2>&1 && tput cols') - 2;
             }
         } elseif ($this->isWin() && (PHP_SAPI === "cli")) {
             exec('mode con', $output);

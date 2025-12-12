@@ -49,14 +49,14 @@ use function ucfirst;
 use function uniqid;
 
 /**
- * Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](https://codeception.com/images/recorder.gif))
- * Activated only for suites with WebDriver module enabled.
+ * Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](https://codeception.com/images/recorder.gif)).
+ * Works only for suites with WebDriver module enabled.
  *
  * The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.
  *
  * #### Installation
  *
- * Add this to the list of enabled extensions in `codeception.yml` or `acceptance.suite.yml`:
+ * Add this to the list of enabled extensions in `codeception.yml` or `Acceptance.suite.yml`:
  *
  * ``` yaml
  * extensions:
@@ -87,7 +87,7 @@ use function uniqid;
  * ```
  * #### Skipping recording of steps with annotations
  *
- * It is also possible to skip recording of steps for specified tests by using the @skipRecording annotation.
+ * It is also possible to skip recording of steps for specified tests by using the `@skipRecording` annotation.
  *
  * ```php
  * /**
@@ -100,7 +100,6 @@ use function uniqid;
  *     $I->amOnUrl('https://codeception.com');
  * }
  * ```
- *
  */
 class Recorder extends Extension
 {

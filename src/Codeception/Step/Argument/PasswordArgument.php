@@ -8,7 +8,7 @@ use Stringable;
 
 class PasswordArgument implements FormattedOutput, Stringable
 {
-    public function __construct(private string $password)
+    public function __construct(private readonly string $password)
     {
     }
 

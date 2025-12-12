@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use ArrayAccess;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\RequiresPackage;
@@ -80,7 +79,7 @@ abstract class Module
      */
     public function _setConfig(array $config): void
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config       = array_merge($this->config, $config);
         $this->backupConfig = $this->config;
         $this->validateConfig();
     }
@@ -131,24 +130,25 @@ abstract class Module
      */
     protected function validateConfig(): void
     {
-        $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) !== $this->requiredFields) {
+        if (($missing = array_diff($this->requiredFields, array_keys($this->config))) !== []) {
             throw new ModuleConfigException(
                 static::class,
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
-                "Please, update the configuration and set all the required fields\n\n"
+                sprintf(
+                    "\nOptions: %s are required\nPlease, update the configuration and set all the required fields\n\n",
+                    implode(', ', $missing)
+                )
             );
         }
+
         if ($this instanceof RequiresPackage) {
-            $errorMessage = '';
+            $errors = '';
             foreach ($this->_requires() as $className => $package) {
-                if (class_exists($className)) {
-                    continue;
+                if (!class_exists($className)) {
+                    $errors .= "Class {$className} can't be loaded, please add {$package} to composer.json\n";
                 }
-                $errorMessage .= "Class {$className} can't be loaded, please add {$package} to composer.json\n";
             }
-            if ($errorMessage !== '') {
-                throw new ModuleException($this, $errorMessage);
+            if ($errors !== '') {
+                throw new ModuleException($this, $errors);
             }
         }
     }
@@ -160,11 +160,9 @@ abstract class Module
     {
         $moduleName = '\\' . static::class;
 
-        if (str_starts_with($moduleName, ModuleContainer::MODULE_NAMESPACE)) {
-            return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
-        }
-
-        return $moduleName;
+        return str_starts_with($moduleName, ModuleContainer::MODULE_NAMESPACE)
+            ? substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE))
+            : $moduleName;
     }
 
     /**
@@ -242,12 +240,12 @@ abstract class Module
     /**
      * Print debug message with a title
      */
-    protected function debugSection(string $title, mixed $message): void
+    protected function debugSection(string $title, mixed $msg): void
     {
-        if (is_array($message) || is_object($message)) {
-            $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE));
+        if (is_array($msg) || is_object($msg)) {
+            $msg = json_encode($msg, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_SLASHES);
         }
-        $this->debug("[{$title}] {$message}");
+        $this->debug("[{$title}] {$msg}");
     }
 
     /**
@@ -300,21 +298,19 @@ abstract class Module
      */
     public function _getConfig(?string $key = null): mixed
     {
-        if (!$key) {
-            return $this->config;
-        }
-        return $this->config[$key] ?? null;
+        return $key === null ? $this->config : ($this->config[$key] ?? null);
     }
 
     protected function scalarizeArray(array $array): array
     {
-        foreach ($array as $k => $v) {
-            if (!is_null($v) && !is_scalar($v)) {
-                $array[$k] = (is_array($v) || $v instanceof ArrayAccess)
-                    ? $this->scalarizeArray($v)
-                    : (string)$v;
+        array_walk_recursive(
+            $array,
+            static function (&$value): void {
+                if (!is_null($value) && !is_scalar($value)) {
+                    $value = (string)$value;
+                }
             }
-        }
+        );
 
         return $array;
     }

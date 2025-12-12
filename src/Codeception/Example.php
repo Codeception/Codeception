@@ -21,9 +21,8 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * Whether an offset exists
      *
      * @link https://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>An offset to check for.</p>
-     * @return bool true on success or false on failure.
-     * The return value will be casted to boolean if non-boolean was returned.
+     * @param mixed $offset
+     * @return bool
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -39,10 +38,9 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetGet(mixed $offset): mixed
     {
-        if (!$this->offsetExists($offset)) {
-            throw new AssertionFailedError(sprintf("Example %s doesn't exist", $offset));
-        }
-        return $this->data[$offset];
+        return array_key_exists($offset, $this->data)
+            ? $this->data[$offset]
+            : throw new AssertionFailedError(sprintf("Example %s doesn't exist", $offset));
     }
 
     /**

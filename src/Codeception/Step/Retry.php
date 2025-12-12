@@ -18,21 +18,21 @@ class Retry extends Assertion implements GeneratedStep
 
     /**
      * [!] Method is generated.
-     * 
+     *
      * {{doc}}
-     * 
+     *
      * Retry number and interval set by \$I->retry();
      *
      * @see \{{module}}::{{method}}()
      */
     public function {{action}}({{params}}) {
-        \$retryNum = isset(\$this->retryNum) ? \$this->retryNum : 1;
-        \$retryInterval = isset(\$this->retryInterval) ? \$this->retryInterval : 200;
+        \$retryNum      = \$this->retryNum ?? 1;
+        \$retryInterval = \$this->retryInterval ?? 200;
         return \$this->getScenario()->runStep(new \Codeception\Step\Retry('{{method}}', func_get_args(), \$retryNum, \$retryInterval));
     }
 EOF;
 
-    public function __construct($action, array $arguments, private int $retryNum, private int $retryInterval)
+    public function __construct($action, array $arguments, private readonly int $retryNum, private readonly int $retryInterval)
     {
         $this->action = $action;
         $this->arguments = $arguments;
@@ -40,18 +40,18 @@ EOF;
 
     public function run(?ModuleContainer $container = null)
     {
-        $retry = 0;
+        $attempts = 0;
         $interval = $this->retryInterval;
         while (true) {
             try {
-                $this->isTry = $retry < $this->retryNum;
+                $this->isTry = $attempts < $this->retryNum;
                 return parent::run($container);
             } catch (Exception $e) {
-                ++$retry;
+                ++$attempts;
                 if (!$this->isTry) {
                     throw $e;
                 }
-                codecept_debug("Retrying #{$retry} in {$interval}ms");
+                codecept_debug("Retrying #{$attempts} in {$interval}ms");
                 usleep($interval * 1000);
                 $interval *= 2;
             }
@@ -60,14 +60,14 @@ EOF;
 
     public static function getTemplate(Template $template): ?Template
     {
-        $action = $template->getVar('action');
+        $action = (string) $template->getVar('action');
 
-        if ((str_starts_with($action, 'have')) || (str_starts_with($action, 'am'))) {
-            return null; // dont retry conditions
-        }
-
-        if (str_starts_with($action, 'wait')) {
-            return null; // dont retry waiters
+        if (
+            str_starts_with($action, 'have') ||
+            str_starts_with($action, 'am')   ||
+            str_starts_with($action, 'wait')
+        ) {
+            return null;
         }
 
         $doc = "* Executes {$action} and retries on failure.";

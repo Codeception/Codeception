@@ -87,15 +87,18 @@ EOF;
         $this->name = $settings['actor'];
         $this->settings = $settings;
         $this->di = new Di();
-        $modules = Configuration::modules($this->settings);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
-        foreach ($modules as $moduleName) {
+        $this->initializeModules();
+    }
+
+    protected function initializeModules()
+    {
+        foreach (Configuration::modules($this->settings) as $moduleName) {
             $this->moduleContainer->create($moduleName);
         }
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
-
-        $this->generatedSteps = (array)$settings['step_decorators'];
+        $this->generatedSteps = (array)$this->settings['step_decorators'];
     }
 
     public function produce(): string
@@ -105,14 +108,13 @@ EOF;
         $methods = [];
         $code = [];
         foreach ($this->actions as $action => $moduleName) {
-            if (in_array($action, $methods)) {
-                continue;
+            if (!in_array($action, $methods)) {
+                $class = new ReflectionClass($this->modules[$moduleName]);
+                $method = $class->getMethod($action);
+                $code[] = $this->addMethod($method);
+                $methods[] = $action;
+                ++$this->numMethods;
             }
-            $class = new ReflectionClass($this->modules[$moduleName]);
-            $method = $class->getMethod($action);
-            $code[] = $this->addMethod($method);
-            $methods[] = $action;
-            ++$this->numMethods;
         }
 
         return (new Template($this->template))
@@ -251,11 +253,6 @@ EOF;
         return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array)$settings['step_decorators']));
     }
 
-    public function getNumMethods(): int
-    {
-        return $this->numMethods;
-    }
-
     private function createReturnTypeHint(ReflectionMethod $refMethod): string
     {
         $returnType = $refMethod->getReturnType();
@@ -322,10 +319,14 @@ EOF;
             // If we can't get the class then just return what we've been given.
             $name = $attribute->getName();
         }
-        $arguments = $attribute->getArguments();
         // Strip the wrapping array brackets so parameters aren't converted to arrays.
-        $args = substr(ReflectionHelper::phpEncodeValue($arguments), 1, -1);
+        $args = substr(ReflectionHelper::phpEncodeValue($attribute->getArguments()), 1, -1);
 
         return '#[' . $name . '(' . $args . ')]';
+    }
+
+    public function getNumMethods(): int
+    {
+        return $this->numMethods;
     }
 }

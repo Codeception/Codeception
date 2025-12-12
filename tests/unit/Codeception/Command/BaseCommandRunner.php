@@ -27,7 +27,12 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
     protected function execute(array $args = [], $isSuite = true)
     {
         $app = new Application();
-        $app->add($this->command);
+        // addCommand() is available since symfony 7.4
+        if (method_exists($app, 'addCommand')) {
+            $app->addCommand($this->command);
+        } else {
+            $app->add($this->command);
+        }
 
         $default = \Codeception\Configuration::$defaultConfig;
         $default['paths']['tests'] = __DIR__;

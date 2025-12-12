@@ -2,8 +2,10 @@
 
 # Codeception
 
-[![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
-[![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
+[![Latest Stable Version](https://poser.pugx.org/codeception/codeception/v)](https://packagist.org/packages/codeception/codeception)
+[![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads)](https://packagist.org/packages/codeception/codeception)
+[![Monthly Downloads](https://poser.pugx.org/codeception/codeception/d/monthly)](https://packagist.org/packages/codeception/codeception)
+[![Daily Downloads](https://poser.pugx.org/codeception/codeception/d/daily)](https://packagist.org/packages/codeception/codeception)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild)
 
@@ -14,7 +16,7 @@ Inspired by BDD, it provides an absolutely new way of writing acceptance, functi
 
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0.0/CONTRIBUTING.md).
 
 ### At a Glance
 
@@ -42,13 +44,8 @@ For unit testing you can stay on classic PHPUnit tests, as Codeception can run t
 
 ### Composer
 
-```
-php composer.phar require "codeception/codeception"
-```
-
-TODO: Document how to install the modules, e.g.
-```
-php composer.phar require "codeception/module-phpbrowser"
+```bash
+composer require "codeception/codeception" --dev
 ```
 
 ### Phar

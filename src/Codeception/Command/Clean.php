@@ -6,6 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Util\FileSystem;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,19 +17,18 @@ use Symfony\Component\Console\Output\OutputInterface;
  * * `codecept clean`
  *
  */
+#[AsCommand(
+    name: 'clean',
+    description: 'Recursively cleans log and generated code'
+)]
 class Clean extends Command
 {
     use Shared\ConfigTrait;
 
-    protected function configure(): void
-    {
-        $this->setDescription('Recursively cleans log and generated code');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->cleanProjectsRecursively($output, Configuration::projectDir());
-        $output->writeln("Done");
+        $output->writeln('Done');
         return Command::SUCCESS;
     }
 

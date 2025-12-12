@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,10 +19,13 @@ use function count;
  * Prints all steps from all Gherkin contexts for a specific suite
  *
  * ```
- * codecept gherkin:steps acceptance
+ * codecept gherkin:steps Acceptance
  * ```
- *
  */
+#[AsCommand(
+    name: 'gherkin:steps',
+    description: 'Prints all defined feature steps'
+)]
 class GherkinSteps extends Command
 {
     use Shared\ConfigTrait;
@@ -29,7 +33,7 @@ class GherkinSteps extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Prints all defined feature steps')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config');
     }

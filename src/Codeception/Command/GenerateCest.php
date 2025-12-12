@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Cest as CestGenerator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +22,10 @@ use function file_exists;
  * * `codecept g:cest "App\Login"`
  *
  */
+#[AsCommand(
+    name: 'generate:cest',
+    description: 'Generates empty Cest file in suite'
+)]
 class GenerateCest extends Command
 {
     use Shared\FileSystemTrait;
@@ -28,7 +33,7 @@ class GenerateCest extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Generates empty Cest file in suite')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put')
             ->addArgument('class', InputArgument::REQUIRED, 'test name');
     }

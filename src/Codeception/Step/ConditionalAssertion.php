@@ -37,7 +37,7 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
 
     public static function getTemplate(Template $template): ?Template
     {
-        $action = $template->getVar('action');
+        $action = (string) $template->getVar('action');
 
         if ((!str_starts_with($action, 'see')) && (!str_starts_with($action, 'dontSee'))) {
             return null;

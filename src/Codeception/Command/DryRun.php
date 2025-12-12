@@ -23,6 +23,7 @@ use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,12 +37,16 @@ use function str_replace;
 /**
  * Shows step-by-step execution process for scenario driven tests without actually running them.
  *
- * * `codecept dry-run acceptance`
- * * `codecept dry-run acceptance MyCest`
- * * `codecept dry-run acceptance checkout.feature`
- * * `codecept dry-run tests/acceptance/MyCest.php`
+ * * `codecept dry-run Acceptance`
+ * * `codecept dry-run Acceptance MyCest`
+ * * `codecept dry-run Acceptance checkout.feature`
+ * * `codecept dry-run tests/Acceptance/MyCest.php`
  *
  */
+#[AsCommand(
+    name: 'dry-run',
+    description: 'Prints step-by-step scenario-driven test or a feature'
+)]
 class DryRun extends Command
 {
     use Shared\ConfigTrait;
@@ -49,12 +54,10 @@ class DryRun extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files'),
-                new InputArgument('test', InputArgument::OPTIONAL, 'tests to be loaded'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files'),
+            new InputArgument('test', InputArgument::OPTIONAL, 'tests to be loaded'),
+        ]);
         parent::configure();
     }
 
@@ -181,12 +184,12 @@ class DryRun extends Command
     private function getDefaultValueForBuiltinType(ReflectionNamedType $returnType): mixed
     {
         return match ($returnType->getName()) {
-            'mixed', 'void' => null,
+            'mixed', 'never', 'void' => null,
             'string' => '',
             'int' => 0,
             'float' => 0.0,
             'bool' => false,
-            'array' => [],
+            'array', 'iterable' => [],
             'resource' => fopen('data://text/plain;base64,', 'r'),
             default => throw new Exception('Unsupported return type ' . $returnType->getName()),
         };

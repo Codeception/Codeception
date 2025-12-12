@@ -16,6 +16,7 @@ use Codeception\Suite;
 use Codeception\SuiteManager;
 use Codeception\Test\Cept;
 use Codeception\Util\Debug;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,8 +31,12 @@ use function pcntl_signal;
 /**
  * Try to execute test commands in run-time. You may try commands before writing the test.
  *
- * * `codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
+ * * `codecept console Acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
  */
+#[AsCommand(
+    name: 'console',
+    description: 'Launches interactive test console'
+)]
 class Console extends Command
 {
     protected ?Cept $test = null;
@@ -49,9 +54,9 @@ class Console extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Launches interactive test console')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'suite to be executed')
-            ->addOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output');
+            ->addOption('colors', null, InputOption::VALUE_NONE, 'Use colors in output');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -84,7 +89,7 @@ class Console extends Command
         $this->test = new Cept('', '');
         $this->test->getMetadata()->setServices([
             'dispatcher' => $eventDispatcher,
-            'modules' => $moduleContainer
+            'modules'    => $moduleContainer,
         ]);
 
         $scenario = new Scenario($this->test);

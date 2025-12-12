@@ -32,7 +32,8 @@ final class BuildCest
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeThisFileMatches("!^<\?php .*\n// phpcs:ignoreFile!");
         $I->seeInThisFile('seeFileFound(');
-        $I->seeInThisFile('public function assertSame($expected, $actual, string $message = "") {');
+        // native mixed and void return type was added in codeception/lib-asserts:3
+        $I->seeThisFileMatches('!public function assertSame\((mixed )?\$expected, (mixed )?\$actual, string \$message = ""\)(: void)? \{!');
     }
 
     public function usesLiteralTypes(CliGuy $I, Scenario $scenario)
@@ -110,7 +111,7 @@ final class BuildCest
     public function generateNullableParameters(CliGuy $I, Scenario $scenario)
     {
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
-        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(\Directory $dir = null): ?bool', $cliHelperContents);
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(?\Directory $dir = null): ?bool', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
 
         $I->runShellCommand('php codecept build');
@@ -139,9 +140,6 @@ final class BuildCest
 
     public function generateCorrectTypeWhenSelfTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
-        }
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(self $dir): self', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
@@ -157,9 +155,6 @@ final class BuildCest
 
     public function generateCorrectTypeWhenParentTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
-        }
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(parent $dir): parent', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
