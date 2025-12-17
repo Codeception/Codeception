@@ -36,7 +36,7 @@ class Codecept
     /**
      * @var string
      */
-    public const VERSION = '5.3.2';
+    public const VERSION = '5.3.3';
 
     protected ResultAggregator $resultAggregator;
 

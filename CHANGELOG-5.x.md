@@ -1,3 +1,30 @@
+#### 5.3.3
+
+* Fix empty data provider case by @joester89 in #6866
+* Fix Composer `branch-alias` for feature releases 5.3.x by @llaville in #6879
+* Add guard before deleting directory by @fabacino in #6877
+* Remove Reflection*::setAccessible() usage by @Disservin in #6869
+* Update RunProcess.php: Removing MailCatcher by @ThomasLandauer in #6815
+* update readme links by @Arhell in #6882
+* chore: allow installation of lib-asserts v3 by @W0rma in #6887
+* Replace backtick with shell_exec to prevent php8.5 deprecation by @craig-mcmahon in #6892
+* Readme updated: Contribution link fixed by @Sunsetboy in #6895
+* Update Cest.php: Minor rewording by @ThomasLandauer in #6897
+* Update composer.json: Updating description by @ThomasLandauer in #6896
+* Fix test for lib-asserts v3 by @W0rma in #6899
+* Avoid declaring nullable parameter implicitly in BuildCest by @W0rma in #6900
+* Add support for never return type in DryRun by @W0rma in #6901
+* Fix ci when using behat/gherkin v4.15 by @W0rma in #6902
+* Test against PHP 8.5 by @W0rma in #6903
+* CI: fix module-phpbrowser test in experimental build by @W0rma in #6904
+* Bump actions/checkout from 3 to 6 by @dependabot[bot] in #6893
+* Remove obsolete version check in tests by @W0rma in #6907
+* Add support for iterable return type in DryRun by @W0rma in #6906
+* Add support for symfony 8 by @W0rma in #6898
+* Use upper-cased suite names by @W0rma in #6909
+* Update readme.md: Cleaning up Installation by @ThomasLandauer in #6911
+* Update Run.php: Adding `codecept run -g failed` by @ThomasLandauer in #6910
+
 #### 5.3.2
 
 * Rollback getSubscribedEvents Extension refactor by @TavoNiievez in #6862
