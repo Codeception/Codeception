@@ -25,30 +25,50 @@ final class GherkinCest
     public function snippets(CliGuy $I)
     {
         $I->executeCommand('gherkin:snippets scenario');
-        $I->seeInShellOutput("@Given I have only idea of what's going on here");
+        $I->seeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('I have only idea of what\'s going on here')]
+            TEXT
+        );
         $I->seeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
     public function snippetsScenarioFile(CliGuy $I)
     {
         $I->executeCommand('gherkin:snippets scenario FileExamples.feature');
-        $I->dontSeeInShellOutput("@Given I have only idea of what's going on here");
+        $I->dontSeeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('I have only idea of what\'s going on here')]
+            TEXT
+        );
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
     public function snippetsScenarioFolder(CliGuy $I)
     {
         $I->executeCommand('gherkin:snippets scenario subfolder');
-        $I->seeInShellOutput('Given I have a feature in a subfolder');
+        $I->seeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('I have a feature in a subfolder')
+            TEXT
+        );
         $I->seeInShellOutput('public function iHaveAFeatureInASubfolder');
-        $I->dontSeeInShellOutput("@Given I have only idea of what's going on here");
+        $I->dontSeeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('I have only idea of what\'s going on here')]
+            TEXT
+        );
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
     public function snippetsPyStringArgument(CliGuy $I)
     {
         $I->executeCommand('gherkin:snippets scenario PyStringArgumentExample.feature');
-        $I->seeInShellOutput('@Given I have PyString argument :arg1');
+        $I->seeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('I have PyString argument :arg1')]
+            TEXT
+        );
         $I->seeInShellOutput('public function iHavePyStringArgument($arg1)');
         $I->dontSeeInShellOutput('public function iSeeOutput($arg1)');
     }
@@ -72,7 +92,11 @@ final class GherkinCest
     public function snippetsScenarioUtf8(CliGuy $I)
     {
         $I->executeCommand('gherkin:snippets scenario Utf8Example.feature');
-        $I->seeInShellOutput('@Given я написал сценарий на языке :arg1');
+        $I->seeInShellOutput(
+            <<<TEXT
+            #[\Codeception\Attribute\Given('я написал сценарий на языке :arg1')]
+            TEXT
+        );
         $I->seeInShellOutput('public function step_62e20dc62($arg1)');
     }
 
