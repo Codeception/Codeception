@@ -195,15 +195,22 @@ class LocalServer extends SuiteSubscriber
         $c3Url = $this->settings['c3_url'] ?? $this->module->_getUrl();
         $contents = file_get_contents("{$c3Url}/c3/report/{$action}", false, $context);
 
+        // $http_response_header is deprecated as of PHP 8.5
+        if (!function_exists('http_get_last_response_headers')) {
+            $responseHeaders = $http_response_header;
+        } else {
+            $responseHeaders = http_get_last_response_headers();
+        }
+
         $okHeaders = array_filter(
-            $http_response_header,
+            $responseHeaders,
             fn ($h) => preg_match('#^HTTP(.*?)\s200#', $h)
         );
         if ($okHeaders === []) {
-            throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
+            throw new RemoteException("Request was not successful. See response header: " . $responseHeaders[0]);
         }
         if ($contents === false) {
-            $this->getRemoteError($http_response_header);
+            $this->getRemoteError($responseHeaders);
         }
         return $contents;
     }
