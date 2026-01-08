@@ -18,10 +18,6 @@ permissions:
 
 env:
   PHP_INI_VALUES: memory_limit=-1,date.timezone=UTC
-  # register_argc_argv seems to be off by default in PHP 8.5
-  # see https://github.com/php/php-src/issues/20279
-  # enable it because codeception relies on it.
-  PHP_INI_VALUES_PHP_85: memory_limit=-1,date.timezone=UTC,register_argc_argv=1
   COMPOSER_ROOT_VERSION: 5.0.99
   SYMFONY_DEPRECATIONS_HELPER: weak
 
@@ -76,23 +72,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install PHP != 8.5 & Composer
+      - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
-        if: ${{ matrix.php != '8.5' }}
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.PHP_INI_VALUES }}
-          coverage: xdebug
-          tools: composer:v2
-
-      - name: Install PHP 8.5 & Composer
-        uses: shivammathur/setup-php@v2
-        if: ${{ matrix.php == '8.5' }}
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: ${{ env.extensions }}
-          ini-values: ${{ env.PHP_INI_VALUES_PHP_85 }}
           coverage: xdebug
           tools: composer:v2
 
@@ -175,22 +160,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install PHP != 8.5 & Composer
+      - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
-        if: ${{ matrix.php != '8.5' }}
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.PHP_INI_VALUES }}
-          tools: composer:v2
-
-      - name: Install PHP 8.5 & Composer
-        uses: shivammathur/setup-php@v2
-        if: ${{ matrix.php == '8.5' }}
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: ${{ env.extensions }}
-          ini-values: ${{ env.PHP_INI_VALUES_PHP_85 }}
           tools: composer:v2
 
       - name: Determine composer cache directory
