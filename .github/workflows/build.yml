@@ -85,7 +85,7 @@ jobs:
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
       - name: Cache dependencies installed with composer
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: php${{ matrix.php }}-${{ matrix.mode }}-composer-${{ hashFiles('**/composer.json') }}
@@ -173,7 +173,7 @@ jobs:
           echo "COMPOSER_CACHE_DIR=~\\AppData\\Local\\Composer" >> $GITHUB_ENV
 
       - name: Cache dependencies installed with composer
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
