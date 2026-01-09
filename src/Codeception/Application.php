@@ -100,7 +100,7 @@ class Application extends BaseApplication
             $input = $this->getCoreArguments();
         }
 
-        if (!ini_get('register_argc_argv')) {
+        if ((PHP_VERSION_ID < 80500 || 'cli' !== php_sapi_name()) && !ini_get('register_argc_argv')) {
             throw new ConfigurationException('register_argc_argv must be set to On for running Codeception');
         }
 
