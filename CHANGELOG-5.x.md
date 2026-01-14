@@ -1,3 +1,9 @@
+#### 5.3.4
+
+* Use attributes syntax in gherkin:snippets in #6917
+* PHP 8.5: Fix usage of deprecated $http_response_header in #6919
+* Do not expect the register_argc_argv ini setting in cli for php >= 8.5 in #6921
+
 #### 5.3.3
 
 * Fix empty data provider case by @joester89 in #6866
