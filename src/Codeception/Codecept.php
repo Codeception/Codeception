@@ -197,8 +197,6 @@ class Codecept
 
     public function run(string $suite, ?string $test = null, ?array $config = null): void
     {
-        ini_set('memory_limit', $this->config['settings']['memory_limit'] ?? '1024M');
-
         $config = Configuration::suiteSettings($suite, $config ?: Configuration::config());
         $selectedEnvironments = $this->options['env'];
 
