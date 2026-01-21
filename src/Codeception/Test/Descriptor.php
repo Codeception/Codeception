@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use BackedEnum;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Plain;
 use Codeception\TestInterface;
-use JsonException;
 use PHPUnit\Framework\SelfDescribing;
+use UnitEnum;
 
 use function codecept_relative_path;
 use function json_encode;
@@ -34,13 +35,10 @@ class Descriptor
         if (method_exists($testCase, 'getScenario') && $env = $testCase->getScenario()?->current('env')) {
             $signature .= ':' . $env;
         }
-        try {
-            if (method_exists($testCase, 'getMetadata') && $example = $testCase->getMetadata()->getCurrent('example')) {
-                $encoded = json_encode($example, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
-                $signature .= ':' . substr(sha1($encoded), 0, 7);
-            }
-        } catch (JsonException $e) {
-            codecept_debug('Failed serializing example: ' . $e->getMessage());
+        if (method_exists($testCase, 'getMetadata') && $example = $testCase->getMetadata()->getCurrent('example')) {
+            $example = self::normalizeForJsonEncoding($example);
+            $encoded = json_encode($example, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+            $signature .= ':' . substr(sha1($encoded), 0, 7);
         }
 
         return $signature;
@@ -88,6 +86,16 @@ class Descriptor
             is_int($index)   => ' with data set #' . $index,
             $index !== null  => ' with data set "' . $index . '"',
             default          => '',
+        };
+    }
+
+      private static function normalizeForJsonEncoding(mixed $value): mixed
+    {
+        return match (true) {
+            is_array($value) => array_map(self::normalizeForJsonEncoding(...), $value),
+            $value instanceof BackedEnum => $value->value,
+            $value instanceof UnitEnum => $value->name,
+            default => $value,
         };
     }
 }
