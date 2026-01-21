@@ -40,6 +40,8 @@ class TestCase implements Descriptive
 
 class DescriptorTest extends PHPUnitTestCase
 {
+    private const TEST_CASE_METHOD = 'TestCaseMethod';
+
     public function testUnitEnumSerialization(): void
     {
         $testCase = new class extends TestCase {
@@ -55,12 +57,12 @@ class DescriptorTest extends PHPUnitTestCase
 
             public function getSignature(): string
             {
-                return 'TestCaseMethod';
+                return self::TEST_CASE_METHOD;
             }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:41e8901', $signature);
+        $this->assertSame(self::TEST_CASE_METHOD . ':41e8901', $signature);
     }
 
     public function testBackedEnumSerialization(): void
@@ -78,12 +80,12 @@ class DescriptorTest extends PHPUnitTestCase
 
             public function getSignature(): string
             {
-                return 'TestCaseMethod';
+                return self::TEST_CASE_METHOD;
             }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:f863384', $signature);
+        $this->assertSame(self::TEST_CASE_METHOD . ':f863384', $signature);
     }
 
 
@@ -112,5 +114,54 @@ class DescriptorTest extends PHPUnitTestCase
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
         $this->assertSame('TestCaseMethod:db6e561', $signature);
+    }
+
+    public function testStringSerialization(): void
+    {
+        $testCase = new class extends TestCase {
+            public function getMetadata(): object
+            {
+                return new class {
+                    public function getCurrent(string $key): mixed
+                    {
+                        return ['string' => 'test value'];
+                    }
+                };
+            }
+
+            public function getSignature(): string
+            {
+                return 'TestCaseMethod';
+            }
+        };
+
+        $signature = Descriptor::getTestSignatureUnique($testCase);
+        $this->assertSame('TestCaseMethod:d6f6623', $signature);
+    }
+
+    public function testArraySerialization(): void
+    {
+        $testCase = new class extends TestCase {
+            public function getMetadata(): object
+            {
+                return new class {
+                    public function getCurrent(string $key): mixed
+                    {
+                        return [
+                            'array' => ['one', 'two', 'three'],
+                            'nested' => ['key' => 'value']
+                        ];
+                    }
+                };
+            }
+
+            public function getSignature(): string
+            {
+                return 'TestCaseMethod';
+            }
+        };
+
+        $signature = Descriptor::getTestSignatureUnique($testCase);
+        $this->assertSame('TestCaseMethod:e6c31e6', $signature);
     }
 }
