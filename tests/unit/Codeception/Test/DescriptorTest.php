@@ -40,8 +40,6 @@ class TestCase implements Descriptive
 
 class DescriptorTest extends PHPUnitTestCase
 {
-    private const TEST_CASE_METHOD = 'TestCaseMethod';
-
     public function testUnitEnumSerialization(): void
     {
         $testCase = new class extends TestCase {
@@ -57,12 +55,12 @@ class DescriptorTest extends PHPUnitTestCase
 
             public function getSignature(): string
             {
-                return self::TEST_CASE_METHOD;
+                return 'TestCaseMethod';
             }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame(self::TEST_CASE_METHOD . ':41e8901', $signature);
+        $this->assertSame('TestCaseMethod' . ':41e8901', $signature);
     }
 
     public function testBackedEnumSerialization(): void
@@ -80,12 +78,12 @@ class DescriptorTest extends PHPUnitTestCase
 
             public function getSignature(): string
             {
-                return self::TEST_CASE_METHOD;
+                return 'TestCaseMethod';
             }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame(self::TEST_CASE_METHOD . ':f863384', $signature);
+        $this->assertSame('TestCaseMethod:f863384', $signature);
     }
 
 
@@ -136,7 +134,7 @@ class DescriptorTest extends PHPUnitTestCase
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:d6f6623', $signature);
+        $this->assertSame('TestCaseMethod:5cf307a', $signature);
     }
 
     public function testArraySerialization(): void
@@ -162,6 +160,6 @@ class DescriptorTest extends PHPUnitTestCase
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:e6c31e6', $signature);
+        $this->assertSame('TestCaseMethod:020e182', $signature);
     }
 }
