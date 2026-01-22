@@ -89,7 +89,7 @@ class Descriptor
         };
     }
 
-      private static function normalizeForJsonEncoding(mixed $value): mixed
+    private static function normalizeForJsonEncoding(mixed $value): mixed
     {
         return match (true) {
             is_array($value) => array_map(self::normalizeForJsonEncoding(...), $value),
