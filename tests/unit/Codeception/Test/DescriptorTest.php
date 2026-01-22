@@ -52,15 +52,10 @@ class DescriptorTest extends PHPUnitTestCase
                     }
                 };
             }
-
-            public function getSignature(): string
-            {
-                return 'TestCaseMethod';
-            }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod' . ':41e8901', $signature);
+        $this->assertSame($testCase->getSignature() . ':41e8901', $signature);
     }
 
     public function testBackedEnumSerialization(): void
@@ -75,43 +70,10 @@ class DescriptorTest extends PHPUnitTestCase
                     }
                 };
             }
-
-            public function getSignature(): string
-            {
-                return 'TestCaseMethod';
-            }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:f863384', $signature);
-    }
-
-
-    public function testNestedEnumSerialization(): void
-    {
-        $testCase = new class extends TestCase {
-            public function getMetadata(): object
-            {
-                return new class {
-                    public function getCurrent(string $key): mixed
-                    {
-                        return [
-                            'unit' => UnitEnumExample::BAR,
-                            'backed' => BackedEnumExample::BAR,
-                            'nested' => ['enum' => UnitEnumExample::FOO]
-                        ];
-                    }
-                };
-            }
-
-            public function getSignature(): string
-            {
-                return 'TestCaseMethod';
-            }
-        };
-
-        $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:db6e561', $signature);
+        $this->assertSame($testCase->getSignature() . ':f863384', $signature);
     }
 
     public function testStringSerialization(): void
@@ -126,15 +88,10 @@ class DescriptorTest extends PHPUnitTestCase
                     }
                 };
             }
-
-            public function getSignature(): string
-            {
-                return 'TestCaseMethod';
-            }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:5cf307a', $signature);
+        $this->assertSame($testCase->getSignature() . ':5cf307a', $signature);
     }
 
     public function testArraySerialization(): void
@@ -146,20 +103,22 @@ class DescriptorTest extends PHPUnitTestCase
                     public function getCurrent(string $key): mixed
                     {
                         return [
-                            'array' => ['one', 'two', 'three'],
-                            'nested' => ['key' => 'value']
+                            'array' => [
+                                'one',
+                                'two',
+                                'three' => [
+                                    'key' => 'value',
+                                    'enum1' => UnitEnumExample::FOO,
+                                    'enum2' => BackedEnumExample::BAR,
+                                ]
+                            ],
                         ];
                     }
                 };
             }
-
-            public function getSignature(): string
-            {
-                return 'TestCaseMethod';
-            }
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame('TestCaseMethod:020e182', $signature);
+        $this->assertSame($testCase->getSignature() . ':e3d81e2', $signature);
     }
 }
