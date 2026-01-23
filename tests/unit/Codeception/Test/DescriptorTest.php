@@ -119,6 +119,6 @@ class DescriptorTest extends PHPUnitTestCase
         };
 
         $signature = Descriptor::getTestSignatureUnique($testCase);
-        $this->assertSame($testCase->getSignature() . ':e3d81e2', $signature);
+        $this->assertSame($testCase->getSignature() . ':8aed566', $signature);
     }
 }

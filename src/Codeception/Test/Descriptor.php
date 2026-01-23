@@ -93,8 +93,7 @@ class Descriptor
     {
         return match (true) {
             is_array($value) => array_map(self::normalizeForJsonEncoding(...), $value),
-            $value instanceof BackedEnum => $value->value,
-            $value instanceof UnitEnum => $value->name,
+            $value instanceof UnitEnum && !($value instanceof BackedEnum) => $value->name,
             default => $value,
         };
     }
