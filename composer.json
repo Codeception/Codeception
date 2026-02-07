@@ -40,7 +40,7 @@
         "ext-simplexml": "*",
         "codeception/lib-innerbrowser": "*@dev",
         "codeception/lib-web": "*@dev",
-        "codeception/module-asserts": "*@dev",
+        "codeception/module-asserts": "dev-master",
         "codeception/module-cli": "*@dev",
         "codeception/module-db": "*@dev",
         "codeception/module-filesystem": "*@dev",
