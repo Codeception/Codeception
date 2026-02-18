@@ -1,3 +1,8 @@
+#### 5.3.5
+
+* PHP 8.5: Avoid accessing deprecated $http_response_header by @W0rma in #6924
+* Add support for PHPUnit 13 by @W0rma in #6925
+
 #### 5.3.4
 
 * Use attributes syntax in gherkin:snippets in #6917
