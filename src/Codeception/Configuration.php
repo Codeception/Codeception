@@ -181,13 +181,6 @@ class Configuration
             throw new ConfigurationException("Configuration file is invalid");
         }
 
-        if (isset($config['extends'])) {
-            $presetFilePath = codecept_absolute_path($config['extends']);
-            if (file_exists($presetFilePath)) {
-                $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
-            }
-        }
-
         self::$config = $config;
 
         if (!isset(self::$config['paths']['support']) && isset(self::$config['paths']['helpers'])) {
@@ -373,6 +366,24 @@ class Configuration
         if (!is_array($conf)) {
             throw new ConfigurationException("Configuration file {$filename} is invalid or empty.");
         }
+
+        static $processedExtendsFilePaths = [];
+        if (in_array($filename, $processedExtendsFilePaths)) {
+            throw new ConfigurationException("Circular 'extends' reference for file {$filename}");
+        }
+        $processedExtendsFilePaths[] = realpath($filename);
+        try {
+            if (isset($conf['extends'])) {
+                $presetFilePath = PathResolver::isPathAbsolute($conf['extends']) ? $conf['extends'] : dirname($filename) . DIRECTORY_SEPARATOR . $conf['extends'];
+                if (!file_exists($presetFilePath)) {
+                    throw new ConfigurationException("Configuration file {$filename} specifies 'extends' file {$presetFilePath} which does not exist");
+                }
+                $conf = self::mergeConfigs(self::getConfFromFile(realpath($presetFilePath)), $conf);
+            }
+        } finally {
+            array_pop($processedExtendsFilePaths);
+        }
+
         return $conf;
     }
 
@@ -579,17 +590,6 @@ class Configuration
         $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
         $suiteDist = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.dist.yml");
         $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.yml");
-        if (isset($suiteConf['extends'])) {
-            $preset = PathResolver::isPathAbsolute($suiteConf['extends'])
-                ? $suiteConf['extends']
-                : realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']);
-            if ($preset === false) {
-                throw new ConfigurationException(sprintf("Configuration file %s does not exist", $suiteConf['extends']));
-            }
-            if (file_exists($preset)) {
-                $settings = self::mergeConfigs(self::getConfFromFile($preset), $settings);
-            }
-        }
         $settings = self::mergeConfigs($settings, $suiteDist);
         return self::mergeConfigs($settings, $suiteConf);
     }
