@@ -101,6 +101,10 @@ class ReportPrinter implements ConsolePrinter
             $name = substr($name, 0, 70);
         }
 
+        // Escape % to avoid ArgumentCountError in Output->message, but prevent double escaping
+        $name = str_replace('%%', '%', $name);
+        $name = str_replace('%', '%%', $name);
+
         $this->message($name)
             ->width(75, '.')
             ->append($status)
