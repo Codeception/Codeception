@@ -24,7 +24,7 @@ class Debug
     }
 
     /**
-     * Prints data to screen. Message can be any time of data
+     * Prints data to screen. Message can be any type of data
      */
     public static function debug(mixed $message): void
     {
