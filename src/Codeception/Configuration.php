@@ -467,7 +467,7 @@ class Configuration
             @chmod($dir, 0777);
         }
         if (!is_writable($dir)) {
-            throw new ConfigurationException("Path for output is not writable. Please, set appropriate access mode for output path: {$dir}");
+            throw new ConfigurationException("The path for Codeception's output is not writable. Please set appropriate file permissions for: {$dir}");
         }
         return $dir;
     }
