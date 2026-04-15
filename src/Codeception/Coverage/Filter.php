@@ -118,7 +118,7 @@ class Filter
         $coveredFiles = array_udiff(
             $allIncludedFiles,
             $allExcludedFiles,
-            function(SplFileInfo $file1, SplFileInfo $file2) {
+            function (SplFileInfo $file1, SplFileInfo $file2): array {
                 return $file1->getRealPath() <=> $file2->getRealPath();
             }
         );
