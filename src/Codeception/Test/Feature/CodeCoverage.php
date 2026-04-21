@@ -14,6 +14,7 @@ use Codeception\Test\Test as CodeceptTest;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use SebastianBergmann\CodeCoverage\Test\TestStatus\TestStatus;
+use SebastianBergmann\CodeCoverage\Test\TestStatus as TestStatusEnum;
 use SebastianBergmann\CodeCoverage\Version as CodeCoverageVersion;
 
 trait CodeCoverage
@@ -43,9 +44,9 @@ trait CodeCoverage
                 $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
             } else {
                 $status = match ($status) {
-                    Test::STATUS_OK                      => TestStatus::success(),
-                    Test::STATUS_FAIL, Test::STATUS_ERROR => TestStatus::failure(),
-                    default                              => TestStatus::unknown(),
+                    Test::STATUS_OK                      => class_exists(TestStatus::class) ? TestStatus::success() : TestStatusEnum::Success,
+                    Test::STATUS_FAIL, Test::STATUS_ERROR => class_exists(TestStatus::class) ? TestStatus::failure() : TestStatusEnum::Failure,
+                    default                              => class_exists(TestStatus::class) ? TestStatus::unknown() : TestStatusEnum::Unknown,
                 };
                 if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
                     $tcClass = 'SebastianBergmann\CodeCoverage\Test\Target\TargetCollection';
