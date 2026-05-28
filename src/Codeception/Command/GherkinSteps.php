@@ -19,7 +19,7 @@ use function count;
  * Prints all steps from all Gherkin contexts for a specific suite
  *
  * ```
- * codecept gherkin:steps acceptance
+ * codecept gherkin:steps Acceptance
  * ```
  */
 #[AsCommand(

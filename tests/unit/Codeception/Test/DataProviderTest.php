@@ -6,6 +6,7 @@ use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
 use data\data_provider\DataProviderReceivesActorTest;
+use data\data_provider\PublicEmptyDataProviderTest;
 
 class DataProviderTest extends Unit
 {
@@ -68,6 +69,17 @@ class DataProviderTest extends Unit
             'bar' => ['bar', 6],
             'not baz' => ['baz', 7],
         ];
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function testExecutesPublicEmptyDataProviderInTheSameClass()
+    {
+        require_once codecept_data_dir('data_provider/PublicEmptyDataProviderTest.php');
+        $method = new ReflectionMethod(PublicEmptyDataProviderTest::class, 'testDataProvider');
+        $result = DataProvider::getDataForMethod($method);
+
+        $expectedResult = [];
 
         $this->assertSame($expectedResult, $result);
     }

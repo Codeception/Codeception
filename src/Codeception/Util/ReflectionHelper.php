@@ -21,21 +21,18 @@ class ReflectionHelper
     public static function readPrivateProperty(object $object, string $property, ?string $class = null): mixed
     {
         $ref = new ReflectionProperty($class ?? $object, $property);
-        $ref->setAccessible(true);
         return $ref->getValue($object);
     }
 
     public static function setPrivateProperty(object $object, string $property, mixed $value, ?string $class = null): void
     {
         $ref = new ReflectionProperty($class ?? $object, $property);
-        $ref->setAccessible(true);
         $ref->setValue($object, $value);
     }
 
     public static function invokePrivateMethod(?object $object, string $method, array $args = [], ?string $class = null): mixed
     {
         $ref = new ReflectionMethod($class ?? $object, $method);
-        $ref->setAccessible(true);
         return $ref->invokeArgs($object, $args);
     }
 

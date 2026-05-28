@@ -58,7 +58,13 @@ class Application extends BaseApplication
         }
 
         foreach ($config['extensions']['commands'] as $commandClass) {
-            $this->add(new $commandClass($this->getCustomCommandName($commandClass)));
+            $command = new $commandClass($this->getCustomCommandName($commandClass));
+            // addCommand() is available since symfony 7.4
+            if (method_exists($this, 'addCommand')) {
+                $this->addCommand($command);
+            } else {
+                $this->add($command);
+            }
         }
     }
 
@@ -94,7 +100,7 @@ class Application extends BaseApplication
             $input = $this->getCoreArguments();
         }
 
-        if (!ini_get('register_argc_argv')) {
+        if ((PHP_VERSION_ID < 80500 || 'cli' !== php_sapi_name()) && !ini_get('register_argc_argv')) {
             throw new ConfigurationException('register_argc_argv must be set to On for running Codeception');
         }
 

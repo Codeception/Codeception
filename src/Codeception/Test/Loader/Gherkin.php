@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test\Loader;
 
+use Behat\Gherkin\Dialect\CucumberDialectProvider;
 use Behat\Gherkin\Filter\RoleFilter;
 use Behat\Gherkin\Keywords\CachedArrayKeywords as GherkinKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
@@ -70,7 +71,11 @@ class Gherkin implements LoaderInterface
         if (!class_exists(GherkinKeywords::class)) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
-        $keywords = GherkinKeywords::withDefaultKeywords();
+        if (class_exists(CucumberDialectProvider::class)) {
+            $keywords = new CucumberDialectProvider();
+        } else {
+            $keywords = GherkinKeywords::withDefaultKeywords();
+        }
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
         $this->fetchGherkinSteps();

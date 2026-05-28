@@ -37,10 +37,10 @@ use function str_replace;
 /**
  * Shows step-by-step execution process for scenario driven tests without actually running them.
  *
- * * `codecept dry-run acceptance`
- * * `codecept dry-run acceptance MyCest`
- * * `codecept dry-run acceptance checkout.feature`
- * * `codecept dry-run tests/acceptance/MyCest.php`
+ * * `codecept dry-run Acceptance`
+ * * `codecept dry-run Acceptance MyCest`
+ * * `codecept dry-run Acceptance checkout.feature`
+ * * `codecept dry-run tests/Acceptance/MyCest.php`
  *
  */
 #[AsCommand(
@@ -184,12 +184,12 @@ class DryRun extends Command
     private function getDefaultValueForBuiltinType(ReflectionNamedType $returnType): mixed
     {
         return match ($returnType->getName()) {
-            'mixed', 'void' => null,
+            'mixed', 'never', 'void' => null,
             'string' => '',
             'int' => 0,
             'float' => 0.0,
             'bool' => false,
-            'array' => [],
+            'array', 'iterable' => [],
             'resource' => fopen('data://text/plain;base64,', 'r'),
             default => throw new Exception('Unsupported return type ' . $returnType->getName()),
         };

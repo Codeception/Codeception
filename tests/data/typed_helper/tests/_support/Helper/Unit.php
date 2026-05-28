@@ -40,4 +40,9 @@ class Unit extends \Codeception\Module
     {
         throw new \RuntimeException(__METHOD__ . ' should not be executed');
     }
+
+    public function getIterable(): iterable
+    {
+        throw new \RuntimeException(__METHOD__ . ' should not be executed');
+    }
 }

@@ -23,9 +23,9 @@ use function ucfirst;
  * Create new test suite. Requires suite name and actor name
  *
  * * ``
- * * `codecept g:suite api` -> api + ApiTester
- * * `codecept g:suite integration Code` -> integration + CodeTester
- * * `codecept g:suite frontend Front` -> frontend + FrontTester
+ * * `codecept g:suite Api` -> api + ApiTester
+ * * `codecept g:suite Integration Code` -> integration + CodeTester
+ * * `codecept g:suite Frontend Front` -> frontend + FrontTester
  *
  */
 #[AsCommand(

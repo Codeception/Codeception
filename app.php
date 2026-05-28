@@ -6,40 +6,58 @@ use Codeception\Application;
 
 call_user_func(static function () {
     $app = new Application('Codeception', Codeception\Codecept::VERSION);
-    $app->add(new Codeception\Command\Build('build'));
-    $app->add(new Codeception\Command\Run('run'));
-    $app->add(new Codeception\Command\Init('init'));
-    $app->add(new Codeception\Command\Console('console'));
-    $app->add(new Codeception\Command\Bootstrap('bootstrap'));
-    $app->add(new Codeception\Command\GenerateCest('generate:cest'));
-    $app->add(new Codeception\Command\GenerateTest('generate:test'));
-    $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
-    $app->add(new Codeception\Command\GenerateHelper('generate:helper'));
-    $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
-    $app->add(new Codeception\Command\Clean('clean'));
-    $app->add(new Codeception\Command\GenerateGroup('generate:groupobject'));
-    $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
-    $app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
-    $app->add(new Codeception\Command\GenerateSnapshot('generate:snapshot'));
-    $app->add(new Codeception\Command\GenerateEnvironment('generate:environment'));
-    $app->add(new Codeception\Command\GenerateFeature('generate:feature'));
-    $app->add(new Codeception\Command\GherkinSnippets('gherkin:snippets'));
-    $app->add(new Codeception\Command\GherkinSteps('gherkin:steps'));
-    $app->add(new Codeception\Command\DryRun('dry-run'));
-    $app->add(new Codeception\Command\ConfigValidate('config:validate'));
+
+    $commands = [
+        new Codeception\Command\Build('build'),
+        new Codeception\Command\Run('run'),
+        new Codeception\Command\Init('init'),
+        new Codeception\Command\Console('console'),
+        new Codeception\Command\Bootstrap('bootstrap'),
+        new Codeception\Command\GenerateCest('generate:cest'),
+        new Codeception\Command\GenerateTest('generate:test'),
+        new Codeception\Command\GenerateSuite('generate:suite'),
+        new Codeception\Command\GenerateHelper('generate:helper'),
+        new Codeception\Command\GenerateScenarios('generate:scenarios'),
+        new Codeception\Command\Clean('clean'),
+        new Codeception\Command\GenerateGroup('generate:groupobject'),
+        new Codeception\Command\GeneratePageObject('generate:pageobject'),
+        new Codeception\Command\GenerateStepObject('generate:stepobject'),
+        new Codeception\Command\GenerateSnapshot('generate:snapshot'),
+        new Codeception\Command\GenerateEnvironment('generate:environment'),
+        new Codeception\Command\GenerateFeature('generate:feature'),
+        new Codeception\Command\GherkinSnippets('gherkin:snippets'),
+        new Codeception\Command\GherkinSteps('gherkin:steps'),
+        new Codeception\Command\DryRun('dry-run'),
+        new Codeception\Command\ConfigValidate('config:validate'),
+    ];
 
     // Suggests package
     if (class_exists('Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand')) {
-        $app->add(new Codeception\Command\Completion());
+        $commands[] = new Codeception\Command\Completion();
     } else {
-        $app->add(new Codeception\Command\CompletionFallback());
+        $commands[] = new Codeception\Command\CompletionFallback();
+    }
+
+    // addCommands() is available since symfony 7.4
+    if (method_exists($app, 'addCommands')) {
+        $app->addCommands($commands);
+    } else {
+        foreach ($commands as $command) {
+            $app->add($command);
+        }
     }
 
     $app->registerCustomCommands();
 
     // add only if within a phar archive.
     if ('phar:' === substr(__FILE__, 0, 5)) {
-        $app->add(new Codeception\Command\SelfUpdate('self-update'));
+        $command = new Codeception\Command\SelfUpdate('self-update');
+        // addCommand() is available since symfony 7.4
+        if (method_exists($app, 'addCommand')) {
+            $app->addCommand($command);
+        } else {
+            $app->add($command);
+        }
     }
 
     $app->run();

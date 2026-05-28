@@ -12,14 +12,17 @@ trait SuiteInitSubscriberTrait
 {
     public static function getSubscribedEvents(): array
     {
-        $events = property_exists(static::class, 'events') && is_array(static::$events)
-            ? static::$events
-            : [];
-
-        $suiteInit = (array) ($events[Events::SUITE_INIT] ?? []);
-        $suiteInit[] = 'receiveModuleContainer';
-        $events[Events::SUITE_INIT] = $suiteInit;
-
-        return $events;
+        if (!isset(static::$events)) {
+            return [Events::SUITE_INIT => 'receiveModuleContainer'];
+        }
+        if (isset(static::$events[Events::SUITE_INIT])) {
+            if (!is_array(static::$events[Events::SUITE_INIT])) {
+                static::$events[Events::SUITE_INIT] = [[static::$events[Events::SUITE_INIT]]];
+            }
+            static::$events[Events::SUITE_INIT][] = ['receiveModuleContainer'];
+        } else {
+            static::$events[Events::SUITE_INIT] = 'receiveModuleContainer';
+        }
+        return static::$events;
     }
 }

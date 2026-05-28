@@ -195,6 +195,11 @@ class LocalServer extends SuiteSubscriber
         $c3Url = $this->settings['c3_url'] ?? $this->module->_getUrl();
         $contents = file_get_contents("{$c3Url}/c3/report/{$action}", false, $context);
 
+        // $http_response_header is deprecated as of PHP 8.5
+        if (function_exists('http_get_last_response_headers')) {
+            $http_response_header = http_get_last_response_headers();
+        }
+
         $okHeaders = array_filter(
             $http_response_header,
             fn ($h) => preg_match('#^HTTP(.*?)\s200#', $h)

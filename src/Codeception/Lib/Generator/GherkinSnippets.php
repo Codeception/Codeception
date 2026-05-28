@@ -12,13 +12,11 @@ use Symfony\Component\Finder\Finder;
 class GherkinSnippets
 {
     protected string $template = <<<EOF
-    /**
-     * @{{type}} {{text}}
-     */
-     public function {{methodName}}({{params}})
-     {
-         throw new \PHPUnit\Framework\IncompleteTestError("Step `{{text}}` is not defined");
-     }
+    #[\Codeception\Attribute\{{type}}('{{text}}')]
+    public function {{methodName}}({{params}})
+    {
+        throw new \PHPUnit\Framework\IncompleteTestError('Step `{{text}}` is not defined');
+    }
 
 EOF;
 
@@ -126,7 +124,7 @@ EOF;
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())
-            ->place('text', $pattern)
+            ->place('text', str_replace(["\\", "'"], ["\\\\", "\\'"], $pattern))
             ->place('methodName', $methodName)
             ->place('params', implode(', ', $args))
             ->produce();

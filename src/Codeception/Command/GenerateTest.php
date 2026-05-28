@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
  *
- * * `codecept g:test unit User`
- * * `codecept g:test unit "App\User"`
+ * * `codecept g:test Unit User`
+ * * `codecept g:test Unit "App\User"`
  */
 #[AsCommand(
     name: 'generate:test',

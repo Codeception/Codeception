@@ -23,7 +23,7 @@ use function codecept_root_dir;
  * Check config:
  *
  * * `codecept config`: check global config
- * * `codecept config unit`: check suite config
+ * * `codecept config Unit`: check suite config
  *
  * Load config:
  *
