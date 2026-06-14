@@ -12,6 +12,7 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Filter as PhpUnitFilter;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 use function array_pop;
 use function explode;
@@ -114,7 +115,13 @@ class Filter
         $allIncludedFiles = $this->matchFiles($include);
         $allExcludedFiles = $this->matchFiles($exclude);
 
-        $coveredFiles = array_diff($allIncludedFiles, $allExcludedFiles);
+        $coveredFiles = array_udiff(
+            $allIncludedFiles,
+            $allExcludedFiles,
+            function (SplFileInfo $file1, SplFileInfo $file2): int {
+                return $file1->getRealPath() <=> $file2->getRealPath();
+            }
+        );
 
         foreach ($coveredFiles as $coveredFile) {
             $this->phpUnitFilter->includeFile((string) $coveredFile);
