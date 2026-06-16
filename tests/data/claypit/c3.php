@@ -14,6 +14,7 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+use SebastianBergmann\CodeCoverage\Report\Facade as ReportFacade;
 
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
@@ -76,7 +77,9 @@ if (!class_exists('\\Codeception\\Codecept') || !function_exists('codecept_is_pa
 if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCoverage\CodeCoverage')) {
     class_alias('SebastianBergmann\CodeCoverage\CodeCoverage', 'PHP_CodeCoverage');
     class_alias('SebastianBergmann\CodeCoverage\Report\Text', 'PHP_CodeCoverage_Report_Text');
-    class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
+    if (class_exists('SebastianBergmann\CodeCoverage\Report\PHP')) {
+        class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
+    }
     class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
     class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
     class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
@@ -129,8 +132,13 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path)
     {
-        $writer = new PHP_CodeCoverage_Report_HTML();
-        $writer->process($codeCoverage, $path . 'html');
+        if (class_exists(ReportFacade::class)) {
+            $writer = ReportFacade::fromObject($codeCoverage);
+            $writer->renderHtml($path . 'html');
+        } else {
+            $writer = new PHP_CodeCoverage_Report_HTML();
+            $writer->process($codeCoverage, $path . 'html');
+        }
 
         if (file_exists($path . '.tar')) {
             unlink($path . '.tar');
@@ -160,16 +168,26 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     function __c3_build_clover_report(PHP_CodeCoverage $codeCoverage, $path)
     {
-        $writer = new PHP_CodeCoverage_Report_Clover();
-        $writer->process($codeCoverage, $path . '.clover.xml');
+        if (class_exists(ReportFacade::class)) {
+            $writer = ReportFacade::fromObject($codeCoverage);
+            $writer->renderClover($path . '.clover.xml');
+        } else {
+            $writer = new PHP_CodeCoverage_Report_Clover();
+            $writer->process($codeCoverage, $path . '.clover.xml');
+        }
 
         return $path . '.clover.xml';
     }
 
     function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path)
     {
-        $writer = new PHP_CodeCoverage_Report_Crap4j();
-        $writer->process($codeCoverage, $path . '.crap4j.xml');
+        if (class_exists(ReportFacade::class)) {
+            $writer = ReportFacade::fromObject($codeCoverage);
+            $writer->renderCrap4j($path . '.crap4j.xml');
+        } else {
+            $writer = new PHP_CodeCoverage_Report_Crap4j();
+            $writer->process($codeCoverage, $path . '.crap4j.xml');
+        }
 
         return $path . '.crap4j.xml';
     }
@@ -187,8 +205,13 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
     {
-        $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
-        $writer->process($codeCoverage, $path . 'phpunit');
+        if (class_exists(ReportFacade::class)) {
+            $writer = ReportFacade::fromObject($codeCoverage);
+            $writer->renderXml($path . 'phpunit', phpUnitVersion: \PHPUnit_Runner_Version::id());
+        } else {
+            $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
+            $writer->process($codeCoverage, $path . 'phpunit');
+        }
 
         if (file_exists($path . '.tar')) {
             unlink($path . '.tar');

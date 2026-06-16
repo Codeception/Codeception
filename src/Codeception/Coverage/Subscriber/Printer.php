@@ -17,10 +17,12 @@ use SebastianBergmann\CodeCoverage\Report\Clover as CloverReport;
 use SebastianBergmann\CodeCoverage\Report\Cobertura as CoberturaReport;
 use SebastianBergmann\CodeCoverage\Report\Crap4j as Crap4jReport;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlFacadeReport;
+use SebastianBergmann\CodeCoverage\Report\Facade as FacadeReport;
 use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
 use SebastianBergmann\CodeCoverage\Report\Text as TextReport;
 use SebastianBergmann\CodeCoverage\Report\Thresholds;
 use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlFacadeReport;
+use SebastianBergmann\CodeCoverage\Serialization\Serializer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use function array_merge;
@@ -109,53 +111,96 @@ class Printer implements EventSubscriberInterface
 
     protected function printConsole(): void
     {
-        $writer = $this->createTextWriter();
-        $this->output->write($writer->process(self::$coverage, $this->options['colors']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $this->output->write($writer->renderText(null, showColors: $this->options['colors']));
+        } else {
+            $writer = $this->createTextWriter();
+            $this->output->write($writer->process(self::$coverage, $this->options['colors']));
+        }
     }
 
     protected function printHtml(): void
     {
-        $writer = $this->createHtmlFacadeWriter();
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $writer->renderHtml($this->absolutePath($this->options['coverage-html']));
+        } else {
+            $writer = $this->createHtmlFacadeWriter();
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
+        }
     }
 
     protected function printXml(): void
     {
-        $writer = new CloverReport();
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-xml']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $writer->renderClover($this->absolutePath($this->options['coverage-xml']));
+        } else {
+            $writer = new CloverReport();
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-xml']));
+        }
     }
 
     protected function printPHP(): void
     {
-        $writer = new PhpReport();
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage']));
+        if (class_exists(PhpReport::class)) {
+            $writer = new PhpReport();
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage']));
+        } else {
+            $serializer = new Serializer();
+            $serializer->serialize($this->absolutePath($this->options['coverage']), self::$coverage);
+        }
     }
 
     protected function printText(): void
     {
-        $writer = $this->createTextWriter();
-        file_put_contents(
-            $this->absolutePath($this->options['coverage-text']),
-            $writer->process(self::$coverage)
-        );
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            file_put_contents(
+                $this->absolutePath($this->options['coverage-text']),
+                $writer->renderText(null)
+            );
+        } else {
+            $writer = $this->createTextWriter();
+            file_put_contents(
+                $this->absolutePath($this->options['coverage-text']),
+                $writer->process(self::$coverage)
+            );
+        }
     }
 
     protected function printCrap4j(): void
     {
-        $writer = new Crap4jReport();
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-crap4j']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $writer->renderCrap4j($this->absolutePath($this->options['coverage-crap4j']));
+        } else {
+            $writer = new Crap4jReport();
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-crap4j']));
+        }
     }
 
     protected function printCobertura(): void
     {
-        $writer = new CoberturaReport();
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-cobertura']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $writer->renderCobertura($this->absolutePath($this->options['coverage-cobertura']));
+        } else {
+            $writer = new CoberturaReport();
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-cobertura']));
+        }
     }
 
     protected function printPHPUnit(): void
     {
-        $writer = new XmlFacadeReport(PHPUnitVersion::id());
-        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
+        if (class_exists(FacadeReport::class)) {
+            $writer = FacadeReport::fromObject(self::$coverage);
+            $writer->renderXml($this->absolutePath($this->options['coverage-phpunit']), phpUnitVersion: PHPUnitVersion::id());
+        } else {
+            $writer = new XmlFacadeReport(PHPUnitVersion::id());
+            $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
+        }
     }
 
     private function createHtmlFacadeWriter(): HtmlFacadeReport
