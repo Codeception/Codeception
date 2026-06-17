@@ -144,7 +144,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             $this->fire(Events::TEST_BEFORE, new TestEvent($this));
             $this->runHooks('Start');
             $failedToStart = false;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $failedToStart = true;
             $this->dispatchOutcome(Events::TEST_ERROR, $e, $time);
         }
