@@ -17,4 +17,11 @@ class SimpleWithExamplesCest
             return count($example);
         })->seeResultEquals(2);
     }
+
+    #[Examples(first: true, second: false)]
+    public function namedArguments(\CodeGuy $I, \Codeception\Example $example)
+    {
+        $I->assertSame(true, $example['first']);
+        $I->assertSame(false, $example['second']);
+    }
 }

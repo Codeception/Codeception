@@ -148,10 +148,23 @@ class DataProviderTest extends Unit
         $this->assertSame($expectedResult, $result);
     }
 
-    public function testSupportsExampleAnnotations()
+    public function testSupportsSingleExampleAnnotation()
     {
         require_once codecept_data_dir('data_provider/ExampleAnnotationTest.php');
-        $method = new ReflectionMethod(ExampleAnnotationTest::class, 'testExample');
+        $method = new ReflectionMethod(ExampleAnnotationTest::class, 'testSingleExample');
+        $result = DataProvider::getDataForMethod($method);
+
+        $expectedResult = [
+            ['bar', 4],
+        ];
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function testSupportsMultipleExampleAnnotations()
+    {
+        require_once codecept_data_dir('data_provider/ExampleAnnotationTest.php');
+        $method = new ReflectionMethod(ExampleAnnotationTest::class, 'testMultipleExamples');
         $result = DataProvider::getDataForMethod($method);
 
         $expectedResult = [
@@ -162,10 +175,23 @@ class DataProviderTest extends Unit
         $this->assertSame($expectedResult, $result);
     }
 
-    public function testSupportsExamplesAttribute()
+    public function testSupportsSingleExamplesAttribute()
     {
         require_once codecept_data_dir('data_provider/ExamplesAttributeTest.php');
-        $method = new ReflectionMethod(ExamplesAttributeTest::class, 'testExample');
+        $method = new ReflectionMethod(ExamplesAttributeTest::class, 'testSingleExample');
+        $result = DataProvider::getDataForMethod($method);
+
+        $expectedResult = [
+            ['foo', 9],
+        ];
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function testSupportsMultipleExamplesAttributes()
+    {
+        require_once codecept_data_dir('data_provider/ExamplesAttributeTest.php');
+        $method = new ReflectionMethod(ExamplesAttributeTest::class, 'testMultipleExamples');
         $result = DataProvider::getDataForMethod($method);
 
         $expectedResult = [
