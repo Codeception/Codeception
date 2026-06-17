@@ -206,7 +206,9 @@ EOF;
                 $attributes .= ' ';
             }
 
-            if ($param->isOptional()) {
+            if ($param->isVariadic()) {
+                $params[] = $attributes . $type . '...$' . $param->name;
+            } elseif ($param->isOptional()) {
                 $params[] = $attributes . $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
                 $params[] = $attributes . $type . '$' . $param->name;
