@@ -1,10 +1,12 @@
 <?php
 
+use Tests\Support\CliTester;
+
 // @group reports
 
 $testsPath = __DIR__ . '/../';
 
-$I = new CliGuy($scenario);
+$I = new CliTester($scenario);
 $I->wantTo('generate xml reports for unit tests');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run unit --xml --no-exit');

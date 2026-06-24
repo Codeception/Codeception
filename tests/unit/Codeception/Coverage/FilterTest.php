@@ -11,7 +11,7 @@ use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 class FilterTest extends \Codeception\Test\Unit
 {
-    protected \CodeGuy $tester;
+    protected \Tests\Support\CodeTester $tester;
 
     protected Filter $filter;
 
@@ -32,7 +32,7 @@ class FilterTest extends \Codeception\Test\Unit
                         'src/Codeception/Codecept.php'
                     ],
                     'exclude' => [
-                        'tests/support/CodeGuy.php'
+                        'tests/Support/CodeTester.php'
                     ]
                 ]
             ]
@@ -42,7 +42,7 @@ class FilterTest extends \Codeception\Test\Unit
         $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('src/Codeception/Codecept.php')));
         $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/Support/CodeTester.php')));
         $this->assertTrue(
             $fileFilter->isExcluded(
                 codecept_root_dir('tests/unit.suite.yml')
@@ -55,12 +55,12 @@ class FilterTest extends \Codeception\Test\Unit
     {
         $config = ['coverage' => [
             'include' => ['tests/*'],
-            'exclude' => ['tests/support/CodeGuy.php']
+            'exclude' => ['tests/Support/CodeTester.php']
         ]];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
         $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/Support/CodeTester.php')));
     }
 
     public function testWhitelistIncludeFilterApplied()
@@ -80,7 +80,7 @@ class FilterTest extends \Codeception\Test\Unit
         $fileFilter = $this->filter->getFilter();
         $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/Support/CodeTester.php')));
         $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
         $this->assertTrue(
             $fileFilter->isExcluded(

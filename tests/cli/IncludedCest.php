@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Before;
 use Codeception\Attribute\Group;
 
@@ -13,13 +14,13 @@ final class IncludedCest
         \Codeception\Util\FileSystem::doEmptyDir($logDir);
     }
 
-    private function moveToIncluded(CliGuy $I)
+    private function moveToIncluded(CliTester $I)
     {
         $I->amInPath('tests/data/included');
     }
 
     #[Before('moveToIncluded')]
-    public function runSuitesFromIncludedConfigs(CliGuy $I)
+    public function runSuitesFromIncludedConfigs(CliTester $I)
     {
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
@@ -31,7 +32,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function runTestsFromIncludedConfigs(CliGuy $I)
+    public function runTestsFromIncludedConfigs(CliTester $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php", false);
@@ -51,7 +52,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function runTestsFromIncludedConfigsNested(CliGuy $I)
+    public function runTestsFromIncludedConfigsNested(CliTester $I)
     {
         $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php', false);
 
@@ -70,7 +71,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function runTestsFromIncludedConfigsSingleTest(CliGuy $I)
+    public function runTestsFromIncludedConfigsSingleTest(CliTester $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->executeCommand("run jazz{$ds}tests{$ds}unit{$ds}SimpleTest.php:testSimple", false);
@@ -95,7 +96,7 @@ final class IncludedCest
 
     #[Before('moveToIncluded')]
     #[Group('reports')]
-    public function runIncludedWithXmlOutput(CliGuy $I)
+    public function runIncludedWithXmlOutput(CliTester $I)
     {
         $I->executeCommand('run --xml');
         $I->amInPath('_log');
@@ -110,7 +111,7 @@ final class IncludedCest
 
     #[Before('moveToIncluded')]
     #[Group('reports')]
-    public function runIncludedWithHtmlOutput(CliGuy $I)
+    public function runIncludedWithHtmlOutput(CliTester $I)
     {
         $I->executeCommand('run --html');
         $I->amInPath('_log');
@@ -125,7 +126,7 @@ final class IncludedCest
 
     #[Before('moveToIncluded')]
     #[Group('coverage')]
-    public function runIncludedWithCoverage(CliGuy $I): void
+    public function runIncludedWithCoverage(CliTester $I): void
     {
         $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
@@ -139,7 +140,7 @@ final class IncludedCest
 
     #[Before('moveToIncluded')]
     #[Group('coverage')]
-    public function runIncludedWithoutPhpReport(CliGuy $I): void
+    public function runIncludedWithoutPhpReport(CliTester $I): void
     {
         $I->executeCommand('run --coverage-text --disable-coverage-php');
         $I->amInPath('_log');
@@ -148,7 +149,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function buildIncluded(CliGuy $I)
+    public function buildIncluded(CliTester $I)
     {
         $I->executeCommand('build');
         $I->seeInShellOutput('generated successfully');
@@ -158,7 +159,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function cleanIncluded(CliGuy $I)
+    public function cleanIncluded(CliTester $I)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -171,14 +172,14 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function runIncludedGroup(CliGuy $I)
+    public function runIncludedGroup(CliTester $I)
     {
         $I->executeCommand("run -g group", false);
         $I->dontSeeInShellOutput('No tests executed');
         $I->seeInShellOutput('2 tests');
     }
 
-    public function includedSuitesAreNotRunTwice(CliGuy $I)
+    public function includedSuitesAreNotRunTwice(CliTester $I)
     {
         $I->amInPath('tests/data/included_two_config_files');
         $I->executeCommand('run');
@@ -189,7 +190,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function someSuitesForSomeIncludedApplicationCanBeRun(CliGuy $I)
+    public function someSuitesForSomeIncludedApplicationCanBeRun(CliTester $I)
     {
         $I->executeCommand('run jazz::functional');
 
@@ -217,7 +218,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function someSuitesCanBeRunForAllIncludedApplications(CliGuy $I)
+    public function someSuitesCanBeRunForAllIncludedApplications(CliTester $I)
     {
         $I->executeCommand('run *::functional');
 
@@ -245,7 +246,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function wildCardSuitesAndAppSpecificSuitesCantBeCombined(CliGuy $I)
+    public function wildCardSuitesAndAppSpecificSuitesCantBeCombined(CliTester $I)
     {
         $I->executeCommand('run jazz::unit,*::functional', false);
         $I->seeResultCodeIs(2);
@@ -253,7 +254,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function runningASuiteInTheRootApplicationDoesNotRunTheIncludedAppSuites(CliGuy $I)
+    public function runningASuiteInTheRootApplicationDoesNotRunTheIncludedAppSuites(CliTester $I)
     {
         $I->executeCommand('run unit');
 
@@ -277,7 +278,7 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
-    public function rootSuitesCanBeRunInCombinationWithIncludedSuites(CliGuy $I)
+    public function rootSuitesCanBeRunInCombinationWithIncludedSuites(CliTester $I)
     {
         $I->executeCommand('run unit,*::unit');
 

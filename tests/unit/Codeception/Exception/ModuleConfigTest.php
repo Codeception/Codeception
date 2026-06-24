@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\ModuleContainer;
-use Codeception\Module\CodeHelper;
+use Codeception\Module\EmulateModuleHelper;
 use Codeception\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -19,9 +19,9 @@ class ModuleConfigTest extends TestCase
     public function testCanBeCreatedForModuleObject()
     {
         $exception = new ModuleConfigException(
-            new CodeHelper(Stub::make(ModuleContainer::class)),
+            new EmulateModuleHelper(Stub::make(ModuleContainer::class)),
             "Hello world"
         );
-        $this->assertSame("CodeHelper module is not configured!\n \nHello world", $exception->getMessage());
+        $this->assertSame("EmulateModuleHelper module is not configured!\n \nHello world", $exception->getMessage());
     }
 }

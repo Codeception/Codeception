@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class DryRunCest
 {
-    public function _before(CliGuy $I)
+    public function _before(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
     }
 
-    public function runCestWithExamples(CliGuy $I)
+    public function runCestWithExamples(CliTester $I)
     {
         $I->executeCommand('dry-run scenario ExamplesCest --no-ansi');
         $I->seeInShellOutput('ExamplesCest: Files exists annotation');
@@ -17,7 +19,7 @@ final class DryRunCest
         $I->seeInShellOutput('I see file found "dummy.suite.yml"');
     }
 
-    public function runFeature(CliGuy $I)
+    public function runFeature(CliTester $I)
     {
         $I->executeCommand('dry-run scenario File.feature --no-ansi');
         $I->seeInShellOutput('Run gherkin: Check file exists');
@@ -28,7 +30,7 @@ final class DryRunCest
         $I->seeInShellOutput("Step definition for `I have only idea of what's going on here` not found");
     }
 
-    public function runTestsWithTypedHelper(CliGuy $I)
+    public function runTestsWithTypedHelper(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('typed_helper'));
         $I->executeCommand('build');

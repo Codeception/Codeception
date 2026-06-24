@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class RunSingleTestWithIncludeCest
 {
-    public function run(CliGuy $I)
+    public function run(CliTester $I)
     {
         $I->amInPath('tests/data/single_test_with_include');
         $I->wantTo('execute one test with include in config');

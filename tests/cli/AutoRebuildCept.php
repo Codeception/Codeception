@@ -1,6 +1,6 @@
 <?php
 
-$I = new CliGuy($scenario);
+$I = new \Tests\Support\CliTester($scenario);
 $I->wantTo('change configs and check that Guy is rebuilt');
 $I->amInPath('tests/data/sandbox');
 $I->writeToFile(

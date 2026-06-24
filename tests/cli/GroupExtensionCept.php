@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('see that my group extension works');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run skipped -g notorun -c codeception_grouped.yml');

@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('generate test scenario');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:scenarios dummy');

@@ -1,10 +1,10 @@
-actor: CliGuy
+actor: CliTester
 modules:
     enabled:
         - Filesystem
         - Cli
-        - CliHelper
-        - CodeHelper
+        - Tests\Support\Helper\CliHelper
+        - Tests\Support\Helper\CodeHelper
         - Asserts
 step_decorators:
     - Codeception\Step\ConditionalAssertion

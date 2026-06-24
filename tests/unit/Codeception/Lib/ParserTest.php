@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Group;
 use Codeception\Lib\Parser;
 use Codeception\Scenario;
@@ -12,7 +13,7 @@ use Codeception\Test\Unit;
 #[Group('core')]
 final class ParserTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     protected Parser $parser;
 

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class ConfigBundledSuitesCest
 {
-    public function runBundledSuite(CliGuy $I)
+    public function runBundledSuite(CliTester $I)
     {
         $I->amInPath('tests/data/bundled_suites');
         $I->executeCommand('build');
@@ -12,14 +14,14 @@ final class ConfigBundledSuitesCest
         $I->seeInShellOutput('OK (1 test');
     }
 
-    public function runTestByPath(CliGuy $I)
+    public function runTestByPath(CliTester $I)
     {
         $I->amInPath('tests/data/bundled_suites');
         $I->executeCommand('run BasicTest.php');
         $I->seeInShellOutput('OK (1 test');
     }
 
-    public function generateTestsForBundledSuite(CliGuy $I)
+    public function generateTestsForBundledSuite(CliTester $I)
     {
         $I->amInPath('tests/data/bundled_suites');
         $I->executeFailCommand('generate:cest unit Some');

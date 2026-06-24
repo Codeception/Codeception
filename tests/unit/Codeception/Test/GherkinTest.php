@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Depends;
 use Codeception\Attribute\Group;
 use Codeception\Exception\ParseException;
@@ -15,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 #[Group('gherkin')]
 final class GherkinTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     protected $feature;
 

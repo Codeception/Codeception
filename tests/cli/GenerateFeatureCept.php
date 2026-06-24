@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('generate gherkin steps');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:feature scenario Login');

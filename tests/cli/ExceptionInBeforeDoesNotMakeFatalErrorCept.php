@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('see that exception in before does not cause fatal error in after');
 $I->amInPath('tests/data/exception_in_before');
 $I->executeFailCommand('run --xml --no-ansi');

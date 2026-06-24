@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class SecondTestIsExecutedWhenTheFirstTestFailsCest
 {
-    public function testIsExecuted(CliGuy $I)
+    public function testIsExecuted(CliTester $I)
     {
         $I->wantTo('see that the second test is executed');
         $I->amInPath('tests/data/first_test_fails');
@@ -14,7 +16,7 @@ final class SecondTestIsExecutedWhenTheFirstTestFailsCest
         $I->seeInShellOutput('+ TwoTestsCest: Successful');
     }
 
-    public function endTestEventIsEmitted(CliGuy $I)
+    public function endTestEventIsEmitted(CliTester $I)
     {
         $I->wantTo('see that all start and end events are emitted');
         $I->amInPath('tests/data/first_test_fails');

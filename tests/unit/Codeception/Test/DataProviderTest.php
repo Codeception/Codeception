@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
@@ -10,7 +11,7 @@ use data\data_provider\PublicEmptyDataProviderTest;
 
 class DataProviderTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     public function testParsesAnnotationContainingMethodNameOnly()
     {

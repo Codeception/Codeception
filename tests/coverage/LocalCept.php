@@ -1,6 +1,8 @@
 <?php
 
-$I = new CoverGuy($scenario);
+use Tests\Support\CoverTester;
+
+$I = new CoverTester($scenario);
 $I->wantTo('run local code coverage for cest and test');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run math MathTest --coverage', false, '-d pcov.directory=' . getcwd());

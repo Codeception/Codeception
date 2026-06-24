@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\After;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;
@@ -9,19 +10,19 @@ use Codeception\Scenario;
 
 final class RunCest
 {
-    public function _before(CliGuy $I)
+    public function _before(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
     }
 
-    public function runOneFile(CliGuy $I)
+    public function runOneFile(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run tests/dummy/FileExistsCept.php');
         $I->seeInShellOutput("OK (");
     }
 
-    public function runOneFileWithColors(CliGuy $I)
+    public function runOneFileWithColors(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run --colors tests/dummy/FileExistsCept.php');
@@ -32,21 +33,21 @@ final class RunCest
     /**
      * https://github.com/Codeception/Codeception/issues/6103
      */
-    public function runSuiteWhenNameMatchesExistingDirectory(CliGuy $I)
+    public function runSuiteWhenNameMatchesExistingDirectory(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
         $I->executeCommand('run api');
         $I->seeInShellOutput('SuccessCest');
     }
 
-    public function runTestsDoesntFail(CliGuy $I)
+    public function runTestsDoesntFail(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
         $I->executeCommand('run tests');
         $I->seeInShellOutput('SuccessCest');
     }
 
-    public function runTestsWithFilterDoesntFail(CliGuy $I)
+    public function runTestsWithFilterDoesntFail(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
         $I->executeCommand('run tests:^success');
@@ -56,7 +57,7 @@ final class RunCest
         $I->seeInShellOutput('SuccessCest');
     }
 
-    public function filterTestsWithoutSpecifyingSuite(CliGuy $I)
+    public function filterTestsWithoutSpecifyingSuite(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
         $I->executeCommand('run :^success');
@@ -64,7 +65,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runHtml(CliGuy $I)
+    public function runHtml(CliTester $I)
     {
         $I->wantTo('execute tests with html output');
         $I->executeCommand('run dummy --html');
@@ -73,7 +74,7 @@ final class RunCest
 
 
     #[Group('reports')]
-    public function runXmlReport(CliGuy $I)
+    public function runXmlReport(CliTester $I)
     {
         $I->wantTo('check xml reports');
         $I->executeCommand('run dummy --xml');
@@ -85,7 +86,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runXmlReportsInStrictMode(CliGuy $I)
+    public function runXmlReportsInStrictMode(CliTester $I)
     {
         $I->wantTo('check xml in strict mode');
         $I->executeCommand('run dummy --xml -c codeception_strict_xml.yml');
@@ -97,7 +98,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runPhpUnitXmlReport(CliGuy $I)
+    public function runPhpUnitXmlReport(CliTester $I)
     {
         $I->wantTo('check phpunit xml reports');
         $I->executeCommand('run dummy --phpunit-xml');
@@ -121,7 +122,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runPhpUnitXmlReportsInStrictMode(CliGuy $I)
+    public function runPhpUnitXmlReportsInStrictMode(CliTester $I)
     {
         $I->wantTo('check phpunit xml in strict mode');
         $I->executeCommand('run dummy --phpunit-xml -c codeception_strict_xml.yml');
@@ -145,7 +146,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runCustomReport(CliGuy $I)
+    public function runCustomReport(CliTester $I)
     {
         $I->executeCommand('run dummy --ext=MyReportPrinter -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
@@ -153,13 +154,13 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runCompactReport(CliGuy $I)
+    public function runCompactReport(CliTester $I)
     {
         $I->executeCommand('run dummy --report');
         $I->seeInShellOutput('FileExistsCept: Check config exists........................................Ok');
     }
 
-    public function runOneGroup(CliGuy $I)
+    public function runOneGroup(CliTester $I)
     {
         $I->executeCommand('run skipped -g notorun');
         $I->seeInShellOutput('Skipped Tests (1)');
@@ -167,7 +168,7 @@ final class RunCest
         $I->dontSeeInShellOutput("SkipMeCept");
     }
 
-    public function skipRunOneGroup(CliGuy $I)
+    public function skipRunOneGroup(CliTester $I)
     {
         $I->executeCommand('run skipped --skip-group notorun');
         $I->seeInShellOutput('Skipped Tests (2)');
@@ -176,7 +177,7 @@ final class RunCest
     }
 
     #[Group('attrs')]
-    public function runOneGroupByAttr(CliGuy $I)
+    public function runOneGroupByAttr(CliTester $I)
     {
         $I->executeCommand('run Attrs -g g1');
         $I->seeInShellOutput("Valid test");
@@ -184,7 +185,7 @@ final class RunCest
     }
 
     #[Group('attrs')]
-    public function runWithBeforeAfter(CliGuy $I)
+    public function runWithBeforeAfter(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g g1');
         $I->seeInShellOutput("open1");
@@ -195,7 +196,7 @@ final class RunCest
 
 
     #[Group('attrs')]
-    public function runWithExamples(CliGuy $I)
+    public function runWithExamples(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g e1');
         $I->seeInShellOutput("OK (2 test");
@@ -203,34 +204,34 @@ final class RunCest
 
 
     #[Group('attrs')]
-    public function runWithDataprovider(CliGuy $I)
+    public function runWithDataprovider(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g d1');
         $I->seeInShellOutput("OK (2 test");
     }
 
     #[Group('attrs')]
-    public function runWithDepends(CliGuy $I)
+    public function runWithDepends(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g dp');
         $I->seeInShellOutput("This test depends on Attrs\BasicScenarioCest:validTest to pass");
     }
 
     #[Group('attrs')]
-    public function runWithUnitSkipped(CliGuy $I)
+    public function runWithUnitSkipped(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g uskip');
         $I->seeInShellOutput("Skipped: 1");
     }
 
     #[Group('attrs')]
-    public function runWithUnitIncomplete(CliGuy $I)
+    public function runWithUnitIncomplete(CliTester $I)
     {
         $I->executeCommand('run Attrs --steps -g uincomplete');
         $I->seeInShellOutput("Incomplete: 1");
     }
 
-    public function skipGroupOfCest(CliGuy $I)
+    public function skipGroupOfCest(CliTester $I)
     {
         $I->executeCommand('run dummy');
         $I->seeInShellOutput('Optimistic');
@@ -241,7 +242,7 @@ final class RunCest
         $I->dontSeeInShellOutput('Optimistic');
     }
 
-    public function runTwoSuites(CliGuy $I)
+    public function runTwoSuites(CliTester $I)
     {
         $I->executeCommand('run skipped,dummy --no-exit');
         $I->seeInShellOutput("Skipped Tests (3)");
@@ -249,7 +250,7 @@ final class RunCest
         $I->dontSeeInShellOutput("Remote Tests");
     }
 
-    public function skipSuites(CliGuy $I)
+    public function skipSuites(CliTester $I)
     {
         $I->executeCommand(
             'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit '
@@ -261,7 +262,7 @@ final class RunCest
         $I->dontSeeInShellOutput("Order Tests");
     }
 
-    public function runOneTestFromUnit(CliGuy $I)
+    public function runOneTestFromUnit(CliTester $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
         $I->seeInShellOutput("AnotherTest: First");
@@ -269,14 +270,14 @@ final class RunCest
         $I->dontSeeInShellOutput('AnotherTest: Second');
     }
 
-    public function runOneTestFromCest(CliGuy $I)
+    public function runOneTestFromCest(CliTester $I)
     {
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
         $I->seeInShellOutput("Optimistic");
         $I->dontSeeInShellOutput('Pessimistic');
     }
 
-    public function runTestWithDataProviders(CliGuy $I)
+    public function runTestWithDataProviders(CliTester $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput('Is triangle | "real triangle"');
@@ -286,7 +287,7 @@ final class RunCest
         $I->seeInShellOutput("OK");
     }
 
-    public function filterTestsByDataProviderCaseNumber(CliGuy $I)
+    public function filterTestsByDataProviderCaseNumber(CliTester $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:#1');
         $I->seeInShellOutput('Is triangle | #1');
@@ -296,7 +297,7 @@ final class RunCest
         $I->seeInShellOutput("OK (1 test, 1 assertion)");
     }
 
-    public function filterTestsByDataProviderCaseNumberRange(CliGuy $I)
+    public function filterTestsByDataProviderCaseNumberRange(CliTester $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:#0-1');
         $I->seeInShellOutput('Is triangle | #0');
@@ -306,7 +307,7 @@ final class RunCest
         $I->seeInShellOutput("OK (2 tests, 2 assertions)");
     }
 
-    public function filterTestsByDataProviderCaseName(CliGuy $I)
+    public function filterTestsByDataProviderCaseName(CliTester $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:@"real.*"');
         $I->seeInShellOutput('Is triangle | "real triangle"');
@@ -316,7 +317,7 @@ final class RunCest
         $I->seeInShellOutput("OK (1 test, 1 assertion)");
     }
 
-    public function filterCestsByDataProviderNumber(CliGuy $I)
+    public function filterCestsByDataProviderNumber(CliTester $I)
     {
         $I->executeCommand('run tests/scenario/DataProviderCest.php:withProtectedDataProvider#1');
         $I->seeInShellOutput('dummy.suite.yml');
@@ -325,7 +326,7 @@ final class RunCest
         $I->seeInShellOutput("OK (1 test, 1 assertion)");
     }
 
-    public function filterCestsByExampleNumber(CliGuy $I)
+    public function filterCestsByExampleNumber(CliTester $I)
     {
         $I->executeCommand('run tests/scenario/DataProviderCest.php:withDataProviderAndExample#0');
         $I->seeInShellOutput('skipped.suite.yml');
@@ -335,7 +336,7 @@ final class RunCest
         $I->seeInShellOutput("OK (1 test, 1 assertion)");
     }
 
-    public function runOneGroupWithDataProviders(CliGuy $I)
+    public function runOneGroupWithDataProviders(CliTester $I)
     {
         $I->executeCommand('run unit -g data-providers');
         $I->seeInShellOutput('Is triangle | "real triangle"');
@@ -345,7 +346,7 @@ final class RunCest
         $I->seeInShellOutput("OK");
     }
 
-    public function runTestWithFailFastDefault(CliGuy $I)
+    public function runTestWithFailFastDefault(CliTester $I)
     {
         $I->executeCommand('run unit --skip-group error --skip-group multiple-fail --no-exit');
         $I->seeInShellOutput('FailingTest: Me');
@@ -355,7 +356,7 @@ final class RunCest
         $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
-    public function runTestWithFailFastCustom(CliGuy $I)
+    public function runTestWithFailFastCustom(CliTester $I)
     {
         $I->executeCommand('run unit MultipleFailingTest.php --fail-fast=2 --no-exit');
         $I->seeInShellOutput('There were 2 failures');
@@ -364,7 +365,7 @@ final class RunCest
     }
 
     #[Group('reports')]
-    public function runWithCustomOutputPath(CliGuy $I)
+    public function runWithCustomOutputPath(CliTester $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
         $I->seeFileFound('myverycustom.xml', 'tests/_output');
@@ -376,7 +377,7 @@ final class RunCest
         $I->dontSeeFileFound('report.html', 'tests/_output');
     }
 
-    public function runTestsWithDependencyInjections(CliGuy $I)
+    public function runTestsWithDependencyInjections(CliTester $I)
     {
         $I->executeCommand('run math');
         $I->seeInShellOutput('MathCest: Test addition');
@@ -388,7 +389,7 @@ final class RunCest
         $I->dontSeeInShellOutput('error');
     }
 
-    public function runErrorTest(CliGuy $I)
+    public function runErrorTest(CliTester $I)
     {
         $I->executeCommand('run unit ErrorTest --no-exit');
         $I->seeInShellOutput('There was 1 error');
@@ -396,7 +397,7 @@ final class RunCest
         $I->seeInShellOutput('ErrorTest.php');
     }
 
-    public function runTestWithException(CliGuy $I)
+    public function runTestWithException(CliTester $I)
     {
         $I->executeCommand('run unit ExceptionTest --no-exit -v');
         $I->seeInShellOutput('There was 1 error');
@@ -406,7 +407,7 @@ final class RunCest
         $I->seeInShellOutput(\RuntimeException::class);
     }
 
-    public function runTestsWithSteps(CliGuy $I)
+    public function runTestsWithSteps(CliTester $I)
     {
         $I->executeCommand('run scenario SuccessCept --steps');
         $I->seeInShellOutput(
@@ -419,7 +420,7 @@ EOF
         );
     }
 
-    public function runTestWithFailedScenario(CliGuy $I, $scenario)
+    public function runTestWithFailedScenario(CliTester $I, $scenario)
     {
         if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
@@ -449,7 +450,7 @@ EOF
         );
     }
 
-    public function runTestWithSubSteps(CliGuy $I, Scenario $scenario)
+    public function runTestWithSubSteps(CliTester $I, Scenario $scenario)
     {
         if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
@@ -469,13 +470,13 @@ EOF
         );
     }
 
-    public function runDependentCest(CliGuy $I)
+    public function runDependentCest(CliTester $I)
     {
         $I->executeCommand('run order DependentCest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
     }
 
-    public function runDependentTest(CliGuy $I)
+    public function runDependentTest(CliTester $I)
     {
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
@@ -483,14 +484,14 @@ EOF
         $I->seeInShellOutput('Skipped: 2');
     }
 
-    public function resultIsPassedToDependentTest(CliGuy $I)
+    public function resultIsPassedToDependentTest(CliTester $I)
     {
         $I->executeCommand('run unit ResultIsPassedToDependentTest --no-exit');
         $I->dontSeeInShellOutput('Skipped:');
         $I->seeInShellOutput('OK (3 tests, 4 assertions)');
     }
 
-    public function runGherkinTest(CliGuy $I)
+    public function runGherkinTest(CliTester $I)
     {
         $I->executeCommand('run scenario File.feature --steps');
         $I->seeInShellOutput(
@@ -513,21 +514,21 @@ EOF
         $I->seeInShellOutput('PASSED');
     }
 
-    public function reportsCorrectFailedStep(CliGuy $I)
+    public function reportsCorrectFailedStep(CliTester $I)
     {
         $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
         $I->seeInShellOutput("Step definition for `I have only idea of what's going on here` not found in contexts");
     }
 
-    public function runFailingGherkinTest(CliGuy $I)
+    public function runFailingGherkinTest(CliTester $I)
     {
         $I->executeCommand('run scenario Fail.feature -v --no-exit');
         $I->seeInShellOutput('Step  I see file "games.zip"');
         $I->seeInShellOutput('Step  I see file "tools.zip"');
     }
 
-    public function runGherkinScenarioWithMultipleStepDefinitions(CliGuy $I)
+    public function runGherkinScenarioWithMultipleStepDefinitions(CliTester $I)
     {
         $I->executeCommand('run scenario "File.feature:Check file once more" --steps');
         $I->seeInShellOutput('When there is a file "scenario.suite.yml"');
@@ -536,31 +537,31 @@ EOF
         $I->seeInShellOutput('PASSED');
     }
 
-    public function runGherkinScenarioOutline(CliGuy $I)
+    public function runGherkinScenarioOutline(CliTester $I)
     {
         $I->executeCommand('run scenario FileExamples.feature -v');
         $I->seeInShellOutput('OK (3 tests');
     }
 
     #[After('checkExampleFiles')]
-    public function runTestWithAnnotationExamples(CliGuy $I)
+    public function runTestWithAnnotationExamples(CliTester $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsAnnotation --steps');
     }
 
     #[After('checkExampleFiles')]
-    public function runTestWithJsonExamples(CliGuy $I)
+    public function runTestWithJsonExamples(CliTester $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByJson --steps');
     }
 
     #[After('checkExampleFiles')]
-    public function runTestWithArrayExamples(CliGuy $I)
+    public function runTestWithArrayExamples(CliTester $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByArray --steps');
     }
 
-    private function checkExampleFiles(CliGuy $I)
+    private function checkExampleFiles(CliTester $I)
     {
         $I->seeInShellOutput('OK (3 tests');
         $I->seeInShellOutput('I see file found "scenario.suite.yml"');
@@ -568,7 +569,7 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
-    public function runTestWithComplexExample(CliGuy $I)
+    public function runTestWithComplexExample(CliTester $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsComplexJson --debug');
         $I->seeInShellOutput('Files exists complex json | {"path":"."');
@@ -578,7 +579,7 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
-    public function reportersConfigurationSectionIsNotSupported(CliGuy $I)
+    public function reportersConfigurationSectionIsNotSupported(CliTester $I)
     {
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
         $I->seeInShellOutput(
@@ -588,7 +589,7 @@ EOF
         $I->dontSeeInShellOutput('##teamcity[testStarted');
     }
 
-    public function overrideModuleOptions(CliGuy $I)
+    public function overrideModuleOptions(CliTester $I)
     {
         $I->executeCommand('run powers PowerIsRisingCept --no-exit');
         $I->seeInShellOutput('FAILURES');
@@ -596,13 +597,13 @@ EOF
         $I->dontSeeInShellOutput('FAILURES');
     }
 
-    public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
+    public function runTestWithAnnotationExamplesFromGroupFileTest(CliTester $I)
     {
         $I->executeCommand('run scenario -g groupFileTest1 --steps');
         $I->seeInShellOutput('OK (3 tests');
     }
 
-    public function testsWithConditionalFails(CliGuy $I)
+    public function testsWithConditionalFails(CliTester $I)
     {
         $I->executeCommand('run scenario ConditionalCept --no-exit');
         $I->seeInShellOutput('There were 3 failures');
@@ -611,13 +612,13 @@ EOF
         $I->seeInShellOutput('Fail  File "nothing" not found');
     }
 
-    public function runTestWithAnnotationDataprovider(CliGuy $I)
+    public function runTestWithAnnotationDataprovider(CliTester $I)
     {
         $I->executeCommand('run scenario -g dataprovider --steps');
         $I->seeInShellOutput('OK (18 tests');
     }
 
-    public function runFailedTestAndCheckOutput(CliGuy $I)
+    public function runFailedTestAndCheckOutput(CliTester $I)
     {
         $I->executeCommand('run scenario FailedCept', false);
         $testPath = implode(DIRECTORY_SEPARATOR, ['tests', 'scenario', 'FailedCept.php']);
@@ -627,13 +628,13 @@ EOF
         $I->seeInShellOutput('Fail  File "games.zip" not found at ""');
     }
 
-    public function runTestWithCustomSetupMethod(CliGuy $I)
+    public function runTestWithCustomSetupMethod(CliTester $I)
     {
         $I->executeCommand('run powers PowerUpCest');
         $I->dontSeeInShellOutput('FAILURES');
     }
 
-    public function runCestWithTwoFailedTest(CliGuy $I)
+    public function runCestWithTwoFailedTest(CliTester $I)
     {
         $I->executeCommand('run scenario PartialFailedCest', false);
         $I->seeInShellOutput('See file found "testcasetwo.txt"');
@@ -642,7 +643,7 @@ EOF
         $I->seeInShellOutput('Failures: 2.');
     }
 
-    public function failedTestFollowedByExceptionReportsCorrectStep(CliGuy $I)
+    public function failedTestFollowedByExceptionReportsCorrectStep(CliTester $I)
     {
         $I->executeCommand('run scenario FailureAndExceptionCest', false);
         $I->seeInShellOutput('1. $I->throwException("test exception")');
@@ -650,7 +651,7 @@ EOF
         $I->seeInShellOutput('Failed asserting that 2 is identical to 1.');
     }
 
-    public function displaysAllFailedConditionalStepsInOneCest(CliGuy $I)
+    public function displaysAllFailedConditionalStepsInOneCest(CliTester $I)
     {
         $I->executeCommand('run scenario MultipleConditionalFailsCest --no-ansi', false);
         $I->seeInShellOutput('x MultipleConditionalFailsCest: Multiple fails 3x[F]');
@@ -667,7 +668,7 @@ EOF
         $I->seeInShellOutput(' 13. $I->canSeeFileFound("nothing") at ' . $filename . ':19');
     }
 
-    public function scenarioFailuresDontShowForIncorrectTest(CliGuy $I)
+    public function scenarioFailuresDontShowForIncorrectTest(CliTester $I)
     {
         $I->executeCommand('run scenario ExpectedFailureTest --no-ansi', false);
         $I->seeInShellOutput('x ExpectedFailureTest: Expected failure');
@@ -678,7 +679,7 @@ EOF
     }
 
     #[Group('shuffle')]
-    public function showSeedNumberOnShuffle(CliGuy $I)
+    public function showSeedNumberOnShuffle(CliTester $I)
     {
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $I->seeInShellOutput('Seed');
@@ -687,7 +688,7 @@ EOF
     }
 
     #[Group('shuffle')]
-    public function showSameOrderOfFilesOnSeed(CliGuy $I, Scenario $scenario)
+    public function showSameOrderOfFilesOnSeed(CliTester $I, Scenario $scenario)
     {
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $I->seeInShellOutput('Seed');
@@ -711,7 +712,7 @@ EOF
         $I->assertNotSame($output, $newOutput, 'order of tests is the same');
     }
 
-    public function runCustomBootstrap(CliGuy $I)
+    public function runCustomBootstrap(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run dummy --bootstrap tests/_init.php');
@@ -720,7 +721,7 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
-    public function throwErrorIfBootstrapNotFound(CliGuy $I)
+    public function throwErrorIfBootstrapNotFound(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run dummy --bootstrap tests/init.php --no-exit 2>&1', false);
@@ -729,7 +730,7 @@ EOF
         $I->dontSeeInShellOutput("OK (");
     }
 
-    public function runBootstrapInGlobalConfig(CliGuy $I)
+    public function runBootstrapInGlobalConfig(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run dummy -c codeception.bootstrap.yml');
@@ -738,7 +739,7 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
-    public function runBootstrapInSuiteConfig(CliGuy $I)
+    public function runBootstrapInSuiteConfig(CliTester $I)
     {
         $I->wantTo('execute one test');
         $I->executeCommand('run dummy.bootstrap');
@@ -747,7 +748,7 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
-    public function runTestsWithGrep(CliGuy $I)
+    public function runTestsWithGrep(CliTester $I)
     {
         $I->executeCommand('run dummy --grep Another --no-ansi');
         $I->dontSeeInShellOutput('GroupEventsCest');
@@ -757,14 +758,14 @@ EOF
         $I->seeInShellOutput('OK (1 test');
     }
 
-    public function runTestsWithFilter(CliGuy $I)
+    public function runTestsWithFilter(CliTester $I)
     {
         $I->executeCommand('run dummy --filter Another --no-ansi');
         $I->dontSeeInShellOutput('GroupEventsCest');
         $I->seeInShellOutput('AnotherCest');
     }
 
-    public function runTestsByShards(CliGuy $I)
+    public function runTestsByShards(CliTester $I)
     {
         $I->executeCommand('run dummy --shard=1/3 --no-ansi');
         $I->seeInShellOutput('OK (2 tests');
@@ -792,7 +793,7 @@ EOF
     }
 
     #[Group('reports')]
-    public function runHtmlWithPhpBrowserCheckReport(CliGuy $I)
+    public function runHtmlWithPhpBrowserCheckReport(CliTester $I)
     {
         $I->wantTo('execute tests with PhpBrowser with html output and check html');
         $I->executeFailCommand('run phpbrowser_html_report --html');
@@ -940,7 +941,7 @@ EOF
 
     #[Group('reports')]
     #[DataProvider('htmlReportRegexCheckProvider')]
-    public function runHtmlCheckReport(CliGuy $I, \Codeception\Example $example, Scenario $scenario)
+    public function runHtmlCheckReport(CliTester $I, \Codeception\Example $example, Scenario $scenario)
     {
         /** @var TestHtmlReportRegexBuilder $testBuilder */
         $testBuilder = $example['testHtmlReportRegexBuilder'];

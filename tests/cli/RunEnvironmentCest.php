@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class RunEnvironmentCest
 {
-    public function testDevEnvironment(CliGuy $I)
+    public function testDevEnvironment(CliTester $I)
     {
         $I->wantTo('execute test in --dev environment');
         $I->amInPath('tests/data/sandbox');
@@ -12,7 +14,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput("OK (");
     }
 
-    public function testProdEnvironment(CliGuy $I)
+    public function testProdEnvironment(CliTester $I)
     {
         $I->wantTo('execute test in non existent --prod environment');
         $I->amInPath('tests/data/sandbox');
@@ -21,7 +23,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput("No tests executed");
     }
 
-    public function testEnvironmentParams(CliGuy $I)
+    public function testEnvironmentParams(CliTester $I)
     {
         $I->wantTo('execute check that env params applied');
         $I->amInPath('tests/data/sandbox');
@@ -31,7 +33,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput("OK (");
     }
 
-    public function testWithoutEnvironmentParams(CliGuy $I)
+    public function testWithoutEnvironmentParams(CliTester $I)
     {
         $I->wantTo('execute check that env params applied');
         $I->amInPath('tests/data/sandbox');
@@ -40,7 +42,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput("FAIL");
     }
 
-    public function runTestForSpecificEnvironment(CliGuy $I)
+    public function runTestForSpecificEnvironment(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env whisky');
@@ -50,7 +52,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('OK (3 tests, 3 assertions)');
     }
 
-    public function runTestForNotIncludedEnvironment(CliGuy $I)
+    public function runTestForNotIncludedEnvironment(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env dev');
@@ -58,7 +60,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('OK (1 test, 1 assertion)');
     }
 
-    public function testEnvFileLoading(CliGuy $I)
+    public function testEnvFileLoading(CliTester $I)
     {
         $I->wantTo('test that env configuration files are loaded correctly');
         $I->amInPath('tests/data/sandbox');
@@ -69,7 +71,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('message4: DEFAULT MESSAGE4.');
     }
 
-    public function testEnvMerging(CliGuy $I)
+    public function testEnvMerging(CliTester $I)
     {
         $I->wantTo('test that given environments are merged properly');
         $I->amInPath('tests/data/sandbox');
@@ -81,7 +83,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('message4: MESSAGE4 FROM SUITE-ENV1.');
     }
 
-    public function testSparseEnvMerging(CliGuy $I)
+    public function testSparseEnvMerging(CliTester $I)
     {
         $I->wantTo('test that every configuration ' .
             'in the list of environments gets merged in order of given environments');
@@ -92,7 +94,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('message3: MESSAGE3 FROM SUITE.');
     }
 
-    public function testSparseEnvMergingIsIdempotent(CliGuy $I)
+    public function testSparseEnvMergingIsIdempotent(CliTester $I)
     {
         $I->wantTo('test that the order in which sparse environments get configured are irrelevant');
         $I->amInPath('tests/data/sandbox');
@@ -102,7 +104,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('message3: MESSAGE3 FROM SUITE.');
     }
 
-    public function runTestForMultipleEnvironments(CliGuy $I)
+    public function runTestForMultipleEnvironments(CliTester $I)
     {
         $I->wantTo('check that multiple required environments are taken into account');
         $I->amInPath('tests/data/sandbox');
@@ -116,7 +118,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('Multiple env given');
     }
 
-    public function generateEnvConfig(CliGuy $I)
+    public function generateEnvConfig(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('g:env firefox');
@@ -124,7 +126,7 @@ final class RunEnvironmentCest
         $I->seeFileFound('tests/_envs/firefox.yml');
     }
 
-    public function runEnvironmentForCept(CliGuy $I)
+    public function runEnvironmentForCept(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run messages --env email');
@@ -134,7 +136,7 @@ final class RunEnvironmentCest
         $I->dontSeeInShellOutput('Test emails');
     }
 
-    public function showExceptionForUnconfiguredEnvironment(CliGuy $I)
+    public function showExceptionForUnconfiguredEnvironment(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped NoEnvironmentCept --no-exit');
@@ -142,7 +144,7 @@ final class RunEnvironmentCest
         $I->seeInShellOutput('WARNING');
     }
 
-    public function environmentsFromSubfolders(CliGuy $I)
+    public function environmentsFromSubfolders(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env3');

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Group;
 use Codeception\PHPUnit\TestCase;
 use Codeception\ResultAggregator;
@@ -23,7 +24,7 @@ final class SuiteManagerTest extends TestCase
     {
         $this->dispatcher = new EventDispatcher();
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
-        $settings['actor'] = 'CodeGuy';
+        $settings['actor'] = CodeTester::class;
         $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings, []);
     }
 

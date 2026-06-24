@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class CleanCest
 {
-    public function cleanDoesNotDeleteGitKeepFiles(\CliGuy $I)
+    public function cleanDoesNotDeleteGitKeepFiles(CliTester $I)
     {
         $ds = DIRECTORY_SEPARATOR;
 

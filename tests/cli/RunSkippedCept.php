@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('run skipped test');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run skipped SkipMeCept.php');

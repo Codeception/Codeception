@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Group;
 use Codeception\Test\TestCaseWrapper;
 use Codeception\Test\Unit;
@@ -10,7 +11,7 @@ use Codeception\Test\Descriptor;
 #[Group('testCaseWrapper')]
 final class TestCaseWrapperTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     #[Group('core')]
     public function testNamings()

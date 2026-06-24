@@ -2,23 +2,25 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class RegisterCommandCest
 {
-    public function registerCommand(CliGuy $I)
+    public function registerCommand(CliTester $I)
     {
         $I->amInPath('tests/data/register_command/standard');
         $I->executeCommand('list');
         $I->seeInShellOutput('myProject:myCommand');
     }
 
-    public function registerCommandWithConfigurationAtNewPlace(CliGuy $I)
+    public function registerCommandWithConfigurationAtNewPlace(CliTester $I)
     {
         $I->amInPath('tests/data/register_command/');
         $I->executeCommand('list -c standard/codeception.yml');
         $I->seeInShellOutput('myProject:yourCommand');
     }
 
-    public function startMyCommand(CliGuy $I)
+    public function startMyCommand(CliTester $I)
     {
         $userName = get_current_user();
         $I->amInPath('tests/data/register_command/standard');
@@ -26,7 +28,7 @@ final class RegisterCommandCest
         $I->seeInShellOutput("Hello {$userName}!");
     }
 
-    public function startMyCommandWithOptionAndConfigurationAtNewPlace(CliGuy $I)
+    public function startMyCommandWithOptionAndConfigurationAtNewPlace(CliTester $I)
     {
         $userName = get_current_user();
         $I->amInPath('tests/data/register_command');

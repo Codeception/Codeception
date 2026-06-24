@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Lib;
 
+use Tests\Support\CodeTester;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     protected GroupManager $manager;
 
