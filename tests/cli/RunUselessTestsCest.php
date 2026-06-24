@@ -1,6 +1,8 @@
 <?php
 
-class RunUselessTestsCest
+declare(strict_types=1);
+
+final class RunUselessTestsCest
 {
     public function checkOutput(CliGuy $I)
     {

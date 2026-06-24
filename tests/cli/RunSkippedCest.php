@@ -1,6 +1,8 @@
 <?php
 
-class RunSkippedCest
+declare(strict_types=1);
+
+final class RunSkippedCest
 {
     public function classLevelSkipAnnotationWithMessage(CliGuy $I)
     {

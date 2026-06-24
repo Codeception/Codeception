@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Attribute\After;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Runner\Version;
 
-class ErrorExpectationsCest
+final class ErrorExpectationsCest
 {
     public function _before(\CliGuy $I, \Codeception\Scenario $scenario)
     {
