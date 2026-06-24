@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * @guy CliGuy\GeneratorSteps
+ * @guy \Tests\Support\Step\GeneratorSteps
  */
 final class GeneratePageObjectCest
 {
-    public function generateGlobalPageObject(CliGuy\GeneratorSteps $I)
+    public function generateGlobalPageObject(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:page Login');
@@ -15,7 +15,7 @@ final class GeneratePageObjectCest
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
-    public function generateSuitePageObject(CliGuy\GeneratorSteps $I)
+    public function generateSuitePageObject(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:page dummy Login');
@@ -26,7 +26,7 @@ final class GeneratePageObjectCest
         $I->seeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
-    public function generateGlobalPageObjectInDifferentPath(CliGuy\GeneratorSteps $I)
+    public function generateGlobalPageObjectInDifferentPath(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->executeCommand('generate:page Login -c tests/data/sandbox');
         $I->amInPath('tests/data/sandbox');

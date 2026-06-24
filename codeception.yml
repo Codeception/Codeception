@@ -1,12 +1,13 @@
+namespace: Tests
+support_namespace: Support
 paths:
     tests: tests
     output: tests/log
     data: tests/data
-    support: tests/support
+    support: tests/Support
     envs: tests/envs
 settings:
     shuffle: true
-    suite_class: \PHPUnit_Framework_TestSuite
     colors: true
     memory_limit: 1024M
     log: true

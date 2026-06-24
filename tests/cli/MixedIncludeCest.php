@@ -2,24 +2,25 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\After;
 
 final class MixedIncludeCest
 {
     #[After('checkAllSuitesExecuted')]
-    public function runIncludedSuites(CliGuy $I)
+    public function runIncludedSuites(CliTester $I)
     {
         $I->amInPath('tests/data/included_mix');
         $I->executeCommand('run');
     }
 
     #[After('checkAllSuitesExecuted')]
-    public function runIncludedSuiteFromCurrentDir(CliGuy $I)
+    public function runIncludedSuiteFromCurrentDir(CliTester $I)
     {
         $I->executeCommand('run -c tests/data/included_mix');
     }
 
-    private function checkAllSuitesExecuted(CliGuy $I)
+    private function checkAllSuitesExecuted(CliTester $I)
     {
         $I->seeInShellOutput('Unit Tests (1)');
         $I->seeInShellOutput('SimpleTest: Something');

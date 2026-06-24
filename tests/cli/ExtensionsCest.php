@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class ExtensionsCest
 {
-    public function useAlternativeFormatter(CliGuy $I)
+    public function useAlternativeFormatter(CliTester $I)
     {
         $I->wantTo('use alternative formatter delivered through extensions');
         $I->amInPath('tests/data/sandbox');
@@ -14,7 +16,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('Modules used: Filesystem, DumbHelper');
     }
 
-    public function loadExtensionByOverride(CliGuy $I)
+    public function loadExtensionByOverride(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php -o "extensions: enabled: [\Codeception\Extension\SimpleReporter]"');
@@ -22,7 +24,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('[+] FileExistsCept');
     }
 
-    public function dynamicallyEnablingExtensions(CliGuy $I)
+    public function dynamicallyEnablingExtensions(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --ext DotReporter');
@@ -31,7 +33,7 @@ final class ExtensionsCest
         $I->dontSeeInShellOutput('AnotherCest');
     }
 
-    public function reRunFailedTests(CliGuy $I)
+    public function reRunFailedTests(CliTester $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->amInPath('tests/data/sandbox');
@@ -52,7 +54,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('[-] FailingTest:testMe');
     }
 
-    public function checkIfExtensionsReceiveCorrectOptions(CliGuy $I)
+    public function checkIfExtensionsReceiveCorrectOptions(CliTester $I)
     {
         $I->wantTo('check if extensions receive correct options');
         $I->amInPath('tests/data/sandbox');
@@ -66,7 +68,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('Extreme verbosity');
     }
 
-    public function runPerSuiteExtensions(CliGuy $I)
+    public function runPerSuiteExtensions(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run extended,scenario', false);
@@ -79,7 +81,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('Config2: value2');
     }
 
-    public function runPerSuiteExtensionsInEnvironment(CliGuy $I)
+    public function runPerSuiteExtensionsInEnvironment(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run extended --env black', false);
@@ -89,7 +91,7 @@ final class ExtensionsCest
         $I->seeInShellOutput('Config2: value2');
     }
 
-    public function runtimeExtensionsWorkWithIncludedSuitesPresentInTheConfigAndRunningARootSuite(CliGuy $I)
+    public function runtimeExtensionsWorkWithIncludedSuitesPresentInTheConfigAndRunningARootSuite(CliTester $I)
     {
         $I->amInPath('tests/data/included_mix');
         // unit is a root suite.
@@ -98,7 +100,7 @@ final class ExtensionsCest
         $I->dontSeeInShellOutput('SimpleTest:');
     }
 
-    public function runtimeExtensionsWorkWhenRunningWildCardSuites(CliGuy $I)
+    public function runtimeExtensionsWorkWhenRunningWildCardSuites(CliTester $I)
     {
         $I->amInPath('tests/data/included_mix');
         $I->executeCommand('run *::unit --ext DotReporter');
@@ -106,7 +108,7 @@ final class ExtensionsCest
         $I->dontSeeInShellOutput('BasicTest:');
     }
 
-    public function runtimeExtensionsWorkWhenRunningWildCardSuitesAndRoot(CliGuy $I)
+    public function runtimeExtensionsWorkWhenRunningWildCardSuitesAndRoot(CliTester $I)
     {
         $I->amInPath('tests/data/included_mix');
         $I->executeCommand('run unit,*::unit --ext DotReporter');
@@ -115,7 +117,7 @@ final class ExtensionsCest
         $I->dontSeeInShellOutput('BasicTest:');
     }
 
-    public function runtimeExtensionsWorkWhenRunningTestsFromAnIncludedConfig(CliGuy $I)
+    public function runtimeExtensionsWorkWhenRunningTestsFromAnIncludedConfig(CliTester $I)
     {
         $I->amInPath('tests/data/included');
 

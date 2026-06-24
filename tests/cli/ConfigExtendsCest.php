@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class ConfigExtendsCest
 {
-    public function runIncludedSuites(CliGuy $I)
+    public function runIncludedSuites(CliTester $I)
     {
         $I->amInPath('tests/data/config_extends');
         $I->executeCommand('run');

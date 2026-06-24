@@ -1,6 +1,8 @@
 <?php
 
-$I = new CliGuy($scenario);
+use Tests\Support\CliTester;
+
+$I = new CliTester($scenario);
 $I->wantTo('see that my group events fire only once');
 $I->amInPath('tests/data/claypit');
 $I->executeCommand('run dummy -g countevents -c codeception_grouped.yml --no-colors');

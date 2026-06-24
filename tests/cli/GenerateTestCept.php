@@ -1,6 +1,6 @@
 <?php
 
-$I = new CliGuy\GeneratorSteps($scenario);
+$I = new \Tests\Support\Step\GeneratorSteps($scenario);
 $I->wantTo('generate sample Test');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:test dummy Sommy');

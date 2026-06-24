@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 #[\Codeception\Attribute\Group('bootstrap')]
 final class BootstrapCest
 {
-    public function _before(CliGuy $I)
+    public function _before(CliTester $I)
     {
         $bootstrapPath = 'tests/data/sandbox/boot' . uniqid();
         @mkdir($bootstrapPath, 0777, true);
         $I->amInPath($bootstrapPath);
     }
 
-    public function bootstrap(CliGuy $I)
+    public function bootstrap(CliTester $I)
     {
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
@@ -24,7 +26,7 @@ final class BootstrapCest
         $this->checkFilesCreated($I);
     }
 
-    public function bootstrapWithNamespace(CliGuy $I)
+    public function bootstrapWithNamespace(CliTester $I)
     {
         $I->executeCommand('bootstrap --namespace Generated');
 
@@ -37,7 +39,7 @@ final class BootstrapCest
         $I->seeInThisFile('namespace Generated\\Support;');
     }
 
-    public function bootstrapWithNamespaceShortcut(CliGuy $I)
+    public function bootstrapWithNamespaceShortcut(CliTester $I)
     {
         $I->executeCommand('bootstrap -s Generated');
 
@@ -50,32 +52,32 @@ final class BootstrapCest
         $I->seeInThisFile('namespace Generated\\Support;');
     }
 
-    public function bootstrapWithActor(CliGuy $I)
+    public function bootstrapWithActor(CliTester $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
         $I->seeFileFound('AcceptanceNinja.php', 'tests/Support/');
     }
 
-    public function bootstrapEmpty(CliGuy $I)
+    public function bootstrapEmpty(CliTester $I)
     {
         $I->executeCommand('bootstrap --empty');
         $I->dontSeeFileFound('tests/acceptance');
         $I->seeFileFound('codeception.yml');
     }
 
-    public function bootstrapFromInit(CliGuy $I)
+    public function bootstrapFromInit(CliTester $I)
     {
         $I->executeCommand('init bootstrap');
         $this->checkFilesCreated($I);
     }
 
-    public function bootstrapFromInitUsingClassName(CliGuy $I)
+    public function bootstrapFromInitUsingClassName(CliTester $I)
     {
         $I->executeCommand('init "Codeception\Template\Bootstrap"');
         $this->checkFilesCreated($I);
     }
 
-    private function checkFilesCreated(CliGuy $I)
+    private function checkFilesCreated(CliTester $I)
     {
         $I->seeDirFound('tests/Support');
         $I->seeDirFound('tests/Support/Data');

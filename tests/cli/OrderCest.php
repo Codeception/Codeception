@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class OrderCest
 {
-    public function checkOneFile(CliGuy $I)
+    public function checkOneFile(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order LoadingOrderCept.php');
@@ -13,7 +15,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([ST])");
     }
 
-    public function checkForFails(CliGuy $I)
+    public function checkForFails(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order FailedCept.php --no-exit');
@@ -22,7 +24,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([STF])");
     }
 
-    public function checkForCanCantFails(CliGuy $I)
+    public function checkForCanCantFails(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CanCantFailCept.php --no-exit');
@@ -34,7 +36,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([STTF])");
     }
 
-    public function checkForCanCantFailsInCest(CliGuy $I)
+    public function checkForCanCantFailsInCest(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CanCantFailCest.php --no-ansi --no-exit');
@@ -50,7 +52,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([TTF][TTF])");
     }
 
-    public function checkForCanCantFailsInTest(CliGuy $I)
+    public function checkForCanCantFailsInTest(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CanCantFailTest.php --no-ansi --no-exit');
@@ -66,7 +68,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([TTF][TTF])");
     }
 
-    public function checkSimpleFiles(CliGuy $I)
+    public function checkSimpleFiles(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
@@ -74,7 +76,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIBP([ST][STTF][STF][ST])");
     }
 
-    public function checkCestOrder(CliGuy $I)
+    public function checkCestOrder(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/order/ReorderCest.php --no-exit');
@@ -82,7 +84,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([0123456])");
     }
 
-    public function checkFailingCestOrder(CliGuy $I)
+    public function checkFailingCestOrder(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/order/FailedCest.php --no-exit -vvv');
@@ -90,7 +92,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([a%F])");
     }
 
-    public function checkCodeceptionTest(CliGuy $I)
+    public function checkCodeceptionTest(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CodeTest.php --no-exit');
@@ -113,7 +115,7 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB({{[<C>]}})");
     }
 
-    public function checkAfterBeforeClassInTests(CliGuy $I)
+    public function checkAfterBeforeClassInTests(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order BeforeAfterClassTest.php');
@@ -121,7 +123,7 @@ final class OrderCest
         $I->seeInThisFile('BIB({[1][2]})');
     }
 
-    public function checkAfterBeforeClassInTestWithDataProvider(CliGuy $I)
+    public function checkAfterBeforeClassInTestWithDataProvider(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order BeforeAfterClassWithDataProviderTest.php');
@@ -129,7 +131,7 @@ final class OrderCest
         $I->seeInThisFile('BIB({[A][B][C]})');
     }
 
-    public function checkBootstrapIsLoadedBeforeTests(CliGuy $I)
+    public function checkBootstrapIsLoadedBeforeTests(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order ParsedLoadedTest.php');
@@ -138,7 +140,7 @@ final class OrderCest
         $I->seeInThisFile('BIBP([T])');
     }
 
-    public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliGuy $I)
+    public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run math,order,scenario,skipped :BeforeAfterClassTest');

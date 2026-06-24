@@ -2,27 +2,28 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Depends;
 
 #[Depends(ConfigBundledSuitesCest::class . ':runBundledSuite')]
 final class ConfigNoActorCest
 {
     #[Depends(ConfigBundledSuitesCest::class . ':runBundledSuite')]
-    public function runSuitesWithoutActor(CliGuy $I)
+    public function runSuitesWithoutActor(CliTester $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
         $I->executeCommand('run -vvv');
         $I->seeInShellOutput('OK (1 test');
     }
 
-    public function suitesWithoutActorDontHaveActorFiles(CliGuy $I)
+    public function suitesWithoutActorDontHaveActorFiles(CliTester $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
         $I->executeCommand('build');
         $I->dontSeeFileFound('*.php', 'tests/_support');
     }
 
-    public function suitesWithoutActorGenerators(CliGuy $I)
+    public function suitesWithoutActorGenerators(CliTester $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
         $I->executeFailCommand('generate:cest unit Some');

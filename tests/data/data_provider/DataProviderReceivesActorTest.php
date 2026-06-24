@@ -6,7 +6,7 @@ namespace data\data_provider;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Examples;
-use CodeGuy;
+use Tests\Support\CodeTester;
 use PHPUnit\Framework\TestCase;
 
 class DataProviderReceivesActorTest extends TestCase
@@ -16,7 +16,7 @@ class DataProviderReceivesActorTest extends TestCase
     {
     }
 
-    public function getData(CodeGuy $I): array
+    public function getData(CodeTester $I): array
     {
         return [
             $I->codeGuyMethod()

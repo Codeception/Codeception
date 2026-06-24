@@ -144,12 +144,12 @@ Example test:
 
 ```php
 <?php
-$I = new CliGuy($scenario);
+$I = new \Tests\Support\CliTester($scenario);
 $I->wantToTest('build command');
 $I->runShellCommand('php codecept build');
 $I->seeInShellOutput('generated successfully');
-$I->seeFileFound('CodeGuy.php','tests/unit');
-$I->seeFileFound('CliGuy.php','tests/cli');
+$I->seeFileFound('CodeTester.php','tests/unit');
+$I->seeFileFound('CliTester.php','tests/cli');
 $I->seeInThisFile('seeFileFound(');
 ?>
 ```

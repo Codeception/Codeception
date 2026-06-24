@@ -1,15 +1,19 @@
 <?php
 
-class WantToCest
+declare(strict_types=1);
+
+use Tests\Support\CliTester;
+
+final class WantToCest
 {
-    public function iWantToSetsFeatureInCeptFormat(CliGuy $I)
+    public function iWantToSetsFeatureInCeptFormat(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCept.php');
         $I->seeInShellOutput('+ WantToCept: Check if wantTo works');
     }
 
-    public function iWantToSetsFeatureInCestFormat(CliGuy $I)
+    public function iWantToSetsFeatureInCestFormat(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:^IWantTo');
@@ -19,14 +23,14 @@ class WantToCest
     /**
      * Tests https://github.com/Codeception/Codeception/issues/4123
      */
-    public function testerWantDoesntSetFeatureInCestFormat(CliGuy $I)
+    public function testerWantDoesntSetFeatureInCestFormat(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:^TesterWantTo');
         $I->seeInShellOutput('+ WantToCest: Tester want to');
     }
 
-    public function iWantToWithVariableIsIgnored(CliGuy $I)
+    public function iWantToWithVariableIsIgnored(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:Variable');
@@ -36,7 +40,7 @@ class WantToCest
     /**
      * Tests https://github.com/Codeception/Codeception/issues/4124
      */
-    public function iWantToDoesntOverrideDataproviderData(CliGuy $I)
+    public function iWantToDoesntOverrideDataproviderData(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:DataProviderIWantTo');
@@ -44,7 +48,7 @@ class WantToCest
         $I->seeInShellOutput('+ WantToCest: Check if I->wantTo doesn\\\'t override data provider data | "bbb"');
     }
 
-    public function testerWantToDoesntOverrideDataproviderData(CliGuy $I)
+    public function testerWantToDoesntOverrideDataproviderData(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:DataProviderTesterWantTo');
@@ -52,7 +56,7 @@ class WantToCest
         $I->seeInShellOutput('+ WantToCest: Data provider tester want to | "bbb"');
     }
 
-    public function wantToTextIsUsedInXmlReport(CliGuy $I)
+    public function wantToTextIsUsedInXmlReport(CliTester $I)
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run unit --xml');

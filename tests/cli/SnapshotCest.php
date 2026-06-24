@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Before;
 use Codeception\Attribute\Group;
 
 final class SnapshotCest
 {
-    public function _openSnapshotSuite(CliGuy $I)
+    public function _openSnapshotSuite(CliTester $I)
     {
         $I->amInPath('tests/data/snapshots');
     }
 
     #[Before('_openSnapshotSuite')]
-    public function runAllSnapshotTests(CliGuy $I)
+    public function runAllSnapshotTests(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php');
         $I->seeInShellOutput('OK (3 tests');
@@ -23,7 +24,7 @@ final class SnapshotCest
 
     #[Group('user')]
     #[Before('_openSnapshotSuite')]
-    public function runSnapshotRefresh(CliGuy $I)
+    public function runSnapshotRefresh(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php:loadSnapshotAndRefresh --debug --no-colors');
         $I->seeInShellOutput('Snapshot\UserSnapshot: assert');
@@ -33,7 +34,7 @@ final class SnapshotCest
     }
 
     #[Before('_openSnapshotSuite')]
-    public function runSnapshotRefreshFail(CliGuy $I)
+    public function runSnapshotRefreshFail(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php:loadSnapshotAndSkipRefresh --debug  --no-colors');
         $I->seeInShellOutput('Snapshot\UserSnapshot: assert');
@@ -43,14 +44,14 @@ final class SnapshotCest
     }
 
     #[Before('_openSnapshotSuite')]
-    public function runSnapshotDiffDisplay(CliGuy $I)
+    public function runSnapshotDiffDisplay(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotDisplayDiffCest.php');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('_openSnapshotSuite')]
-    public function loadSnapshotInDebugAndFailOnProd(CliGuy $I)
+    public function loadSnapshotInDebugAndFailOnProd(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotFailCest.php --debug');
         $I->seeInShellOutput('PASSED');
@@ -59,7 +60,7 @@ final class SnapshotCest
         $I->seeInShellOutput('Snapshot doesn\'t match real data');
     }
 
-    public function generateGlobalSnapshot(CliGuy\GeneratorSteps $I)
+    public function generateGlobalSnapshot(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:snapshot Login');
@@ -67,7 +68,7 @@ final class SnapshotCest
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
-    public function generateSuiteSnapshot(CliGuy\GeneratorSteps $I)
+    public function generateSuiteSnapshot(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:snapshot dummy Login');
@@ -78,7 +79,7 @@ final class SnapshotCest
         $I->seeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
-    public function generateGlobalSnapshotInDifferentPath(CliGuy\GeneratorSteps $I)
+    public function generateGlobalSnapshotInDifferentPath(\Tests\Support\Step\GeneratorSteps $I)
     {
         $I->executeCommand('generate:snapshot Login -c tests/data/sandbox');
         $I->amInPath('tests/data/sandbox');
@@ -87,7 +88,7 @@ final class SnapshotCest
     }
 
     #[Before('_openSnapshotSuite')]
-    public function runNonJsonContentSnapshotTests(CliGuy $I)
+    public function runNonJsonContentSnapshotTests(CliTester $I)
     {
         $I->executeCommand('run tests/SnapshotNonJsonDataCest.php');
         $I->seeInShellOutput('OK (3 tests');

@@ -1,15 +1,17 @@
 <?php
 
+use Tests\Support\CliTester;
+
 final class BootstrapWithNamespaceCest
 {
-    public function _before(CliGuy $I)
+    public function _before(CliTester $I)
     {
         $bootstrapPath = 'tests/data/sandbox/boot' . uniqid();
         @mkdir($bootstrapPath, 0777, true);
         $I->amInPath($bootstrapPath);
     }
 
-    public function bootstrapCodecept5(CliGuy $I)
+    public function bootstrapCodecept5(CliTester $I)
     {
         $I->executeCommand('bootstrap');
         $I->executeCommand('g:suite Api');
@@ -45,7 +47,7 @@ final class BootstrapWithNamespaceCest
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 
-    public function bootstrapCodecept5WithNamespace(CliGuy $I)
+    public function bootstrapCodecept5WithNamespace(CliTester $I)
     {
         $I->executeCommand('bootstrap --namespace Codecept5');
         $I->executeCommand('g:suite Api');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Lib;
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Group;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -14,7 +15,7 @@ use Codeception\Test\Unit;
 
 class ModuleContainerTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     protected ModuleContainer $moduleContainer;
 

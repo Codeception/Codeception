@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;
 use Codeception\Test\Unit;
 
 final class PathResolverTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     #[Group('core')]
     #[DataProvider('getRelativeDirTestData')]

@@ -92,7 +92,11 @@
         }
     },
     "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "tests/Support"
+        },
         "classmap": [
+            "tests/Support/EmulateModuleHelper.php",
             "tests/cli/_steps",
             "tests/data/app/data.php",
             "tests/data/claypit/tests/_data",

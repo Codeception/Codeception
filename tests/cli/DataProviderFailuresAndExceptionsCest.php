@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Before;
 
 final class DataProviderFailuresAndExceptionsCest
 {
-    private function moveToPath(CliGuy $I)
+    private function moveToPath(CliTester $I)
     {
         $I->amInPath('tests/data/dataprovider_failures_and_exceptions');
     }
@@ -17,7 +18,7 @@ final class DataProviderFailuresAndExceptionsCest
      * only the version headers.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersFailureStdout(CliGuy $I)
+    public function runTestWithDataProvidersFailureStdout(CliTester $I)
     {
         /**
          * On windows /dev/null is NUL so detect running OS and return the appropriate string for redirection.
@@ -36,7 +37,7 @@ final class DataProviderFailuresAndExceptionsCest
      * information should be when there is a failure.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersFailureStderr(CliGuy $I)
+    public function runTestWithDataProvidersFailureStderr(CliTester $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1', false);
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest::testIsTriangle is invalid or not callable");
@@ -56,7 +57,7 @@ final class DataProviderFailuresAndExceptionsCest
      * This adds the -v to the stderr test which should just add the Exception Trace to the output.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersFailureStderrVerbose(CliGuy $I)
+    public function runTestWithDataProvidersFailureStderrVerbose(CliTester $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1', false);
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest::testIsTriangle");
@@ -80,7 +81,7 @@ final class DataProviderFailuresAndExceptionsCest
      * When exception thrown all the useful information should go to stderr, so stdout is left with nothing.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersExceptionStdout(CliGuy $I)
+    public function runTestWithDataProvidersExceptionStdout(CliTester $I)
     {
         /**
          * On windows /dev/null is NUL so detect running OS and return the appropriate string for redirection.
@@ -99,7 +100,7 @@ final class DataProviderFailuresAndExceptionsCest
      * information should be when there is a failure.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersExceptionStderr(CliGuy $I)
+    public function runTestWithDataProvidersExceptionStderr(CliTester $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest 2>&1', false);
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
@@ -125,7 +126,7 @@ final class DataProviderFailuresAndExceptionsCest
      * This adds the -v to the stderr test which should just add the Exception Trace to the output of stderr.
      */
     #[Before('moveToPath')]
-    public function runTestWithDataProvidersExceptionStderrVerbose(CliGuy $I)
+    public function runTestWithDataProvidersExceptionStderrVerbose(CliTester $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2>&1', false);
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
@@ -149,7 +150,7 @@ final class DataProviderFailuresAndExceptionsCest
     }
 
     #[Before('moveToPath')]
-    public function runInvalidDataProvider(CliGuy $I)
+    public function runInvalidDataProvider(CliTester $I)
     {
         $I->executeCommand('run -n unit InvalidDataProviderTest.php -v 2>&1', false);
         $I->seeInShellOutput('[Exception]');

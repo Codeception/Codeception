@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class GenerateSuiteCest
 {
-    public function generateSimpleSuite(CliGuy $I)
+    public function generateSimpleSuite(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:suite house HouseGuy');
@@ -19,7 +21,7 @@ final class GenerateSuiteCest
         $I->seeInShellOutput('contains invalid characters');
     }
 
-    public function generateSuiteWithCustomConfig(CliGuy $I)
+    public function generateSuiteWithCustomConfig(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('bootstrap --empty src/FooBar --namespace FooBar');

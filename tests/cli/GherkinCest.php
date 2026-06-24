@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Group;
 
 #[Group('gherkin')]
 final class GherkinCest
 {
-    public function _before(CliGuy $I)
+    public function _before(CliTester $I)
     {
         $I->amInPath('tests/data/sandbox');
     }
 
-    public function steps(CliGuy $I)
+    public function steps(CliTester $I)
     {
         $I->executeCommand('gherkin:steps scenario');
         $I->seeInShellOutput('I have terminal opened');
@@ -22,7 +23,7 @@ final class GherkinCest
         $I->seeInShellOutput('ScenarioGuy::matchFile');
     }
 
-    public function snippets(CliGuy $I)
+    public function snippets(CliTester $I)
     {
         $I->executeCommand('gherkin:snippets scenario');
         $I->seeInShellOutput(
@@ -33,7 +34,7 @@ final class GherkinCest
         $I->seeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
-    public function snippetsScenarioFile(CliGuy $I)
+    public function snippetsScenarioFile(CliTester $I)
     {
         $I->executeCommand('gherkin:snippets scenario FileExamples.feature');
         $I->dontSeeInShellOutput(
@@ -44,7 +45,7 @@ final class GherkinCest
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
-    public function snippetsScenarioFolder(CliGuy $I)
+    public function snippetsScenarioFolder(CliTester $I)
     {
         $I->executeCommand('gherkin:snippets scenario subfolder');
         $I->seeInShellOutput(
@@ -61,7 +62,7 @@ final class GherkinCest
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
 
-    public function snippetsPyStringArgument(CliGuy $I)
+    public function snippetsPyStringArgument(CliTester $I)
     {
         $I->executeCommand('gherkin:snippets scenario PyStringArgumentExample.feature');
         $I->seeInShellOutput(
@@ -73,14 +74,14 @@ final class GherkinCest
         $I->dontSeeInShellOutput('public function iSeeOutput($arg1)');
     }
 
-    public function runIncompletedStepWithPyStringArgument(CliGuy $I)
+    public function runIncompletedStepWithPyStringArgument(CliTester $I)
     {
         $I->executeCommand('run scenario "PyStringArgumentExample.feature:PyString argument" --steps');
         $I->seeInShellOutput('Step definition for `I have PyString argument ""` not found in contexts');
         $I->dontSeeInShellOutput('Step definition for `I see output` not found in contexts');
     }
 
-    public function runSameStepWithInlineAndPyStringArgument(CliGuy $I)
+    public function runSameStepWithInlineAndPyStringArgument(CliTester $I)
     {
         $I->executeCommand('run scenario "InlineArgumentExample.feature:Running step with inline argument" --steps');
         $I->seeInShellOutput("Argument: test");
@@ -89,7 +90,7 @@ final class GherkinCest
         $I->seeInShellOutput("Argument: First line\nSecond line");
     }
 
-    public function snippetsScenarioUtf8(CliGuy $I)
+    public function snippetsScenarioUtf8(CliTester $I)
     {
         $I->executeCommand('gherkin:snippets scenario Utf8Example.feature');
         $I->seeInShellOutput(
@@ -100,7 +101,7 @@ final class GherkinCest
         $I->seeInShellOutput('public function step_62e20dc62($arg1)');
     }
 
-    public function ambiguousStepDefinitions(CliGuy $I)
+    public function ambiguousStepDefinitions(CliTester $I)
     {
         $I->executeCommand('run scenario "AmbiguousStep.feature" --steps');
         $I->dontSeeInShellOutput('definition1 was executed');

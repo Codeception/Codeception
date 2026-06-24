@@ -1,6 +1,8 @@
 <?php
 
-$I = new CoverGuy($scenario);
+use Tests\Support\CoverTester;
+
+$I = new CoverTester($scenario);
 $I->wantTo('try generate remote codecoverage phpunit report');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run remote --coverage-phpunit');

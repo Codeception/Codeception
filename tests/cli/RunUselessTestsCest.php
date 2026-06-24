@@ -1,8 +1,12 @@
 <?php
 
-class RunUselessTestsCest
+declare(strict_types=1);
+
+use Tests\Support\CliTester;
+
+final class RunUselessTestsCest
 {
-    public function checkOutput(CliGuy $I)
+    public function checkOutput(CliTester $I)
     {
         $I->amInPath('tests/data/useless');
         $I->executeCommand('run');
@@ -82,7 +86,7 @@ This test indicates it does not perform assertions but 1 assertions were perform
         );
     }
 
-    public function checkReports(CliGuy $I)
+    public function checkReports(CliTester $I)
     {
         $I->amInPath('tests/data/useless');
         $I->executeCommand('run --report --xml --phpunit-xml --html');

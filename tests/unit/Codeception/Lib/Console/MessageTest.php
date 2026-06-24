@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Console;
 
+use Tests\Support\CodeTester;
+
 class MessageTest extends \Codeception\Test\Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     public function testCut()
     {

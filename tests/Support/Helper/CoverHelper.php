@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeception\Module;
+namespace Tests\Support\Helper;
 
 class CoverHelper extends \Codeception\Module
 {

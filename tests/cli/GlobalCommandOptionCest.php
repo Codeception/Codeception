@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
+
 final class GlobalCommandOptionCest
 {
-    public function configOption(CliGuy $I)
+    public function configOption(CliTester $I)
     {
         $I->wantTo("start codeception with --config option");
         $I->amInPath('tests/data/register_command/');
@@ -12,7 +14,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('myProject:myCommand');
     }
 
-    public function configOptionWithEqualSign(CliGuy $I)
+    public function configOptionWithEqualSign(CliTester $I)
     {
         $I->wantTo("start codeception with --config= option");
         $I->amInPath('tests/data/register_command/');
@@ -20,7 +22,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('myProject:myCommand');
     }
 
-    public function configOptionShortcut(CliGuy $I)
+    public function configOptionShortcut(CliTester $I)
     {
         $I->wantTo("start codeception with shortcut -c option");
         $I->amInPath('tests/data/register_command/');
@@ -28,7 +30,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('myProject:myCommand');
     }
 
-    public function configOptionShortcutWithoutSpace(CliGuy $I)
+    public function configOptionShortcutWithoutSpace(CliTester $I)
     {
         $I->wantTo("start codeception with shortcut -c option and not Space");
         $I->amInPath('tests/data/register_command/');
@@ -36,7 +38,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('myProject:myCommand');
     }
 
-    public function configOptionShortcutWithoutSpaceAndOther(CliGuy $I)
+    public function configOptionShortcutWithoutSpaceAndOther(CliTester $I)
     {
         $I->wantTo("start codeception with two shortcuts and -c option has not Space");
         $I->amInPath('tests/data/register_command/');
@@ -44,7 +46,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('version');
     }
 
-    public function configStartWithoutOption(CliGuy $I)
+    public function configStartWithoutOption(CliTester $I)
     {
         $I->wantTo("start first time codeception without options");
         $I->amInPath('tests/data/register_command/');
@@ -52,7 +54,7 @@ final class GlobalCommandOptionCest
         $I->seeInShellOutput('Available commands:');
     }
 
-    public function configStartWithWrongPath(CliGuy $I)
+    public function configStartWithWrongPath(CliTester $I)
     {
         $I->wantTo('start codeception with wrong path to a codeception.yml file');
         $I->amInPath('tests/data/register_command/');

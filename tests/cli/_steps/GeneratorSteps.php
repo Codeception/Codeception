@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CliGuy;
+namespace Tests\Support\Step;
 
-class GeneratorSteps extends \CliGuy
+class GeneratorSteps extends \Tests\Support\CliTester
 {
     public function seeFileWithGeneratedClass(string $class, string $path = '')
     {

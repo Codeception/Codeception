@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CliTester;
 use Codeception\Attribute\Before;
 
 final class ConfigParamsCest
 {
-    private function moveToTestDir(CliGuy $I): void
+    private function moveToTestDir(CliTester $I): void
     {
         static $prepared = false;
 
@@ -20,28 +21,28 @@ final class ConfigParamsCest
     }
 
     #[Before('moveToTestDir')]
-    public function checkYamlParamsPassed(CliGuy $I)
+    public function checkYamlParamsPassed(CliTester $I)
     {
         $I->executeCommand('run -c codeception_yaml.yml dummy');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('moveToTestDir')]
-    public function checkDotEnvParamsPassed(CliGuy $I)
+    public function checkDotEnvParamsPassed(CliTester $I)
     {
         $I->executeCommand('run -c codeception_dotenv.yml dummy');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('moveToTestDir')]
-    public function checkComplexDotEnvParamsPassed(CliGuy $I)
+    public function checkComplexDotEnvParamsPassed(CliTester $I)
     {
         $I->executeCommand('run -c codeception_dotenv2.yml dummy');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('moveToTestDir')]
-    public function checkEnvParamsPassed(CliGuy $I)
+    public function checkEnvParamsPassed(CliTester $I)
     {
         $I->executeCommand('run --no-exit dummy');
         $I->seeInShellOutput('FAILURES');
@@ -49,21 +50,21 @@ final class ConfigParamsCest
     }
 
     #[Before('moveToTestDir')]
-    public function checkParamsPassedInSelf(CliGuy $I)
+    public function checkParamsPassedInSelf(CliTester $I)
     {
         $I->executeCommand('run -c codeception_self.yml dummy');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('moveToTestDir')]
-    public function checkXmlParamsPassed(CliGuy $I)
+    public function checkXmlParamsPassed(CliTester $I)
     {
         $I->executeCommand('run -c codeception_xml.yml dummy');
         $I->seeInShellOutput('OK (1 test');
     }
 
     #[Before('moveToTestDir')]
-    public function checkNonStringParamsAreEncodedProperly(CliGuy $I)
+    public function checkNonStringParamsAreEncodedProperly(CliTester $I)
     {
         $I->executeCommand('run -c codeception_yaml.yml complex');
         $I->seeInShellOutput('OK (1 test');

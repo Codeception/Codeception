@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Console;
 
+use Tests\Support\CodeTester;
 use Codeception\Test\Unit;
 
 class ColorizerTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     protected Colorizer $colorizer;
 

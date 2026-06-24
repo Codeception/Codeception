@@ -2,7 +2,7 @@
 
 # suite for unit (internal) tests.
 error_level: "E_ALL"
-actor: CodeGuy
+actor: CodeTester
 bootstrap: _bootstrap.php
 modules:
-    enabled: [CodeHelper, EmulateModuleHelper]
+    enabled: [Tests\Support\Helper\CodeHelper, EmulateModuleHelper]

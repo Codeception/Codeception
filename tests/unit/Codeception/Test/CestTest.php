@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\Support\CodeTester;
 use Codeception\Attribute\Group;
 use Codeception\Test\Cest;
 use Codeception\Test\Descriptor;
@@ -9,7 +10,7 @@ use Codeception\Test\Unit;
 
 final class CestTest extends Unit
 {
-    protected \CodeGuy $tester;
+    protected CodeTester $tester;
 
     #[Group('core')]
     public function testCestNamings()
