@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Codeception\Config\ConfigInterface;
+use Codeception\Config\GlobalConfig;
+use Codeception\Config\SuiteConfig;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\ConfigFileLocator;
 use Codeception\Lib\ParamsLoader;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Util\Autoload;
@@ -14,8 +18,14 @@ use InvalidArgumentException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+use Throwable;
 
+use function array_map;
 use function array_unique;
+use function get_debug_type;
+use function is_array;
+use function is_readable;
+use function str_ends_with;
 
 class Configuration
 {
@@ -67,6 +77,10 @@ class Configuration
      * @var array<string, mixed>|null
      */
     protected static ?array $params = null;
+    /**
+     * @var string|null Path of the global config file that was loaded (`.php` or `.yml`).
+     */
+    protected static ?string $loadedConfigFile = null;
 
     /**
      * @var array<string, mixed>
@@ -132,59 +146,67 @@ class Configuration
             return self::$config;
         }
         if ($configFile === null) {
-            $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+            $configFile = self::discoverConfigFile(getcwd());
+        } elseif (is_dir($configFile)) {
+            $configFile = self::discoverConfigFile(rtrim($configFile, DIRECTORY_SEPARATOR));
         }
-        if (is_dir($configFile)) {
-            $configFile = rtrim($configFile, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'codeception.yml';
-        }
+
         $dir = realpath(dirname($configFile));
         if ($dir !== false) {
             self::$dir     = $dir;
             self::$baseDir ??= $dir;
         }
+        $baseDir = $dir !== false ? $dir : dirname($configFile);
 
-        $configDistFile = ($dir !== false ? $dir : dirname($configFile)) . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
-        if (!file_exists($configFile) && !file_exists($configDistFile)) {
+        $ext      = self::isPhpConfig($configFile) ? 'php' : 'yml';
+        $distFile = $baseDir . DIRECTORY_SEPARATOR . 'codeception.dist.' . $ext;
+        if (!file_exists($configFile) && !file_exists($distFile)) {
             throw new ConfigurationException("Configuration file could not be found.\nRun bootstrap to initialize Codeception.", 404);
         }
 
-        $tempConfig = self::$defaultConfig;
-        $distConfigContents = '';
-        if (file_exists($configDistFile)) {
-            $distConfigContents = file_get_contents($configDistFile);
-            if ($distConfigContents === false) {
-                throw new ConfigurationException("Failed to read {$configDistFile}");
-            }
-            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
-        }
+        self::$loadedConfigFile = file_exists($configFile) ? $configFile : $distFile;
 
-        $configContents = '';
-        if (file_exists($configFile)) {
-            $configContents = file_get_contents($configFile);
-            if ($configContents === false) {
-                throw new ConfigurationException("Failed to read {$configFile}");
-            }
-            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents, $configFile));
-        }
+        $distArr = self::getConfFromAnyFile($distFile, [], GlobalConfig::class);
+        $mainArr = self::getConfFromAnyFile($configFile, [], GlobalConfig::class);
 
+        $tempConfig = self::mergeConfigs(self::$defaultConfig, $distArr);
+        $tempConfig = self::mergeConfigs($tempConfig, $mainArr);
         self::prepareParams($tempConfig);
 
-        $config = self::$defaultConfig;
-        if ($distConfigContents !== '') {
-            $config = self::mergeConfigs($config, self::getConfFromContents($distConfigContents, $configDistFile));
+        // Re-read YAML only, so %param% placeholders resolve now that params are loaded.
+        // PHP configs are already final and are not re-required (avoids double side effects).
+        if (!self::isPhpConfig($distFile)) {
+            $distArr = self::getConfFromAnyFile($distFile);
         }
-        if ($configContents !== '') {
-            $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
+        if (!self::isPhpConfig($configFile)) {
+            $mainArr = self::getConfFromAnyFile($configFile);
         }
+
+        $config = self::mergeConfigs(self::$defaultConfig, $distArr);
+        $config = self::mergeConfigs($config, $mainArr);
 
         if ($config === self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
         }
 
+        return self::finalizeConfig($config);
+    }
+
+    /**
+     * PHP config wins: if a `codeception.php`/`codeception.dist.php` exists in the directory,
+     * YAML is ignored entirely. The same rule applies per suite and per environment name.
+     */
+    private static function discoverConfigFile(string $dir): string
+    {
+        return ConfigFileLocator::locate($dir, 'codeception')->mainFile;
+    }
+
+    private static function finalizeConfig(array $config): array
+    {
         if (isset($config['extends'])) {
             $presetFilePath = codecept_absolute_path($config['extends']);
             if (file_exists($presetFilePath)) {
-                $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
+                $config = self::mergeConfigs(self::getConfFromAnyFile($presetFilePath, [], GlobalConfig::class), $config);
             }
         }
 
@@ -233,6 +255,7 @@ class Configuration
         $suites = Finder::create()
             ->files()
             ->name('*.{suite,suite.dist}.yml')
+            ->name('*.{suite,suite.dist}.php')
             ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
             ->depth('< 1')
             ->sortByName();
@@ -242,8 +265,9 @@ class Configuration
             self::$suites[$suite] = $suite;
         }
         foreach ($suites as $suite) {
-            preg_match('#(.*?)(\\.suite|\\.suite\\.dist)\\.yml#', $suite->getFilename(), $matches);
-            self::$suites[$matches[1]] = $matches[1];
+            if (preg_match('#(.*?)(\\.suite|\\.suite\\.dist)\\.(yml|php)#', $suite->getFilename(), $matches)) {
+                self::$suites[$matches[1]] = $matches[1];
+            }
         }
     }
 
@@ -323,14 +347,18 @@ class Configuration
             self::$envConfig[$path] = [];
             return self::$envConfig[$path];
         }
-        $envFiles = Finder::create()->files()->name('*.yml')->in($path)->depth('< 2');
+        $envFiles = Finder::create()->files()->name('*.yml')->name('*.php')->in($path)->depth('< 2');
         $envConfig = [];
         foreach ($envFiles as $envFile) {
-            $env = str_replace(['.dist.yml', '.yml'], '', $envFile->getFilename());
+            $env = str_replace(['.dist.yml', '.yml', '.dist.php', '.php'], '', $envFile->getFilename());
+            if (isset($envConfig[$env])) {
+                continue;
+            }
             $envConfig[$env] = [];
             $envPath = $path . ($envFile->getRelativePath() !== '' ? DIRECTORY_SEPARATOR . $envFile->getRelativePath() : '');
-            foreach (['.dist.yml', '.yml'] as $suffix) {
-                $envConf = self::getConfFromFile($envPath . DIRECTORY_SEPARATOR . $env . $suffix);
+            $locator = ConfigFileLocator::locate($envPath, $env);
+            foreach ([$locator->distFile, $locator->mainFile] as $envFilePath) {
+                $envConf = self::getConfFromAnyFile($envFilePath, [], SuiteConfig::class);
                 $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
             }
         }
@@ -393,6 +421,82 @@ class Configuration
             throw new ConfigurationException("Failed to read {$filename}");
         }
         return self::getConfFromContents($contents, $filename);
+    }
+
+    /**
+     * @param array<string, mixed>          $nonExistentValue Value used if the file is not found
+     * @param class-string<ConfigInterface>|null $expected     Concrete builder the file must return
+     * @return array<string, mixed>
+     * @throws ConfigurationException
+     */
+    protected static function getConfFromPhpFile(string $filename, array $nonExistentValue = [], ?string $expected = null): array
+    {
+        if (!file_exists($filename)) {
+            return $nonExistentValue;
+        }
+        if (!is_readable($filename)) {
+            throw new ConfigurationException("Failed to read {$filename}");
+        }
+        $level = ob_get_level();
+        try {
+            ob_start();
+            $result = (static fn (): mixed => require $filename)();
+        } catch (Throwable $e) {
+            throw new ConfigurationException(sprintf("Error loading PHP config from %s\n\n%s", $filename, $e->getMessage()), 0, $e);
+        } finally {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+        if ($result instanceof ConfigInterface) {
+            self::assertExpectedBuilder($result, $expected, $filename);
+            return $result->toArray();
+        }
+        if (is_array($result)) {
+            return $result;
+        }
+        throw new ConfigurationException(sprintf(
+            "PHP config file %s must return an array or a %s instance, got %s.",
+            $filename,
+            ConfigInterface::class,
+            get_debug_type($result)
+        ));
+    }
+
+    /**
+     * @param class-string<ConfigInterface>|null $expected
+     * @throws ConfigurationException
+     */
+    private static function assertExpectedBuilder(ConfigInterface $result, ?string $expected, string $filename): void
+    {
+        $mismatch = ($expected === GlobalConfig::class && $result instanceof SuiteConfig)
+            || ($expected === SuiteConfig::class && $result instanceof GlobalConfig);
+        if ($mismatch) {
+            throw new ConfigurationException(sprintf(
+                'PHP config file %s must return a %s instance, got %s.',
+                $filename,
+                $expected,
+                $result::class
+            ));
+        }
+    }
+
+    /**
+     * @param array<string, mixed>               $nonExistentValue
+     * @param class-string<ConfigInterface>|null $expected
+     * @return array<string, mixed>
+     * @throws ConfigurationException
+     */
+    protected static function getConfFromAnyFile(string $filename, array $nonExistentValue = [], ?string $expected = null): array
+    {
+        return self::isPhpConfig($filename)
+            ? self::getConfFromPhpFile($filename, $nonExistentValue, $expected)
+            : self::getConfFromFile($filename, $nonExistentValue);
+    }
+
+    private static function isPhpConfig(string $filename): bool
+    {
+        return str_ends_with(strtolower($filename), '.php');
     }
 
     /**
@@ -470,6 +574,22 @@ class Configuration
             throw new ConfigurationException("The path for Codeception's output is not writable. Please set appropriate file permissions for: {$dir}");
         }
         return $dir;
+    }
+
+    /**
+     * Path of the loaded global config file (honors `-c`), or null if not loaded yet.
+     */
+    public static function loadedConfigFile(): ?string
+    {
+        return self::$loadedConfigFile;
+    }
+
+    /**
+     * Whether the current project is configured with PHP files instead of YAML.
+     */
+    public static function isPhpFormat(): bool
+    {
+        return self::$loadedConfigFile !== null && self::isPhpConfig(self::$loadedConfigFile);
     }
 
     /**
@@ -576,9 +696,10 @@ class Configuration
         if (isset(self::$config['suites'][$suite])) {
             return self::mergeConfigs($settings, self::$config['suites'][$suite]);
         }
-        $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
-        $suiteDist = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.dist.yml");
-        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.yml");
+        $suiteDir  = self::$dir . DIRECTORY_SEPARATOR . $path;
+        $locator   = ConfigFileLocator::locate($suiteDir, "{$suite}.suite");
+        $suiteDist = self::getConfFromAnyFile($locator->distFile, [], SuiteConfig::class);
+        $suiteConf = self::getConfFromAnyFile($locator->mainFile, [], SuiteConfig::class);
         if (isset($suiteConf['extends'])) {
             $preset = PathResolver::isPathAbsolute($suiteConf['extends'])
                 ? $suiteConf['extends']
@@ -587,7 +708,7 @@ class Configuration
                 throw new ConfigurationException(sprintf("Configuration file %s does not exist", $suiteConf['extends']));
             }
             if (file_exists($preset)) {
-                $settings = self::mergeConfigs(self::getConfFromFile($preset), $settings);
+                $settings = self::mergeConfigs(self::getConfFromAnyFile($preset, [], SuiteConfig::class), $settings);
             }
         }
         $settings = self::mergeConfigs($settings, $suiteDist);
@@ -627,7 +748,7 @@ class Configuration
         }
         try {
             $finder = Finder::create()->files()
-                ->name('/codeception(\.dist\.yml|\.yml)/')
+                ->name('/codeception(\.dist\.yml|\.yml|\.dist\.php|\.php)/')
                 ->in(self::$dir . DIRECTORY_SEPARATOR . $include);
         } catch (InvalidArgumentException) {
             throw new ConfigurationException("Configuration file(s) could not be found in \"{$include}\".");
@@ -649,5 +770,21 @@ class Configuration
         foreach ($settings['params'] as $paramStorage) {
             self::$params = array_merge(self::$params, ParamsLoader::load($paramStorage));
         }
+    }
+
+    /**
+     * Returns a loaded param. Backs {@see \Codeception\Config\Params::get()}.
+     *
+     * @throws ConfigurationException when called before params are loaded (i.e. from `codeception.php`).
+     */
+    public static function param(string $name, mixed $default = null): mixed
+    {
+        if (self::$params === null) {
+            throw new ConfigurationException(
+                "Params are not loaded yet while the global config is being read.\n" .
+                "Use getenv() in codeception.php; Params::get() works in suite and env config files."
+            );
+        }
+        return self::$params[$name] ?? $default;
     }
 }

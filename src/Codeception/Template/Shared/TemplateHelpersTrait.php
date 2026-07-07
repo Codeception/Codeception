@@ -6,6 +6,18 @@ namespace Codeception\Template\Shared;
 
 trait TemplateHelpersTrait
 {
+    protected function isPhp(): bool
+    {
+        return $this->input->hasOption('php') && (bool) $this->input->getOption('php');
+    }
+
+    protected function loadPhpSuiteSettings(string $suite): array
+    {
+        /** @var \Codeception\Config\GlobalConfig $config */
+        $config = require getcwd() . DIRECTORY_SEPARATOR . 'codeception.php';
+        return $config->toArray()['suites'][$suite];
+    }
+
     protected function createSuiteDirs(string $dir): void
     {
         $paths = ['_output','Support','Support/Data','Support/_generated'];

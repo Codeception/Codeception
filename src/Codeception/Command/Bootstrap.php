@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * By default, it will create 3 suites **Acceptance**, **Functional**, and **Unit**.
  *
  * * `codecept bootstrap` - creates `tests` dir and `codeception.yml` in current dir.
+ * * `codecept bootstrap --php` - generates PHP config files (`codeception.php`) instead of YAML
  * * `codecept bootstrap --empty` - creates `tests` dir without suites
  * * `codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
  * * `codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
@@ -37,7 +38,8 @@ class Bootstrap extends Command
             ->addArgument('path', InputArgument::OPTIONAL, 'custom installation dir')
             ->addOption('namespace', 's', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers')
             ->addOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester')
-            ->addOption('empty', 'e', InputOption::VALUE_NONE, "Don't create standard suites");
+            ->addOption('empty', 'e', InputOption::VALUE_NONE, "Don't create standard suites")
+            ->addOption('php', null, InputOption::VALUE_NONE, 'Generate PHP config files instead of YAML');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

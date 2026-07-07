@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install PHP & tools
         uses: shivammathur/setup-php@v2
@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
@@ -85,7 +85,7 @@ jobs:
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
       - name: Cache dependencies installed with composer
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: php${{ matrix.php }}-${{ matrix.mode }}-composer-${{ hashFiles('**/composer.json') }}
@@ -158,7 +158,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
@@ -169,11 +169,10 @@ jobs:
           tools: composer:v2
 
       - name: Determine composer cache directory
-        run: |
-          echo "COMPOSER_CACHE_DIR=~\\AppData\\Local\\Composer" >> $GITHUB_ENV
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $env:GITHUB_ENV
 
       - name: Cache dependencies installed with composer
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
