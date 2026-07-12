@@ -18,6 +18,7 @@ use LogicException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Metadata\Api\CodeCoverage;
+use PHPUnit\Metadata\Parser\Registry as MetadataRegistry;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionMethod;
@@ -251,6 +252,11 @@ class Cest extends Test implements
     {
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);
+        }
+
+        $metadata = MetadataRegistry::parser()->forClassAndMethod($this->testClass, $this->testMethod);
+        if ($metadata->isCoversNothing()->isNotEmpty()) {
+            return false;
         }
 
         if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
