@@ -1,6 +1,6 @@
 <?php
 
-// function not autoloaded in PHP, thus its a good place for them
+// function not autoloaded in PHP, thus it's a good place for them
 use Codeception\Extension\Logger;
 
 function codecept_debug($data)
@@ -19,23 +19,22 @@ function codecept_pause(array $vars = []): void
     \Codeception\Util\Debug::pause($vars);
 }
 
-function codecept_root_dir($appendPath = '')
+function codecept_root_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::projectDir() . $appendPath;
 }
 
-function codecept_output_dir($appendPath = '')
+function codecept_output_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::outputDir() . $appendPath;
 }
 
-function codecept_log_dir($appendPath = '')
+function codecept_log_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::outputDir() . $appendPath;
 }
 
-
-function codecept_data_dir($appendPath = '')
+function codecept_data_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::dataDir() . $appendPath;
 }
