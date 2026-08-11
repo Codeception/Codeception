@@ -90,12 +90,15 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function fetchDependencies(): array
     {
         $class = $this->testCase::class;
-        return array_map(
-            static fn(string $dep): string => str_contains($dep, ':') || !method_exists($class, $dep)
-                ? $dep
-                : "$class:$dep",
-            $this->metadata->getDependencies()
-        );
+        $names = [];
+        foreach ($this->metadata->getDependencies() as $dependency) {
+            foreach ((array)$dependency as $required) {
+                $names[] = str_contains($required, ':') || !method_exists($class, $required)
+                    ? $required
+                    : $class . ':' . $required;
+            }
+        }
+        return $names;
     }
 
     public function getReportFields(): array
