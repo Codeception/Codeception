@@ -110,6 +110,9 @@ class Annotation
     {
         if (($attr = $this->attribute($annotation)) instanceof ReflectionAttribute) {
             if (!$attr->isRepeated()) {
+                if ($annotation === 'example') {
+                    return [$attr->getArguments()];
+                }
                 return $attr->getArguments();
             }
 
