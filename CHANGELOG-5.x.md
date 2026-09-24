@@ -1,3 +1,19 @@
+#### 5.3.6
+
+* Prevent serialization of non-backed enums by @innerfly in #6796
+* Fix cs by @W0rma in #6930
+* Fix typo in Debug::debug() docblock by @rhuijts in #6934
+* Update Configuration.php: Minor rewording of error message by @ThomasLandauer in #6936
+* Improve handling of coverage exclude option on PHPUnit 11+ by @marcovtwout in #6937
+* Add support for phpunit/php-code-coverage 14.0 by @michalbundyra in #6938
+* catch general Throwable for before test execution code by @applyACS in #6929
+* Support for Variadic parameters by @mvvelde in #6932
+* Fix compatibility with sebastian/diff v8.3.0 + v9.0.0 by @W0rma in #6941
+* Migrate internal tests to the canonical v5 Support layout by @TavoNiievez in #6943
+* Fix `ArgumentCountError` in ReportPrinter when test names contain `%` characters by @Fahl-Design in #6927
+* Minor: More details about `codecept run -g failed` by @ThomasLandauer in #6926
+* Bump actions/checkout and actions/cache by @W0rma in #6948
+
 #### 5.3.5
 
 * PHP 8.5: Avoid accessing deprecated $http_response_header by @W0rma in #6924
