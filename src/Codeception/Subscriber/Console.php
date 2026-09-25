@@ -461,6 +461,9 @@ class Console implements EventSubscriberInterface
         if ($this->metaStep instanceof Meta) {
             $msg->append('  ');
         }
+        if (is_int($step->getLineNumber())) {
+            $msg->append((string)$step->getLineNumber() . ' ');
+        }
         $msg->append($step->getPrefix());
         $prefixLength = $msg->getLength();
         if (!$this->metaStep instanceof Meta) {
