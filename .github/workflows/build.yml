@@ -52,7 +52,7 @@ jobs:
     name: PHP ${{ matrix.php }}–${{ matrix.os }}–${{ matrix.mode }}
     runs-on: ${{ matrix.os }}
     env:
-      extensions: curl, mbstring, openssl, pdo, pdo_sqlite, zip
+      extensions: curl, mbstring, openssl, pdo, pdo_sqlite, zip, xdebug-3.5.3
       COLUMNS: 120
     strategy:
       fail-fast: false
