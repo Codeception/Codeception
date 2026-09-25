@@ -45,3 +45,4 @@
 /Dockerfile      export-ignore
 /nitpick.json    export-ignore
 /ruleset.xml     export-ignore
+/structarmed.php export-ignore

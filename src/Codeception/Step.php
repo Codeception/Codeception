@@ -104,7 +104,7 @@ abstract class Step implements Stringable
         }
 
         if ($totalLength > $maxLength && $maxLength > 0) {
-            uasort($arguments, fn($a, $b): int => mb_strlen($a, 'utf-8') <=> mb_strlen($b, 'utf-8'));
+            uasort($arguments, static fn($a, $b): int => mb_strlen($a, 'utf-8') <=> mb_strlen($b, 'utf-8'));
 
             $allowedLength      = floor(($maxLength - $argumentCount + 1) / $argumentCount);
             $lengthRemaining    = $maxLength;
@@ -291,7 +291,7 @@ abstract class Step implements Stringable
             }
             $this->metaStep = new Step\Meta(
                 $step['function'],
-                array_map(fn($v) => $v, array_values($step['args']))
+                array_map(static fn($v) => $v, array_values($step['args']))
             );
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
             if (!in_array(Actor::class, class_parents($step['class']))) {

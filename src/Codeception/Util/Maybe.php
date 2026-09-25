@@ -146,7 +146,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable, Stringable
             return $this->val;
         }
 
-        return array_map(fn($v) => $v instanceof self ? $v->value() : $v, $this->val);
+        return array_map(static fn($v) => $v instanceof self ? $v->value() : $v, $this->val);
     }
 
     /**
