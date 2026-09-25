@@ -172,7 +172,7 @@ class Console implements EventSubscriberInterface
                 implode(
                     ', ',
                     array_map(
-                        fn ($module): string => $module->_getName(),
+                        static fn ($module): string => $module->_getName(),
                         $event->getSuite()->getModules()
                     )
                 )
@@ -778,7 +778,7 @@ class Console implements EventSubscriberInterface
             $numFails = count(
                 array_filter(
                     $test->getScenario()?->getSteps() ?? [],
-                    fn(Step $step): bool => $step->hasFailed() && $step instanceof ConditionalAssertion
+                    static fn(Step $step): bool => $step->hasFailed() && $step instanceof ConditionalAssertion
                 )
             );
 

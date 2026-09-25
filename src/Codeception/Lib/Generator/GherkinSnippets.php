@@ -98,13 +98,13 @@ EOF;
         $pattern = $step->getText();
 
         // match numbers (not in quotes)
-        $pattern = preg_replace_callback('#([\d.])(?=([^"]*"[^"]*")*[^"]*$)#', function () use (&$args): string {
+        $pattern = preg_replace_callback('#([\d.])(?=([^"]*"[^"]*")*[^"]*$)#', static function () use (&$args): string {
             $args[] = '$num' . (count($args) + 1);
             return ":num" . count($args);
         }, $pattern);
 
         // match quoted strings
-        $pattern = preg_replace_callback('#"(.*?)"#', function () use (&$args): string {
+        $pattern = preg_replace_callback('#"(.*?)"#', static function () use (&$args): string {
             $args[] = '$arg' . (count($args) + 1);
             return ":arg" . count($args);
         }, $pattern);
