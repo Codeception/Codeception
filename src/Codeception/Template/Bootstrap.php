@@ -18,6 +18,12 @@ class Bootstrap extends InitTemplate
     protected string $outputDir       = 'tests/_output';
     protected string $namespace       = 'Tests';
     protected string $supportNamespace = 'Support';
+    protected bool $php               = false;
+
+    private function ext(): string
+    {
+        return $this->php ? 'php' : 'yml';
+    }
 
     public function setup(): void
     {
@@ -32,9 +38,11 @@ class Bootstrap extends InitTemplate
             $this->actorSuffix = $input->getOption('actor');
         }
 
+        $this->php = $input->hasOption('php') && (bool) $input->getOption('php');
+
         $this->say("<fg=white;bg=magenta> Bootstrapping Codeception </fg=white;bg=magenta>\n");
         $this->createGlobalConfig();
-        $this->say("File codeception.yml created       <- global configuration");
+        $this->say('File codeception.' . $this->ext() . ' created       <- global configuration');
 
         $this->createDirs();
 
@@ -54,9 +62,10 @@ class Bootstrap extends InitTemplate
         $this->say();
         $this->saySuccess('Codeception is installed for acceptance, functional, and unit testing');
         $this->say();
+        $ext = $this->ext();
         $this->say('<bold>Next steps:</bold>');
-        $this->say('1. Edit <bold>tests/Acceptance.suite.yml</bold> to set url of your application. Change PhpBrowser to WebDriver to enable browser testing');
-        $this->say("2. Edit <bold>tests/Functional.suite.yml</bold> to enable a framework module. Remove this file if you don't use a framework");
+        $this->say("1. Edit <bold>tests/Acceptance.suite.{$ext}</bold> to set url of your application. Change PhpBrowser to WebDriver to enable browser testing");
+        $this->say("2. Edit <bold>tests/Functional.suite.{$ext}</bold> to enable a framework module. Remove this file if you don't use a framework");
         $this->say('3. Create your first acceptance tests using <comment>codecept g:cest Acceptance First</comment>');
         $this->say('4. Write first test in <bold>tests/Acceptance/FirstCest.php</bold>');
         $this->say('5. Run tests using: <comment>codecept run</comment>');
@@ -90,9 +99,22 @@ modules:
 step_decorators: ~
 
 EOF;
-        $this->createSuite('Functional', $actor, $config);
+        $phpConfig = <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\SuiteConfig;
+
+return SuiteConfig::create()
+    ->actor('{$this->phpLiteral($actor . $this->actorSuffix)}')
+    // ->module('Symfony')  <- add a framework module here
+    ->stepDecorators(null);
+
+EOF;
+        $this->createSuite('Functional', $actor, $config, $phpConfig);
         $this->say("tests/Functional/ created          <- functional tests");
-        $this->say("tests/Functional.suite.yml written <- functional test suite configuration");
+        $this->say("tests/Functional.suite.{$this->ext()} written <- functional test suite configuration");
     }
 
     protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
@@ -115,9 +137,29 @@ step_decorators:
     - Codeception\Step\Retry
 
 EOF;
-        $this->createSuite('Acceptance', $actor, $config);
+        $phpConfig = <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\SuiteConfig;
+use Codeception\\Step\\ConditionalAssertion;
+use Codeception\\Step\\Retry;
+use Codeception\\Step\\TryTo;
+
+return SuiteConfig::create()
+    ->actor('{$this->phpLiteral($actor . $this->actorSuffix)}')
+    ->module('PhpBrowser', ['url' => 'http://localhost/myapp'])
+    ->stepDecorators([
+        ConditionalAssertion::class,
+        TryTo::class,
+        Retry::class,
+    ]);
+
+EOF;
+        $this->createSuite('Acceptance', $actor, $config, $phpConfig);
         $this->say("tests/Acceptance/ created          <- acceptance tests");
-        $this->say("tests/Acceptance.suite.yml written <- acceptance test suite configuration");
+        $this->say("tests/Acceptance.suite.{$this->ext()} written <- acceptance test suite configuration");
     }
 
     protected function createUnitSuite(string $actor = 'Unit'): void
@@ -134,13 +176,31 @@ modules:
 step_decorators: ~
 
 EOF;
-        $this->createSuite('Unit', $actor, $config);
+        $phpConfig = <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\SuiteConfig;
+
+return SuiteConfig::create()
+    ->actor('{$this->phpLiteral($actor . $this->actorSuffix)}')
+    ->module('Asserts')
+    ->stepDecorators(null);
+
+EOF;
+        $this->createSuite('Unit', $actor, $config, $phpConfig);
         $this->say("tests/Unit/ created                <- unit tests");
-        $this->say("tests/Unit.suite.yml written       <- unit test suite configuration");
+        $this->say("tests/Unit.suite.{$this->ext()} written       <- unit test suite configuration");
     }
 
     public function createGlobalConfig(): void
     {
+        if ($this->php) {
+            $this->createFile('codeception.php', $this->globalPhpConfig());
+            return;
+        }
+
         $config = [
             'support_namespace' => $this->supportNamespace,
             'paths' => [
@@ -161,13 +221,54 @@ EOF;
         $this->createFile('codeception.yml', $yaml);
     }
 
-    protected function createSuite(string $name, string $actor, string $config): void
+    protected function globalPhpConfig(): string
     {
-        $settings = Yaml::parse($config);
-        $settings['support_namespace'] = $this->supportNamespace;
+        $namespaceLine = $this->namespace ? "\n    ->namespace('{$this->phpLiteral($this->namespace)}')" : '';
+        $support = $this->phpLiteral($this->supportNamespace);
+        $output  = $this->phpLiteral($this->outputDir);
+        $data    = $this->phpLiteral($this->dataDir);
+        $supportDir = $this->phpLiteral($this->supportDir);
+        $envs    = $this->phpLiteral($this->envsDir);
+
+        return <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\GlobalConfig;
+use Codeception\\Extension\\RunFailed;
+
+return GlobalConfig::create(){$namespaceLine}
+    ->supportNamespace('{$support}')
+    ->paths(
+        tests: 'tests',
+        output: '{$output}',
+        data: '{$data}',
+        support: '{$supportDir}',
+        envs: '{$envs}',
+    )
+    ->actorSuffix('Tester')
+    ->extension(RunFailed::class);
+
+EOF;
+    }
+
+    protected function createSuite(string $name, string $actor, string $config, ?string $phpConfig = null): void
+    {
         $dir      = 'tests' . DIRECTORY_SEPARATOR . $name;
-        $this->createDirectoryFor($dir, "{$name}.suite.yml");
+        $filename = "{$name}.suite." . $this->ext();
+        $this->createDirectoryFor($dir, $filename);
+        $file = 'tests' . DIRECTORY_SEPARATOR . $filename;
+        $this->createFile($file, $this->php ? (string) $phpConfig : $config);
+
+        if ($this->php) {
+            /** @var \Codeception\Config\SuiteConfig $suiteConfig */
+            $suiteConfig = require getcwd() . DIRECTORY_SEPARATOR . $file;
+            $settings = $suiteConfig->toArray();
+        } else {
+            $settings = Yaml::parse($config);
+        }
+        $settings['support_namespace'] = $this->supportNamespace;
         $this->createActor($actor . $this->actorSuffix, $this->supportDir, $settings);
-        $this->createFile('tests' . DIRECTORY_SEPARATOR . "{$name}.suite.yml", $config);
     }
 }

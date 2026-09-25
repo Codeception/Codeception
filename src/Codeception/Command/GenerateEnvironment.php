@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function file_exists;
+
 /**
  * Generates empty environment configuration file into envs dir:
  *
@@ -39,17 +41,48 @@ class GenerateEnvironment extends Command
         if (Configuration::envsDir() === '') {
             throw new ConfigurationException(
                 "Path for environments configuration is not set.\n"
-                . "Please specify envs path in your `codeception.yml`\n \n"
+                . "Please specify envs path in your configuration file (`codeception.yml` or `codeception.php`)\n \n"
                 . "envs: tests/_envs"
             );
         }
 
         $relativePath = $config['paths']['envs'];
         $env = $input->getArgument('env');
-        $file = $env . '.yml';
+
+        if (Configuration::isPhpFormat()) {
+            $file = $env . '.php';
+            $contents = <<<PHP
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\SuiteConfig;
+
+return SuiteConfig::create();
+
+PHP;
+        } else {
+            $file = $env . '.yml';
+            $contents = sprintf('# `%s` environment config goes here', $env);
+        }
 
         $path = $this->createDirectoryFor($relativePath, $file);
-        $saved = $this->createFile($path . $file, sprintf('# `%s` environment config goes here', $env));
+
+        $otherFile = $env . (Configuration::isPhpFormat() ? '.yml' : '.php');
+        if (file_exists($path . $otherFile)) {
+            $output->writeln(sprintf(
+                '<error>Environment "%s" already has %s/%s; a %s would silently shadow one of them '
+                . '(PHP config wins over YAML). Remove %s or edit it directly.</error>',
+                $env,
+                $relativePath,
+                $otherFile,
+                $file,
+                $otherFile
+            ));
+            return Command::FAILURE;
+        }
+
+        $saved = $this->createFile($path . $file, $contents);
 
         if ($saved) {
             $output->writeln(sprintf('<info>%s config was created in %s/%s</info>', $env, $relativePath, $file));
