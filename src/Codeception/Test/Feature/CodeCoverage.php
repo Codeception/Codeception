@@ -54,6 +54,10 @@ trait CodeCoverage
                         class_exists($tcClass)
                         && method_exists($tcClass, 'fromArray')
                     ) {
+                        if ($linesToBeCovered === false) {
+                            $codeCoverage->stop(false, $status);
+                            return;
+                        }
                         $linesToBeCovered = $tcClass::fromArray($linesToBeCovered);
                         $linesToBeUsed    = $tcClass::fromArray($linesToBeUsed);
                     }
