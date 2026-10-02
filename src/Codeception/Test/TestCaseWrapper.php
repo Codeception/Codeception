@@ -136,7 +136,14 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
             $this->fetchDependencies()
         );
         $this->testCase->setDependencyInput($inputs);
-        $this->testCase->runBare();
+
+        // method was renamed in PHPUnit 13.4
+        if (version_compare(PHPUnitVersion::series(), '13.4', '<')) {
+            $this->testCase->runBare();
+        } else {
+            $this->testCase->runLifecycle();
+        }
+
         $this->testCase->addToAssertionCount(Assert::getCount());
 
         self::$testResults[$this->getSignature()] = PHPUnitVersion::series() < 10

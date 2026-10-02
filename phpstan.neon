@@ -12,6 +12,13 @@ parameters:
             - src/Codeception/Coverage/Subscriber/Printer.php
             - src/PHPUnit/Wrapper/PhpUnit9/Test.php
 
+    ignoreErrors:
+        -
+            rawMessages:
+                - 'Class PHPUnit\TextUI\CliArguments\Builder does not have a constructor and must be instantiated without any parameters.'
+                - 'Static method PHPUnit\TextUI\Configuration\Registry::init() invoked with 3 parameters, 2 required.'
+            path: src/Codeception/Suite.php
+
     parallel:
         maximumNumberOfProcesses: 8
         minimumNumberOfJobsPerProcess: 2
