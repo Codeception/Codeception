@@ -11,6 +11,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\Test\Test;
 use Codeception\Test\TestCaseWrapper;
+use PHPUnit\Event\Facade;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
@@ -246,8 +247,22 @@ class Suite
             $cliParameters [] = '--disallow-test-output';
         }
 
-        $cliConfiguration = (new Builder())->fromParameters($cliParameters);
+        // emitter must be injected in PHPUnit >= 13.4
+        if (version_compare(PHPUnitVersion::series(), '13.4', '<')) {
+            $builder = new Builder();
+        } else {
+            $emitter = Facade::emitter();
+            $builder = new Builder($emitter);
+        }
+
+        $cliConfiguration = $builder->fromParameters($cliParameters);
         $xmlConfiguration = DefaultConfiguration::create();
-        Registry::init($cliConfiguration, $xmlConfiguration);
+
+        // emitter must be injected in PHPUnit >= 13.4
+        if (version_compare(PHPUnitVersion::series(), '13.4', '<')) {
+            Registry::init($cliConfiguration, $xmlConfiguration);
+        } else {
+            Registry::init($cliConfiguration, $xmlConfiguration, $emitter);
+        }
     }
 }
