@@ -1,3 +1,7 @@
+#### 5.3.7
+
+* Fix compatibility with phpunit 13.4 by @W0rma in #6953
+
 #### 5.3.6
 
 * Prevent serialization of non-backed enums by @innerfly in #6796
