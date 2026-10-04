@@ -106,6 +106,6 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     {
         $this->testLoader->loadTest('SimpleWithExamplesCest.php');
         $tests = $this->testLoader->getTests();
-        $this->assertCount(3, $tests);
+        $this->assertCount(4, $tests);
     }
 }
