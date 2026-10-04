@@ -55,7 +55,8 @@
         "symfony/dotenv": ">=5.4.24 <9.0",
         "symfony/error-handler": ">=5.4.24 <9.0",
         "symfony/process": ">=5.4.24 <9.0",
-        "vlucas/phpdotenv": "^5.1"
+        "vlucas/phpdotenv": "^5.1",
+        "boundwize/structarmed": "^0.18"
     },
     "conflict": {
         "codeception/lib-innerbrowser": "<3.1.3",

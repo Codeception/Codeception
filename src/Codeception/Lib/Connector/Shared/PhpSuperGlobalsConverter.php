@@ -50,7 +50,7 @@ trait PhpSuperGlobalsConverter
                 // to ['tmp_name' => ['a' => '/tmp/test.txt'] ]
                 foreach ($nestedFiles as $nestedFieldName => $nestedFileInfo) {
                     $nestedFileInfo = array_map(
-                        fn($value): array => [$nestedFieldName => $value],
+                        static fn($value): array => [$nestedFieldName => $value],
                         $nestedFileInfo
                     );
 

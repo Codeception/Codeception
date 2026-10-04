@@ -91,7 +91,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
         $matchedPatterns = array_filter(
             array_keys($this->steps),
-            fn(string $pattern): bool => preg_match($pattern, $text) === 1
+            static fn(string $pattern): bool => preg_match($pattern, $text) === 1
         );
 
         if ($matchedPatterns === []) {

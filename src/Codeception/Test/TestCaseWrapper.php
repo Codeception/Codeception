@@ -132,7 +132,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function test(): void
     {
         $inputs = array_map(
-            fn(string $dep) => self::$testResults[$dep] ?? null,
+            static fn(string $dep) => self::$testResults[$dep] ?? null,
             $this->fetchDependencies()
         );
         $this->testCase->setDependencyInput($inputs);

@@ -97,7 +97,7 @@ class ParamsLoader
             throw new ConfigurationException('`simplexml` extension is required to parse .xml files.');
         }
 
-        $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray): array {
+        $paramsToArray = static function (SimpleXMLElement $params) use (&$paramsToArray): array {
             $a = [];
             foreach ($params as $param) {
                 $key = isset($param['key']) ? (string)$param['key'] : $param->getName();

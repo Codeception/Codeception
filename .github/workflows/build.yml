@@ -48,6 +48,9 @@ jobs:
       - name: PHPStan
         run: phpstan analyse src
 
+      - name: StructArmed
+        run: vendor/bin/structarmed analyze
+
   linux:
     name: PHP ${{ matrix.php }}–${{ matrix.os }}–${{ matrix.mode }}
     runs-on: ${{ matrix.os }}
