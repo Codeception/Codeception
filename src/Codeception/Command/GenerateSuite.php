@@ -13,8 +13,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
+use function addcslashes;
 use function file_exists;
 use function preg_match;
 use function ucfirst;
@@ -57,9 +57,13 @@ class GenerateSuite extends Command
             return Command::FAILURE;
         }
 
+        $isPhp = Configuration::isPhpFormat();
+        $ext   = $isPhp ? 'php' : 'yml';
         $dir = Configuration::testsDir();
-        if (file_exists($dir . $suite . '.suite.yml')) {
-            throw new Exception("Suite configuration file '{$suite}.suite.yml' already exists.");
+        foreach (['yml', 'php'] as $existingExt) {
+            if (file_exists($dir . $suite . '.suite.' . $existingExt)) {
+                throw new Exception("Suite configuration file '{$suite}.suite.{$existingExt}' already exists.");
+            }
         }
 
         $this->createDirectoryFor($dir . $suite);
@@ -72,19 +76,34 @@ class GenerateSuite extends Command
             );
         }
 
-        $yamlSuiteConfigTemplate = <<<EOF
+        $suiteNamespace = $config['namespace'] . '\\' . $suite;
+        if ($isPhp) {
+            $actorLiteral = addcslashes($actor, "\\'");
+            $suiteConfig = <<<PHP
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\SuiteConfig;
+
+return SuiteConfig::create()
+    ->actor('{$actorLiteral}');
+
+PHP;
+        } else {
+            $suiteConfig = (new Template(<<<EOF
 actor: {{actor}}
 suite_namespace: {{suite_namespace}}
 modules:
     # enable helpers as array
     enabled: []
-EOF;
-        $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
-            ->place('actor', $actor)
-            ->place('suite_namespace', $config['namespace'] . '\\' . $suite)
-            ->produce();
-        $this->createFile($dir . $suite . '.suite.yml', $yamlSuiteConfig);
-        Configuration::append(Yaml::parse($yamlSuiteConfig));
+EOF))
+                ->place('actor', $actor)
+                ->place('suite_namespace', $suiteNamespace)
+                ->produce();
+        }
+        $this->createFile($dir . $suite . '.suite.' . $ext, $suiteConfig);
+        Configuration::append(['actor' => $actor, 'suite_namespace' => $suiteNamespace, 'modules' => ['enabled' => []]]);
         $actorGenerator = new ActorGenerator(Configuration::config());
 
         $content = $actorGenerator->produce();
@@ -92,10 +111,10 @@ EOF;
         $this->createFile($file, $content);
 
         $output->writeln("Actor <info>{$actor}</info> was created in {$file}");
-        $output->writeln("Suite config <info>{$suite}.suite.yml</info> was created.");
+        $output->writeln("Suite config <info>{$suite}.suite.{$ext}</info> was created.");
         $output->writeln(' ');
         $output->writeln("Next steps:");
-        $output->writeln("1. Edit <bold>{$suite}.suite.yml</bold> to enable modules for this suite");
+        $output->writeln("1. Edit <bold>{$suite}.suite.{$ext}</bold> to enable modules for this suite");
         $output->writeln("2. Create first test with <bold>generate:cest testName</bold> ( or test|cept) command");
         $output->writeln("3. Run tests of this suite with <bold>codecept run {$suite}</bold> command");
 

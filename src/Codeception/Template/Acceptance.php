@@ -96,21 +96,26 @@ EOF;
         $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directories at {$dir}");
         $this->ensureModules(['WebDriver']);
-        $config = (new Template($this->configTemplate))
-            ->place('url', $url)
-            ->place('browser', $browser)
-            ->place('baseDir', $dir)
-            ->produce();
-
         $namespace = rtrim($this->namespace, '\\');
-        $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
-        $this->createFile('codeception.yml', $config);
 
-        $settings = Yaml::parse($config)['suites']['Acceptance'];
+        if ($this->isPhp()) {
+            $this->createFile('codeception.php', $this->phpConfig($namespace, $dir, $url, $browser));
+            $settings = $this->loadPhpSuiteSettings('Acceptance');
+            $this->sayInfo('Created global config codeception.php inside the root directory');
+        } else {
+            $config = (new Template($this->configTemplate))
+                ->place('url', $url)
+                ->place('browser', $browser)
+                ->place('baseDir', $dir)
+                ->produce();
+            $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
+            $this->createFile('codeception.yml', $config);
+            $settings = Yaml::parse($config)['suites']['Acceptance'];
+            $this->sayInfo('Created global config codeception.yml inside the root directory');
+        }
+
         $settings['support_namespace'] = $this->supportNamespace;
         $this->createActor('AcceptanceTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
-
-        $this->sayInfo('Created global config codeception.yml inside the root directory');
 
         $firstTest = (new Template($this->firstTest))
             ->place('namespace', $namespace)
@@ -129,5 +134,51 @@ EOF;
         $this->say("HINT: Add '\\Codeception\\Step\\Retry' trait to AcceptanceTester class to enable auto-retries");
         $this->say("HINT: See https://codeception.com/docs/03-AcceptanceTests#retry");
         $this->say('<bold>Happy testing!</bold>');
+    }
+
+    private function phpConfig(string $namespace, string $dir, string $url, string $browser): string
+    {
+        $namespace = $this->phpLiteral($namespace);
+        $support   = $this->phpLiteral($this->supportNamespace);
+        $dir       = $this->phpLiteral($dir);
+        $url       = $this->phpLiteral($url);
+        $browser   = $this->phpLiteral($browser);
+
+        return <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\GlobalConfig;
+use Codeception\\Config\\SuiteConfig;
+use Codeception\\Extension\\RunFailed;
+use Codeception\\Step\\ConditionalAssertion;
+use Codeception\\Step\\Retry;
+use Codeception\\Step\\TryTo;
+
+return GlobalConfig::create()
+    ->namespace('{$namespace}')
+    ->supportNamespace('{$support}')
+    ->paths(
+        tests: '{$dir}',
+        output: '{$dir}/_output',
+        data: '{$dir}/Support/Data',
+        support: '{$dir}/Support',
+        envs: '{$dir}/_envs',
+    )
+    ->extension(RunFailed::class)
+    ->params('env')
+    ->settings(shuffle: false, lint: true)
+    ->suite('Acceptance', SuiteConfig::create()
+        ->actor('AcceptanceTester')
+        ->path('.')
+        ->module('WebDriver', ['url' => '{$url}', 'browser' => '{$browser}'])
+        ->stepDecorators([
+            ConditionalAssertion::class,
+            TryTo::class,
+            Retry::class,
+        ]));
+
+EOF;
     }
 }

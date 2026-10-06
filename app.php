@@ -29,6 +29,7 @@ call_user_func(static function () {
         new Codeception\Command\GherkinSteps('gherkin:steps'),
         new Codeception\Command\DryRun('dry-run'),
         new Codeception\Command\ConfigValidate('config:validate'),
+        new Codeception\Command\ConfigToPhp('config:to-php'),
     ];
 
     // Suggests package

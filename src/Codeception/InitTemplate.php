@@ -60,6 +60,11 @@ abstract class InitTemplate
         $this->output = $output;
     }
 
+    protected function phpLiteral(string $value): string
+    {
+        return addcslashes($value, "\\'");
+    }
+
     /**
      * Change the directory where Codeception should be installed.
      */
@@ -194,8 +199,11 @@ abstract class InitTemplate
 
     protected function checkInstalled(string $dir = '.'): void
     {
-        if (file_exists("{$dir}/codeception.yml") || file_exists("{$dir}/codeception.dist.yml")) {
-            throw new Exception('Codeception is already installed in this directory');
+        $configFiles = ['codeception.yml', 'codeception.dist.yml', 'codeception.php', 'codeception.dist.php'];
+        foreach ($configFiles as $configFile) {
+            if (file_exists("{$dir}/{$configFile}")) {
+                throw new Exception('Codeception is already installed in this directory');
+            }
         }
     }
 

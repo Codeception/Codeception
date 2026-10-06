@@ -56,19 +56,29 @@ EOF;
         $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directory at {$dir}");
 
-        $config = (new Template($this->configTemplate))
-            ->place('baseDir', $dir)
-            ->place('tester', $haveTester ? $this->testerAndModules : '')
-            ->produce();
+        $namespace = rtrim($this->namespace, '\\');
 
-        $namespace     = rtrim($this->namespace, '\\');
-        $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
-        $this->createFile('codeception.yml', $config);
-        $this->ensureModules(['Asserts']);
-        if ($haveTester) {
-            $settings = Yaml::parse($config)['suites']['Unit'];
-            $settings['support_namespace'] = $this->supportNamespace;
-            $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
+        if ($this->isPhp()) {
+            $this->createFile('codeception.php', $this->phpConfig($namespace, $dir, (bool) $haveTester));
+            $this->ensureModules(['Asserts']);
+            if ($haveTester) {
+                $settings = $this->loadPhpSuiteSettings('Unit');
+                $settings['support_namespace'] = $this->supportNamespace;
+                $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
+            }
+        } else {
+            $config = (new Template($this->configTemplate))
+                ->place('baseDir', $dir)
+                ->place('tester', $haveTester ? $this->testerAndModules : '')
+                ->produce();
+            $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
+            $this->createFile('codeception.yml', $config);
+            $this->ensureModules(['Asserts']);
+            if ($haveTester) {
+                $settings = Yaml::parse($config)['suites']['Unit'];
+                $settings['support_namespace'] = $this->supportNamespace;
+                $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
+            }
         }
 
         $this->saySuccess('INSTALLATION COMPLETE');
@@ -86,5 +96,37 @@ EOF;
         $this->say('1. Generate a test: <comment>codecept g:test unit MyTest</comment>');
         $this->say('2. Run tests: <comment>codecept run</comment>');
         $this->say('<bold>Happy testing!</bold>');
+    }
+
+    private function phpConfig(string $namespace, string $dir, bool $haveTester): string
+    {
+        $namespaceLine = $namespace !== '' ? "\n    ->namespace('{$this->phpLiteral($namespace)}')" : '';
+        $support = $this->phpLiteral($this->supportNamespace);
+        $dir     = $this->phpLiteral($dir);
+        $suite = "SuiteConfig::create()\n        ->path('.')";
+        if ($haveTester) {
+            $suite .= "\n        ->actor('UnitTester')\n        ->module('Asserts')\n        ->stepDecorators(null)";
+        }
+
+        return <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\GlobalConfig;
+use Codeception\\Config\\SuiteConfig;
+
+return GlobalConfig::create(){$namespaceLine}
+    ->supportNamespace('{$support}')
+    ->paths(
+        tests: '{$dir}',
+        output: '{$dir}/_output',
+        support: '{$dir}/Support',
+        data: '{$dir}/Support/Data',
+    )
+    ->settings(shuffle: true, lint: true)
+    ->suite('Unit', {$suite});
+
+EOF;
     }
 }
