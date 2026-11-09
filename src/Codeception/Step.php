@@ -7,6 +7,7 @@ namespace Codeception;
 use Closure;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Argument\FormattedOutput;
+use Codeception\Step\Argument\ReleasedArgument;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
 use Exception;
@@ -15,6 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use RuntimeException;
 use Stringable;
+use Throwable;
 
 abstract class Step implements Stringable
 {
@@ -169,6 +171,59 @@ abstract class Step implements Stringable
             return $argument->toString();
         }
         return $this->getClassName($argument);
+    }
+
+    /**
+     * Replaces object arguments with the text they are displayed as, so that the objects
+     * (and everything they reference) can be garbage collected once the test has finished.
+     *
+     * @internal
+     */
+    public function releaseArguments(): void
+    {
+        $this->arguments = array_map($this->releaseArgument(...), $this->arguments);
+    }
+
+    private function releaseArgument(mixed $argument): mixed
+    {
+        if ($argument instanceof ReleasedArgument) {
+            return $argument;
+        }
+        if (is_object($argument)) {
+            try {
+                return new ReleasedArgument($this->stringifyObject($argument));
+            } catch (Throwable) {
+                // e.g. __toString() of an object whose dependencies are already shut down; this runs for
+                // every test, not only for the failed ones whose steps are printed, and must not abort the run
+                return new ReleasedArgument($this->getClassName($argument));
+            }
+        }
+        if (is_array($argument)) {
+            // objects directly inside an array argument are displayed by their class name, everything below as JSON
+            return array_map(
+                fn(mixed $item): mixed => is_object($item) ? $this->getClassName($item) : $this->asJsonData($item),
+                $argument
+            );
+        }
+        return $argument;
+    }
+
+    /**
+     * Replaces nested objects with plain data that is JSON encoded the same way (public properties or jsonSerialize()).
+     */
+    private function asJsonData(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            return array_map($this->asJsonData(...), $value);
+        }
+        if (!is_object($value)) {
+            return $value;
+        }
+        try {
+            return json_decode(json_encode($value, self::JSON_FLAGS | JSON_THROW_ON_ERROR), flags: JSON_THROW_ON_ERROR);
+        } catch (Throwable) {
+            return $this->getClassName($value);
+        }
     }
 
     protected function getClassName(object $argument): string
