@@ -26,6 +26,9 @@ abstract class Step implements Stringable
      * @var int
      */
     public const STACK_POSITION     = 3;
+
+    private const JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE;
+
     public bool $executed = false;
 
     protected bool $failed   = false;
@@ -145,23 +148,27 @@ abstract class Step implements Stringable
                 }
             }
         } elseif (is_object($argument)) {
-            if ($argument instanceof FormattedOutput) {
-                $argument = $argument->getOutput();
-            } elseif (method_exists($argument, '__toString')) {
-                $argument = (string) $argument;
-            } elseif ($argument::class === 'Facebook\\WebDriver\\WebDriverBy') {
-                $argument = Locator::humanReadableString($argument);
-            } elseif ($argument instanceof Constraint) {
-                $argument = $argument->toString();
-            } else {
-                $argument = $this->getClassName($argument);
-            }
+            $argument = $this->stringifyObject($argument);
         }
-        $arg_str = json_encode(
-            $argument,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
-        );
+        $arg_str = json_encode($argument, self::JSON_FLAGS);
         return str_replace('"', '"', $arg_str);
+    }
+
+    protected function stringifyObject(object $argument): string
+    {
+        if ($argument instanceof FormattedOutput) {
+            return $argument->getOutput();
+        }
+        if (method_exists($argument, '__toString')) {
+            return (string) $argument;
+        }
+        if ($argument::class === 'Facebook\\WebDriver\\WebDriverBy') {
+            return Locator::humanReadableString($argument);
+        }
+        if ($argument instanceof Constraint) {
+            return $argument->toString();
+        }
+        return $this->getClassName($argument);
     }
 
     protected function getClassName(object $argument): string
