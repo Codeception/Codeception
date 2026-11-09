@@ -33,6 +33,7 @@ class Suite
     protected ?string $baseName = null;
 
     private bool $reportUselessTests = false;
+    private bool $releaseStepArguments = false;
     private bool $backupGlobals = false;
     private bool $beStrictAboutChangesToGlobalState = false;
     private bool $disallowTestOutput = false;
@@ -55,6 +56,11 @@ class Suite
     public function reportUselessTests(bool $enabled): void
     {
         $this->reportUselessTests = $enabled;
+    }
+
+    public function releaseStepArguments(bool $enabled): void
+    {
+        $this->releaseStepArguments = $enabled;
     }
 
     public function backupGlobals(bool $enabled): void
@@ -128,6 +134,7 @@ class Suite
 
             $test->setEventDispatcher($this->dispatcher);
             $test->reportUselessTests($this->reportUselessTests);
+            $test->releaseStepArguments($this->releaseStepArguments);
             $test->collectCodeCoverage($this->collectCodeCoverage);
             $test->realRun($result);
         }
