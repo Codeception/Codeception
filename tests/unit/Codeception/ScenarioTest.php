@@ -43,4 +43,23 @@ class ScenarioTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame('successfulLogin', $scenario->current('name'));
     }
+
+    public function testReleaseStepArgumentsReleasesStepsAndMetaSteps()
+    {
+        $object = new stdClass();
+        $reference = WeakReference::create($object);
+        $step = new \Codeception\Step\Action('do', [$object]);
+        $step->setMetaStep(new \Codeception\Step\Meta('helper', [$object]));
+        $executor = new \Codeception\Step\Executor(fn() => $object);
+        unset($object);
+
+        $scenario = new \Codeception\Scenario(new \Codeception\Test\Cept('test', 'testCept.php'));
+        $scenario->addStep($step);
+        $scenario->addStep($executor);
+        $scenario->releaseStepArguments();
+
+        $this->assertNull($reference->get());
+        $this->assertSame('do "stdClass"', $step->toString(200));
+        $this->assertSame('helper "stdClass"', $step->getMetaStep()->toString(200));
+    }
 }

@@ -90,6 +90,7 @@ class Configuration
             'lint'                                    => true,
             'backup_globals'                          => true,
             'report_useless_tests'                    => false,
+            'release_step_arguments'                  => false,
             'be_strict_about_changes_to_global_state' => false,
             'shuffle'                                 => false,
         ],
