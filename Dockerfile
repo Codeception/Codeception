@@ -1,4 +1,4 @@
-ARG flavor=bullseye
+ARG flavor=trixie
 
 FROM php:8.2-cli-${flavor}
 
@@ -23,7 +23,7 @@ RUN set -eux; \
     # Configure php \
     echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini;
 
-ENV COMPOSER_ALLOW_SUPERUSER '1'
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
