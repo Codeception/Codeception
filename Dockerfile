@@ -23,7 +23,7 @@ RUN set -eux; \
     # Configure php \
     echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini;
 
-ENV COMPOSER_ALLOW_SUPERUSER '1'
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
