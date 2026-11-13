@@ -1,4 +1,4 @@
-ARG flavor=bullseye
+ARG flavor=trixie
 
 FROM php:8.2-cli-${flavor}
 
