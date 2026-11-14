@@ -13,15 +13,55 @@
         {
             "in": "vendor",
             "notPath": "#^codeception/#",
-            "name": ["*.php", "*.php8", "*.css", "*.js", "*.png", "*.svg", "*.eot", "*.ttf", "*.woff", "*.woff2", "*.tpl", "*.tpl.dist", "*.html.dist", "*.bash", "*.fish", "*.zsh"],
-            "exclude": ["Tests", "tests", "benchmark", "demo"]
+            "notName": [
+                "*.md",
+                "*.markdown",
+                "*.rst",
+                "README*",
+                "CHANGELOG*",
+                "UPGRADE*",
+                "CONTRIBUTING*",
+                "composer.json",
+                "composer.lock",
+                "phpunit.xml*",
+                "phpstan*.neon*",
+                "psalm.xml*",
+                "phpcs.xml*",
+                ".php-cs-fixer*"
+            ],
+            "exclude": [
+                "Tests",
+                "tests",
+                "benchmark",
+                "demo"
+            ]
         }
     ],
     "finder-bin": [
         {
             "in": "vendor/codeception",
-            "name": ["*.php", "*.php8", "*.css", "*.js", "*.png", "*.svg", "*.eot", "*.ttf", "*.woff", "*.woff2", "*.tpl", "*.tpl.dist", "*.html.dist", "*.bash", "*.fish", "*.zsh"],
-            "exclude": ["Tests", "tests", "benchmark", "demo"]
+            "notName": [
+                "*.md",
+                "*.markdown",
+                "*.rst",
+                "README*",
+                "CHANGELOG*",
+                "UPGRADE*",
+                "CONTRIBUTING*",
+                "composer.json",
+                "composer.lock",
+                "phpunit.xml*",
+                "phpstan*.neon*",
+                "psalm.xml*",
+                "phpcs.xml*",
+                ".php-cs-fixer*"
+            ],
+            "exclude": [
+                "Tests",
+                "tests",
+                "benchmark",
+                "demo"
+            ]
         }
     ]
 }
