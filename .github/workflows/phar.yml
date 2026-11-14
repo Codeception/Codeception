@@ -1,0 +1,61 @@
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to build the phar for, e.g. 5.3.7'
+        required: true
+
+name: phar
+
+concurrency:
+  group: phar-${{ github.event.release.tag_name || inputs.tag }}
+
+permissions:
+  contents: write
+
+jobs:
+  phar:
+    name: Build and upload codecept.phar
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      # build.sh and box.json come from the checked out ref: the release tag for release events, the selected
+      # branch for workflow_dispatch. Use workflow_dispatch to rebuild a release with a fixed build config.
+      # The Codeception sources always come from the tag.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          ini-values: phar.readonly=0, memory_limit=-1
+          tools: composer:v2
+
+      - name: Build phar
+        run: phar/build.sh "$TAG"
+
+      - name: Smoke test
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir smoke && cd smoke
+          cp "$GITHUB_WORKSPACE/phar/build/codecept.phar" .
+          php codecept.phar --version
+          php codecept.phar bootstrap --no-interaction
+          php codecept.phar build
+          php codecept.phar run
+
+      - name: Create checksum
+        working-directory: phar/build
+        run: sha256sum codecept.phar > codecept.phar.sha256
+
+      - name: Upload to release
+        working-directory: phar/build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" codecept.phar codecept.phar.sha256 --clobber --repo "$GITHUB_REPOSITORY"

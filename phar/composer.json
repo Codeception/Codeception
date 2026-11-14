@@ -1,0 +1,30 @@
+{
+    "name": "codeception/phar-file",
+    "type": "project",
+    "description": "Dependencies bundled into codecept.phar, see build.sh",
+    "license": "MIT",
+    "require": {
+        "codeception/module-amqp": "*",
+        "codeception/module-apc": "*",
+        "codeception/module-asserts": "*",
+        "codeception/module-cli": "*",
+        "codeception/module-db": "*",
+        "codeception/module-filesystem": "*",
+        "codeception/module-ftp": "*",
+        "codeception/module-memcache": "*",
+        "codeception/module-mongodb": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-queue": "*",
+        "codeception/module-redis": "*",
+        "codeception/module-rest": "*",
+        "codeception/module-sequence": "*",
+        "codeception/module-soap": "*",
+        "codeception/module-webdriver": "*",
+        "laravel-zero/phar-updater": "^1.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        }
+    }
+}
