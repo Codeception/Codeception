@@ -1,0 +1,101 @@
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to build the images for, e.g. 5.3.7'
+        required: true
+
+name: docker
+
+concurrency:
+  group: docker-${{ github.event.release.tag_name || inputs.tag }}
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ github.event.release.tag_name || inputs.tag }}
+  # set the repository variable DOCKERHUB_IMAGE to push to another image, e.g. on a fork
+  IMAGE: ${{ vars.DOCKERHUB_IMAGE || 'codeception/codeception' }}
+
+jobs:
+  docker:
+    name: Build and push ${{ matrix.flavor }} image
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - flavor: trixie
+            suffix: ''
+          - flavor: alpine
+            suffix: '-alpine'
+    steps:
+      # The Dockerfile comes from the checked out ref: the release tag for release events, the selected
+      # branch for workflow_dispatch. The Codeception sources always come from the tag.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Prepare build context
+        run: |
+          if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid tag '$TAG', expected a release tag like 5.3.7" >&2
+            exit 1
+          fi
+          mkdir "$RUNNER_TEMP/codeception"
+          git archive "$TAG" | tar -x -C "$RUNNER_TEMP/codeception"
+
+      # latest is only moved when the tag is the newest release, so backfills of older versions don't overwrite it
+      - name: Determine image tags
+        id: tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SUFFIX: ${{ matrix.suffix }}
+        run: |
+          LATEST_TAG=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          {
+            echo "list<<EOF"
+            echo "$IMAGE:$TAG$SUFFIX"
+            if [[ "$TAG" == "$LATEST_TAG" ]]; then
+              echo "$IMAGE:latest$SUFFIX"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ runner.temp }}/codeception
+          file: Dockerfile
+          build-args: |
+            flavor=${{ matrix.flavor }}
+            CODECEPTION_VERSION=${{ env.TAG }}
+          load: true
+          tags: codeception-smoke-test
+
+      - name: Smoke test
+        run: docker run --rm codeception-smoke-test --version | grep -F "$TAG"
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # reuses the layers of the build above
+      - name: Push image
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ runner.temp }}/codeception
+          file: Dockerfile
+          build-args: |
+            flavor=${{ matrix.flavor }}
+            CODECEPTION_VERSION=${{ env.TAG }}
+          push: true
+          tags: ${{ steps.tags.outputs.list }}

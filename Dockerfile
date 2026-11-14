@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 ARG flavor=trixie
 
 FROM php:8.2-cli-${flavor}
@@ -27,10 +29,18 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
-# Install codeception
-RUN set -eux; \
+# Version of the Codeception sources in the build context, e.g. 5.3.7
+ARG CODECEPTION_VERSION
+
+# Install codeception from the build context (the workflow uses `git archive <tag>` as context)
+# TODO: remove COMPOSER_NO_SECURITY_BLOCKING once module-ftp allows a phpseclib version without security advisories
+RUN --mount=type=bind,target=/tmp/codeception \
+    set -eux; \
+    test -n "${CODECEPTION_VERSION}"; \
+    echo '{}' > composer.json; \
+    composer config repositories.codeception "{\"type\": \"path\", \"url\": \"/tmp/codeception\", \"options\": {\"symlink\": false, \"versions\": {\"codeception/codeception\": \"${CODECEPTION_VERSION}\"}}}"; \
     composer require --no-update \
-        codeception/codeception \
+        "codeception/codeception:${CODECEPTION_VERSION}" \
         codeception/module-apc \
         codeception/module-asserts \
         codeception/module-cli \
@@ -45,7 +55,7 @@ RUN set -eux; \
         codeception/module-sequence \
         codeception/module-soap \
         codeception/module-webdriver; \
-    composer update --no-dev --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader; \
+    COMPOSER_NO_SECURITY_BLOCKING=1 composer update --no-dev --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader; \
     ln -s /codecept/vendor/bin/codecept /usr/local/bin/codecept; \
     mkdir /project;
 
