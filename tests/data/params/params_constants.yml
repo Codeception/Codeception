@@ -1,0 +1,3 @@
+parameters:
+    global: !php/const PHP_INT_MAX
+    class: !php/const Codeception\Codecept::VERSION

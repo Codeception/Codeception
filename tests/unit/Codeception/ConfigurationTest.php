@@ -67,4 +67,38 @@ class ConfigurationTest extends TestCase
         $this->assertArrayHasKey('extends', $defaultConfig);
         $this->assertNull($defaultConfig['extends']);
     }
+
+    #[Group('core')]
+    public function testPhpConstantsInYamlConfig()
+    {
+        $configuration = new class extends \Codeception\Configuration {
+            public static function parse(string $contents): array
+            {
+                return self::getConfFromContents($contents);
+            }
+        };
+
+        $config = $configuration::parse(<<<YAML
+            global: !php/const PHP_INT_MAX
+            class: !php/const Codeception\Codecept::VERSION
+            YAML);
+
+        $this->assertSame(PHP_INT_MAX, $config['global']);
+        $this->assertSame(\Codeception\Codecept::VERSION, $config['class']);
+    }
+
+    #[Group('core')]
+    public function testUndefinedPhpConstantInYamlConfig()
+    {
+        $configuration = new class extends \Codeception\Configuration {
+            public static function parse(string $contents): array
+            {
+                return self::getConfFromContents($contents, 'codeception.yml');
+            }
+        };
+
+        $this->expectException(\Codeception\Exception\ConfigurationException::class);
+        $this->expectExceptionMessage('Error loading Yaml config from codeception.yml');
+        $configuration::parse('value: !php/const UNDEFINED_CONSTANT');
+    }
 }

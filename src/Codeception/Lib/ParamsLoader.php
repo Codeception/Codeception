@@ -84,7 +84,7 @@ class ParamsLoader
      */
     private static function loadYamlFile(string $file): array
     {
-        $params = Yaml::parse(self::getFileContents($file));
+        $params = Yaml::parse(self::getFileContents($file), Yaml::PARSE_CONSTANT);
         return self::validateParams($params['parameters'] ?? $params, $file);
     }
 

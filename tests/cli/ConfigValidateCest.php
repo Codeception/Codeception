@@ -52,4 +52,10 @@ final class ConfigValidateCest
         $I->executeCommand('config:validate --no-ansi');
         $I->dontSeeInShellOutput('Warning: no suites found');
     }
+
+    public function resolvesPhpConstantInOverrideOption(CliTester $I)
+    {
+        $I->executeCommand('config:validate -o "params: foo: !php/const PHP_INT_MAX" --no-ansi');
+        $I->seeInShellOutput('foo => ' . PHP_INT_MAX);
+    }
 }
