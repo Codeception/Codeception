@@ -220,7 +220,7 @@ class Printer implements EventSubscriberInterface
 
     private function htmlGenerator(): string
     {
-        return ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit {PHPUnitVersion::id()}</a>';
+        return ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit ' . PHPUnitVersion::id() . '</a>';
     }
 
     private function createThresholds(): Thresholds
