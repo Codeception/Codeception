@@ -38,4 +38,18 @@ final class ConfigValidateCest
         $I->executeCommand('config:validate -o "params: foo: bar" --no-ansi');
         $I->seeInShellOutput('foo => bar');
     }
+
+    public function warnsWhenNoSuitesDefined(CliTester $I)
+    {
+        $I->amInPath(codecept_data_dir('no_suites'));
+        $I->executeCommand('config:validate --no-ansi');
+        $I->seeInShellOutput('Warning: no suites found');
+    }
+
+    public function doesNotWarnForIncludeOnlyConfig(CliTester $I)
+    {
+        $I->amInPath(codecept_data_dir('included_w'));
+        $I->executeCommand('config:validate --no-ansi');
+        $I->dontSeeInShellOutput('Warning: no suites found');
+    }
 }
