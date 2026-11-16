@@ -16,7 +16,7 @@ Inspired by BDD, it provides an absolutely new way of writing acceptance, functi
 
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0.0/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/main/CONTRIBUTING.md).
 
 ### At a Glance
 
@@ -92,4 +92,4 @@ This will create a default directory structure and default test suites.
 The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
 ## License
-[MIT](https://github.com/Codeception/Codeception/blob/master/LICENSE)
+[MIT](https://github.com/Codeception/Codeception/blob/main/LICENSE)

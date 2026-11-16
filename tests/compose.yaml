@@ -1,0 +1,22 @@
+# Runs the internal test suite in a container, see tests/README.md
+services:
+  php:
+    build:
+      # Xdebug is required by the coverage suite
+      dockerfile_inline: |
+        FROM composer:2
+        COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+        RUN install-php-extensions xdebug
+    # run as the host user, so that files created in the repository are not owned by root
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /repo
+    environment:
+      COMPOSER_HOME: /tmp/composer
+      # coverage is only collected when requested with `-e XDEBUG_MODE=coverage`, which also applies to the demo application
+      XDEBUG_MODE: "off"
+    volumes:
+      - ..:/repo
+    # start the demo application which is required by some tests, then run the given command
+    entrypoint: ["sh", "-c", "php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 & exec \"$$@\"", "--"]
+    # tests of the coverage group need Xdebug, which is disabled by default
+    command: ["php", "codecept", "run", "cli,unit", "--skip-group", "coverage"]
