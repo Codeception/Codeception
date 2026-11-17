@@ -1,0 +1,67 @@
+{
+    "$schema": "https://raw.githubusercontent.com/box-project/box/4.7.1/res/schema.json",
+    "main": false,
+    "stub": "stub.php",
+    "output": "codecept.phar",
+    "compression": "GZ",
+    "compactors": [
+        "KevinGH\\Box\\Compactor\\Php"
+    ],
+    "check-requirements": false,
+    "dump-autoload": false,
+    "finder": [
+        {
+            "in": "vendor",
+            "notPath": "#^codeception/#",
+            "notName": [
+                "*.md",
+                "*.markdown",
+                "*.rst",
+                "README*",
+                "CHANGELOG*",
+                "UPGRADE*",
+                "CONTRIBUTING*",
+                "composer.json",
+                "composer.lock",
+                "phpunit.xml*",
+                "phpstan*.neon*",
+                "psalm.xml*",
+                "phpcs.xml*",
+                ".php-cs-fixer*"
+            ],
+            "exclude": [
+                "Tests",
+                "tests",
+                "benchmark",
+                "demo"
+            ]
+        }
+    ],
+    "finder-bin": [
+        {
+            "in": "vendor/codeception",
+            "notName": [
+                "*.md",
+                "*.markdown",
+                "*.rst",
+                "README*",
+                "CHANGELOG*",
+                "UPGRADE*",
+                "CONTRIBUTING*",
+                "composer.json",
+                "composer.lock",
+                "phpunit.xml*",
+                "phpstan*.neon*",
+                "psalm.xml*",
+                "phpcs.xml*",
+                ".php-cs-fixer*"
+            ],
+            "exclude": [
+                "Tests",
+                "tests",
+                "benchmark",
+                "demo"
+            ]
+        }
+    ]
+}
