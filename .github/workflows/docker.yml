@@ -48,14 +48,14 @@ jobs:
           mkdir "$RUNNER_TEMP/codeception"
           git archive "$TAG" | tar -x -C "$RUNNER_TEMP/codeception"
 
-      # latest is only moved when the tag is the newest release, so backfills of older versions don't overwrite it
+      # latest is only moved for the highest release version, so backfills and patch releases
+      # of older majors don't overwrite it
       - name: Determine image tags
         id: tags
         env:
-          GH_TOKEN: ${{ github.token }}
           SUFFIX: ${{ matrix.suffix }}
         run: |
-          LATEST_TAG=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          LATEST_TAG=$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
           {
             echo "list<<EOF"
             echo "$IMAGE:$TAG$SUFFIX"
