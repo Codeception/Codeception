@@ -29,18 +29,20 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
-# Version of the Codeception sources in the build context, e.g. 5.3.7
+# Version of the Codeception sources in the build context, e.g. 5.3.7.
+# Defaults to Codecept::VERSION from the sources, so a plain `docker build .` works.
 ARG CODECEPTION_VERSION
 
 # Install codeception from the build context (the workflow uses `git archive <tag>` as context)
 # TODO: remove COMPOSER_NO_SECURITY_BLOCKING once module-ftp allows a phpseclib version without security advisories
 RUN --mount=type=bind,target=/tmp/codeception \
     set -eux; \
-    test -n "${CODECEPTION_VERSION}"; \
+    version="${CODECEPTION_VERSION:-$(sed -n "s/.*const VERSION = '\(.*\)';/\1/p" /tmp/codeception/src/Codeception/Codecept.php)}"; \
+    test -n "${version}"; \
     echo '{}' > composer.json; \
-    composer config repositories.codeception "{\"type\": \"path\", \"url\": \"/tmp/codeception\", \"options\": {\"symlink\": false, \"versions\": {\"codeception/codeception\": \"${CODECEPTION_VERSION}\"}}}"; \
+    composer config repositories.codeception "{\"type\": \"path\", \"url\": \"/tmp/codeception\", \"options\": {\"symlink\": false, \"versions\": {\"codeception/codeception\": \"${version}\"}}}"; \
     composer require --no-update \
-        "codeception/codeception:${CODECEPTION_VERSION}" \
+        "codeception/codeception:${version}" \
         codeception/module-apc \
         codeception/module-asserts \
         codeception/module-cli \
