@@ -20,6 +20,7 @@
         "codeception/module-sequence": "*",
         "codeception/module-soap": "*",
         "codeception/module-webdriver": "*",
+        "composer/semver": "^3.0",
         "laravel-zero/phar-updater": "^1.0"
     },
     "config": {
