@@ -70,7 +70,6 @@ class ConfigValidate extends Command
 
         $output->write("Validating global config... ");
         $config = $this->getGlobalConfig();
-        $output->writeln($input->getOption('override'));
         if (!empty($input->getOption('override'))) {
             $config = $this->overrideConfig($input->getOption('override'));
         }
