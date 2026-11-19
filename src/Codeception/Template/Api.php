@@ -66,20 +66,25 @@ EOF;
         $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directories at {$dir}");
         $this->ensureModules(['REST', 'PhpBrowser']);
-        $config = (new Template($this->configTemplate))
-            ->place('url', $url)
-            ->place('baseDir', $dir)
-            ->produce();
-
         $namespace = rtrim($this->namespace, '\\');
-        $config = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $config;
-        $this->createFile('codeception.yml', $config);
 
-        $settings = Yaml::parse($config)['suites']['Api'];
+        if ($this->isPhp()) {
+            $this->createFile('codeception.php', $this->phpConfig($namespace, $dir, $url));
+            $settings = $this->loadPhpSuiteSettings('Api');
+            $this->sayInfo('Created global config codeception.php inside the root directory');
+        } else {
+            $config = (new Template($this->configTemplate))
+                ->place('url', $url)
+                ->place('baseDir', $dir)
+                ->produce();
+            $config = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $config;
+            $this->createFile('codeception.yml', $config);
+            $settings = Yaml::parse($config)['suites']['Api'];
+            $this->sayInfo('Created global config codeception.yml inside the root directory');
+        }
+
         $settings['support_namespace'] = $this->supportNamespace;
         $this->createActor('ApiTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
-
-        $this->sayInfo('Created global config codeception.yml inside the root directory');
 
         $firstTest = (new Template($this->firstTest))
             ->place('namespace', $namespace)
@@ -96,5 +101,39 @@ EOF;
         $this->say("2. Run tests using: <comment>codecept run</comment>");
         $this->say();
         $this->say('<bold>Happy testing!</bold>');
+    }
+
+    private function phpConfig(string $namespace, string $dir, string $url): string
+    {
+        $namespace = $this->phpLiteral($namespace);
+        $support   = $this->phpLiteral($this->supportNamespace);
+        $dir       = $this->phpLiteral($dir);
+        $url       = $this->phpLiteral($url);
+
+        return <<<EOF
+<?php
+
+declare(strict_types=1);
+
+use Codeception\\Config\\GlobalConfig;
+use Codeception\\Config\\SuiteConfig;
+
+return GlobalConfig::create()
+    ->namespace('{$namespace}')
+    ->supportNamespace('{$support}')
+    ->paths(
+        tests: '{$dir}',
+        output: '{$dir}/_output',
+        data: '{$dir}/Support/Data',
+        support: '{$dir}/Support',
+    )
+    ->settings(shuffle: false, lint: true)
+    ->suite('Api', SuiteConfig::create()
+        ->actor('ApiTester')
+        ->path('.')
+        ->module('REST', ['url' => '{$url}'], depends: 'PhpBrowser')
+        ->stepDecorators(['Codeception\\Step\\AsJson']));
+
+EOF;
     }
 }

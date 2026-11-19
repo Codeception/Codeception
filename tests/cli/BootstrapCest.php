@@ -65,6 +65,33 @@ final class BootstrapCest
         $I->seeFileFound('codeception.yml');
     }
 
+    public function bootstrapPhp(CliTester $I)
+    {
+        $I->executeCommand('bootstrap --php');
+        $I->seeFileFound('codeception.php');
+        $I->dontSeeFileFound('codeception.yml');
+        $I->seeFileFound('Functional.suite.php', 'tests');
+        $I->seeFileFound('Acceptance.suite.php', 'tests');
+        $I->seeFileFound('Unit.suite.php', 'tests');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeFileFound('FunctionalTester.php', 'tests/Support');
+        $I->seeFileFound('UnitTester.php', 'tests/Support');
+    }
+
+    public function bootstrapPhpWithNamespaceIsValid(CliTester $I)
+    {
+        $I->executeCommand('bootstrap --php --namespace Generated');
+        $I->seeFileFound('codeception.php');
+        $I->seeInThisFile("->namespace('Generated')");
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeInThisFile('namespace Generated\\Support;');
+
+        $I->executeCommand('config:validate', false);
+        $I->dontSeeInShellOutput('ConfigurationException');
+        $I->seeInShellOutput('Loaded config file');
+        $I->seeInShellOutput('codeception.php');
+    }
+
     public function bootstrapFromInit(CliTester $I)
     {
         $I->executeCommand('init bootstrap');

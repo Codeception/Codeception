@@ -27,7 +27,8 @@ class Init extends Command
         $this
             ->addArgument('template', InputArgument::REQUIRED, 'Init template for the setup')
             ->addOption('path', null, InputOption::VALUE_REQUIRED, 'Change current directory')
-            ->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers');
+            ->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers')
+            ->addOption('php', null, InputOption::VALUE_NONE, 'Generate PHP config files instead of YAML');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

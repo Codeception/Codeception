@@ -1,0 +1,4 @@
+actor: SampleTester
+modules:
+    enabled:
+        - Asserts

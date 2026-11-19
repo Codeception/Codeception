@@ -78,6 +78,7 @@ class ConfigValidate extends Command
         $suites = Configuration::suites();
 
         $output->writeln("------------------------------\n");
+        $output->writeln('<info>Loaded config file</info>: ' . (Configuration::loadedConfigFile() ?? '(none)'));
         $output->writeln("<info>Codeception Config</info>:\n");
         $output->writeln($this->formatOutput($config));
 
