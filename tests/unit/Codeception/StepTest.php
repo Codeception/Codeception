@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Codeception\Step;
 use Codeception\Step\Argument\FormattedOutput;
+use Codeception\Step\Argument\PasswordArgument;
+use Codeception\Step\Argument\ReleasedArgument;
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Constraint\Constraint;
@@ -149,5 +151,97 @@ class StepTest extends TestCase
         $step = $this->getStep(['this', [$argument]]);
         $output = $step->toString(200);
         $this->assertSame('this "is a constraint"', $output);
+    }
+
+    public function testReleaseArgumentsKeepsOutput()
+    {
+        $constraint = Stub::makeEmpty(Constraint::class);
+        $constraint->method('toString')->willReturn('is a constraint');
+        $jsonSerializable = new class implements JsonSerializable {
+            public function jsonSerialize(): array
+            {
+                return ['serialized' => true];
+            }
+        };
+        $withProperties = new stdClass();
+        $withProperties->name = 'value';
+        $stringable = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'stringable';
+            }
+        };
+        $step = $this->getStep(['do', [
+            'string',
+            42,
+            new stdClass(),
+            function () {
+            },
+            $constraint,
+            new PasswordArgument('secret'),
+            ['key' => new ArrayObject(), 'value' => 1],
+            ['nested' => [new stdClass(), $withProperties, $jsonSerializable, new DateTimeImmutable('2026-10-30')], 'list' => [1.0, []]],
+            ['assoc' => ['object' => new stdClass(), 'value' => 1]],
+            $stringable,
+        ]]);
+        $before = $step->toString(1000);
+
+        $step->releaseArguments();
+
+        $this->assertSame($before, $step->toString(1000));
+        $arguments = $step->getArguments();
+        $this->assertSame('string', $arguments[0]);
+        $this->assertSame(42, $arguments[1]);
+        foreach ([2, 3, 4, 5, 9] as $key) {
+            $this->assertInstanceOf(ReleasedArgument::class, $arguments[$key]);
+        }
+        $this->assertSame(['key' => 'ArrayObject', 'value' => 1], $arguments[6]);
+        $this->assertSame(['list' => [1.0, []]], array_diff_key($arguments[7], ['nested' => true]));
+        $this->assertIsArray($arguments[8]['assoc']);
+    }
+
+    public function testReleaseArgumentsLetsObjectsBeCollected()
+    {
+        $object = new stdClass();
+        $recursive = new stdClass();
+        $recursive->self = $recursive;
+        $reference = WeakReference::create($object);
+        $recursiveReference = WeakReference::create($recursive);
+        $step = $this->getStep(['do', [$object, [$object, 'nested' => [$object], 'recursive' => [$recursive]]]]);
+        unset($object, $recursive);
+
+        $step->releaseArguments();
+        gc_collect_cycles();
+
+        $this->assertNull($reference->get());
+        $this->assertNull($recursiveReference->get());
+        $this->assertSame(['stdClass'], $step->getArguments()[1]['recursive']);
+    }
+
+    public function testReleaseArgumentsIsIdempotent()
+    {
+        $step = $this->getStep(['do', [new stdClass()]]);
+        $step->releaseArguments();
+        $released = $step->getArguments()[0];
+
+        $step->releaseArguments();
+
+        $this->assertSame($released, $step->getArguments()[0]);
+        $this->assertSame('do "stdClass"', $step->toString(200));
+    }
+
+    public function testReleaseArgumentsFallsBackToClassNameIfStringConversionFails()
+    {
+        $argument = new class implements Stringable {
+            public function __toString(): string
+            {
+                throw new RuntimeException('cannot be converted');
+            }
+        };
+        $step = $this->getStep(['do', [$argument]]);
+
+        $step->releaseArguments();
+
+        $this->assertStringStartsWith('do "Stringable@anonymous', $step->toString(200));
     }
 }

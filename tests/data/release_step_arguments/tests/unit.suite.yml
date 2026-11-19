@@ -1,0 +1,7 @@
+actor: UnitTester
+modules:
+  enabled:
+    - Asserts
+extensions:
+  enabled:
+    - StepArgumentsReporter

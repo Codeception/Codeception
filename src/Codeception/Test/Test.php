@@ -99,6 +99,8 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     protected bool $reportUselessTests = false;
 
+    private bool $releaseStepArguments = false;
+
     private bool $collectCodeCoverage = false;
 
     /**
@@ -119,6 +121,11 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
     public function reportUselessTests(bool $enabled): void
     {
         $this->reportUselessTests = $enabled;
+    }
+
+    public function releaseStepArguments(bool $enabled): void
+    {
+        $this->releaseStepArguments = $enabled;
     }
 
     public function setEventDispatcher(EventDispatcher $eventDispatcher): void
@@ -199,6 +206,11 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
         $this->eventDispatcher->dispatch(new TestEvent($this, $time), Events::TEST_END);
+
+        // Finished tests are kept until the suite ends; from now on their steps are only printed.
+        if ($this->releaseStepArguments && method_exists($this, 'getScenario')) {
+            $this->getScenario()?->releaseStepArguments();
+        }
     }
 
     /**

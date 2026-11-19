@@ -122,6 +122,7 @@ class SuiteManager
         $suite->setModules($this->moduleContainer->all());
 
         $suite->reportUselessTests(!empty($this->settings['report_useless_tests']));
+        $suite->releaseStepArguments(!empty($this->settings['release_step_arguments']));
         $suite->backupGlobals(!empty($this->settings['backup_globals']));
         $suite->beStrictAboutChangesToGlobalState(!empty($this->settings['be_strict_about_changes_to_global_state']));
         $suite->disallowTestOutput(!empty($this->settings['disallow_test_output']));

@@ -91,6 +91,17 @@ class Scenario
         return $this->steps;
     }
 
+    /**
+     * Lets objects passed to the recorded steps be garbage collected, see the `release_step_arguments` setting.
+     */
+    public function releaseStepArguments(): void
+    {
+        foreach ($this->steps as $step) {
+            $step->releaseArguments();
+            $step->getMetaStep()?->releaseArguments();
+        }
+    }
+
     public function getHtml(): string
     {
         $text = '';

@@ -19,4 +19,10 @@ class Executor extends CodeceptionStep
     {
         return ($this->callable)();
     }
+
+    public function releaseArguments(): void
+    {
+        parent::releaseArguments();
+        $this->callable = static fn() => null;
+    }
 }
