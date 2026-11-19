@@ -3,7 +3,7 @@
 // function not autoloaded in PHP, thus its a good place for them
 use Codeception\Extension\Logger;
 
-function codecept_debug($data)
+function codecept_debug(mixed $data): void
 {
     \Codeception\Util\Debug::debug($data);
 }
@@ -19,28 +19,31 @@ function codecept_pause(array $vars = []): void
     \Codeception\Util\Debug::pause($vars);
 }
 
-function codecept_root_dir($appendPath = '')
+function codecept_root_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::projectDir() . $appendPath;
 }
 
-function codecept_output_dir($appendPath = '')
+function codecept_output_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::outputDir() . $appendPath;
 }
 
-function codecept_log_dir($appendPath = '')
+/**
+ * @deprecated Use `codecept_output_dir()` instead
+ */
+function codecept_log_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::outputDir() . $appendPath;
 }
 
 
-function codecept_data_dir($appendPath = '')
+function codecept_data_dir(string $appendPath = ''): string
 {
     return \Codeception\Configuration::dataDir() . $appendPath;
 }
 
-function codecept_relative_path($path)
+function codecept_relative_path(string $path): string
 {
     return \Codeception\Util\PathResolver::getRelativeDir(
         $path,
@@ -54,22 +57,17 @@ function codecept_relative_path($path)
  * If $path is relative, it will be passed to `codecept_root_dir()` function
  * to make it absolute.
  *
- * @param string $path
  * @return string the absolute path
  */
-function codecept_absolute_path($path)
+function codecept_absolute_path(string $path): string
 {
     return codecept_is_path_absolute($path) ? $path : codecept_root_dir($path);
 }
 
 /**
- * Check whether the given $path is absolute.
- *
- * @param string $path
- * @return bool
- * @since 2.4.4
+ * Checks whether the given $path is absolute.
  */
-function codecept_is_path_absolute($path)
+function codecept_is_path_absolute(string $path): bool
 {
     return \Codeception\Util\PathResolver::isPathAbsolute($path);
 }
