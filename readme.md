@@ -50,19 +50,20 @@ composer require "codeception/codeception" --dev
 
 ### Phar
 
-Download [codecept.phar](https://codeception.com/codecept.phar)
+Download `codecept.phar` from the [latest release](https://github.com/Codeception/Codeception/releases/latest).
+Phars of older versions are attached to their [releases](https://github.com/Codeception/Codeception/releases).
+The phar requires PHP 8.2 or newer.
 
 Copy it into your project.
 
-You can also make Codeception an executable and it put it into your `$PATH`, for instance:
+You can also make Codeception an executable and put it into your `$PATH`, for instance:
 
 ```
-wget https://codeception.com/codecept.phar
+wget https://github.com/Codeception/Codeception/releases/latest/download/codecept.phar
 
 chmod +x codecept.phar
 
 sudo mv codecept.phar /usr/local/bin/codecept
-
 ```
 
 You can then run Codecept in the command line using: `codecept bootstrap`, `codecept run`, etc
@@ -72,6 +73,8 @@ Run CLI utility:
 ```
 php codecept.phar
 ```
+
+Update it to the latest release of the same major version with `php codecept.phar self-update`.
 
 See also [Installation](https://codeception.com/install) | **[QuickStart](https://codeception.com/quickstart)**
 

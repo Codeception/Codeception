@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Codecept;
+use Codeception\Lib\SelfUpdate\GithubReleaseStrategy;
 use Exception;
 use Humbug\SelfUpdate\Updater;
 use Phar;
@@ -16,7 +17,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function sprintf;
 
 /**
- * Auto-updates phar archive from official site: 'https://codeception.com/codecept.phar' .
+ * Updates the phar archive to the latest release of the same major version from GitHub:
+ * https://github.com/Codeception/Codeception/releases
  *
  * * `php codecept.phar self-update`
  *
@@ -37,11 +39,6 @@ class SelfUpdate extends Command
      * @var string
      */
     public const GITHUB_REPO = 'Codeception/Codeception';
-
-    /**
-     * @var string
-     */
-    public const PHAR_URL = 'https://codeception.com/php80/';
 
     /**
      * Holds the current script filename.
@@ -66,8 +63,7 @@ class SelfUpdate extends Command
         );
 
         $updater = new Updater(null, false);
-        $updater->getStrategy()->setPharUrl(self::PHAR_URL . 'codecept.phar');
-        $updater->getStrategy()->setVersionUrl(self::PHAR_URL . 'codecept.version');
+        $updater->setStrategyObject(new GithubReleaseStrategy($this->getCurrentVersion()));
 
         try {
             if ($updater->hasUpdate()) {

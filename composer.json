@@ -47,6 +47,7 @@
         "codeception/module-phpbrowser": "*@dev",
         "codeception/module-webdriver": "*@dev",
         "codeception/util-universalframework": "*@dev",
+        "composer/semver": "^3.0",
         "doctrine/orm": "^3.3",
         "jetbrains/phpstorm-attributes": "^1.0",
         "laravel-zero/phar-updater": "^1.4",

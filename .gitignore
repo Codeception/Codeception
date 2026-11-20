@@ -1,11 +1,7 @@
 .idea
-.roboci
 composer.phar
 composer.lock
 vendor
-package/codecept.phar
-package/codecept5.phar
-package/php54/codecept.phar
 tests/support/_generated
 tests/data/app/db
 tests/data/sandbox
@@ -40,7 +36,6 @@ tests/data/bundled_suites/_output/
 tests/data/snapshots/tests/_support/_generated
 tests/data/snapshots/tests/_data/Snapshot.UserSnapshot.json
 .DS_Store
-robo.phar
 .env
 .php-cs-fixer.cache
 .php-cs-fixer.php
