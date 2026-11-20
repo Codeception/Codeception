@@ -2,25 +2,24 @@
 
 namespace Codeception\PHPUnit;
 
+use Codeception\PHPUnit\Wrapper\TestCaseHooks;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+
+// phpcs:disable
+if (PHPUnitVersion::series() < 10) {
+    require_once __DIR__ . '/Wrapper/PhpUnit9/TestCaseHooks.php';
+} else {
+    require_once __DIR__ . '/Wrapper/PhpUnit10/TestCaseHooks.php';
+}
+// phpcs:enable
+
 /**
  * @method static void _setUpBeforeClass()
  * @method static void _tearDownAfterClass()
  */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp(): void
-    {
-        if (method_exists($this, '_setUp')) {
-            $this->_setUp();
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        if (method_exists($this, '_tearDown')) {
-            $this->_tearDown();
-        }
-    }
+    use TestCaseHooks;
 
     public static function setUpBeforeClass(): void
     {
