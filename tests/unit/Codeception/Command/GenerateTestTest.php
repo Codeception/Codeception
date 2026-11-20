@@ -58,6 +58,18 @@ class GenerateTestTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
+    public function testGenerateWithoutActor()
+    {
+        $this->config['actor'] = null;
+        $this->config['namespace'] = 'MiddleEarth';
+        $this->config['support_namespace'] = 'Gondor';
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
+        $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
+        $this->assertStringNotContainsString('use MiddleEarth\\Gondor\\', $this->content);
+        $this->assertStringNotContainsString('$tester', $this->content);
+        $this->assertIsValidPhp($this->content);
+    }
+
     public function testValidPHP()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
