@@ -55,7 +55,7 @@ trait ConfigTrait
             }
             $yaml .= $value;
             try {
-                $config = Yaml::parse($yaml);
+                $config = Yaml::parse($yaml, Yaml::PARSE_CONSTANT);
             } catch (ParseException $e) {
                 throw new \Codeception\Exception\ParseException("Overridden config can't be parsed: \n{$yaml}\n" . $e->getParsedLine());
             }

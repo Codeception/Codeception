@@ -360,7 +360,7 @@ class Configuration
             $contents = $template->produce();
         }
         try {
-            $conf = Yaml::parse($contents);
+            $conf = Yaml::parse($contents, Yaml::PARSE_CONSTANT);
         } catch (ParseException $e) {
             throw new ConfigurationException(
                 sprintf(
