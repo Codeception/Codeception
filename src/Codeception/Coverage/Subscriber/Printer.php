@@ -113,7 +113,13 @@ class Printer implements EventSubscriberInterface
     {
         if (class_exists(FacadeReport::class)) {
             $writer = FacadeReport::fromObject(self::$coverage);
-            $this->output->write($writer->renderText(null, showColors: $this->options['colors']));
+            $this->output->write($writer->renderText(
+                null,
+                $this->createThresholds(),
+                $this->settings['show_uncovered'],
+                $this->settings['show_only_summary'],
+                $this->options['colors']
+            ));
         } else {
             $writer = $this->createTextWriter();
             $this->output->write($writer->process(self::$coverage, $this->options['colors']));
@@ -124,7 +130,11 @@ class Printer implements EventSubscriberInterface
     {
         if (class_exists(FacadeReport::class)) {
             $writer = FacadeReport::fromObject(self::$coverage);
-            $writer->renderHtml($this->absolutePath($this->options['coverage-html']));
+            $writer->renderHtml(
+                $this->absolutePath($this->options['coverage-html']),
+                $this->htmlGenerator(),
+                thresholds: $this->createThresholds()
+            );
         } else {
             $writer = $this->createHtmlFacadeWriter();
             $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
@@ -159,7 +169,12 @@ class Printer implements EventSubscriberInterface
             $writer = FacadeReport::fromObject(self::$coverage);
             file_put_contents(
                 $this->absolutePath($this->options['coverage-text']),
-                $writer->renderText(null)
+                $writer->renderText(
+                    null,
+                    $this->createThresholds(),
+                    $this->settings['show_uncovered'],
+                    $this->settings['show_only_summary']
+                )
             );
         } else {
             $writer = $this->createTextWriter();
@@ -203,18 +218,28 @@ class Printer implements EventSubscriberInterface
         }
     }
 
+    private function htmlGenerator(): string
+    {
+        return ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit ' . PHPUnitVersion::id() . '</a>';
+    }
+
+    private function createThresholds(): Thresholds
+    {
+        return Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']);
+    }
+
     private function createHtmlFacadeWriter(): HtmlFacadeReport
     {
-        $generator = ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit {PHPUnitVersion::id()}</a>';
+        $generator = $this->htmlGenerator();
         return PHPUnitVersion::series() < 10 ?
             new HtmlFacadeReport($this->settings['low_limit'], $this->settings['high_limit'], $generator) :
-            new HtmlFacadeReport($generator, null, Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']));
+            new HtmlFacadeReport($generator, null, $this->createThresholds());
     }
 
     private function createTextWriter(): TextReport
     {
         return PHPUnitVersion::series() < 10 ?
             new TextReport($this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], $this->settings['show_only_summary']) :
-            new TextReport(Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']), $this->settings['show_uncovered'], $this->settings['show_only_summary']);
+            new TextReport($this->createThresholds(), $this->settings['show_uncovered'], $this->settings['show_only_summary']);
     }
 }

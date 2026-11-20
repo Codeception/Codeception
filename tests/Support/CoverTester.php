@@ -23,10 +23,26 @@ class CoverTester extends \Codeception\Actor
 {
     use _generated\CoverTesterActions;
 
+    // per-class rows print methods and lines on one line, summary rows don't
+    private const CLASS_COVERAGE_REGEX = '#Methods:.*Lines:#';
+
     public function seeCoverageStatsNotEmpty()
     {
         $this->seeShellOutputMatches(
             '#info\n\s+Methods:\s+\d+\.\d+% \( [01]/ 1\)\s+Lines:\s+\d+\.\d+% \(  [345]/  [345]\)#s'
+        );
+    }
+
+    public function seeCoverageDetailsPerClass()
+    {
+        $this->seeShellOutputMatches(self::CLASS_COVERAGE_REGEX);
+    }
+
+    public function dontSeeCoverageDetailsPerClass()
+    {
+        \PHPUnit\Framework\Assert::assertDoesNotMatchRegularExpression(
+            self::CLASS_COVERAGE_REGEX,
+            $this->grabShellOutput()
         );
     }
 }
