@@ -58,7 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.2', '8.3', '8.4', '8.5']
+        php: ['8.2', '8.3', '8.4', '8.5', '8.6']
         mode: ['stable', 'experimental']
         exclude:
           - php: '8.3'
@@ -66,6 +66,8 @@ jobs:
           - php: '8.4'
             mode: 'experimental'
           - php: '8.5'
+            mode: 'experimental'
+          - php: '8.6'
             mode: 'experimental'
 
     steps:
@@ -154,7 +156,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ['8.2', '8.3', '8.4', '8.5']
+        php: ['8.2', '8.3', '8.4', '8.5', '8.6']
 
     steps:
       - name: Checkout
