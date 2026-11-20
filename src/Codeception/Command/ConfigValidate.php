@@ -89,6 +89,16 @@ class ConfigValidate extends Command
 
         $output->writeln("<info>Available suites</info>: " . implode(', ', $suites));
 
+        if ($suites === [] && empty($config['include'])) {
+            $output->writeln('');
+            $output->writeln(sprintf(
+                '<error> Warning: no suites found in %s </error>',
+                Configuration::testsDir()
+            ));
+            $output->writeln('Run <info>codecept generate:suite <name></info> to create one.');
+            $output->writeln('');
+        }
+
         foreach ($suites as $suite) {
             $output->write("Validating suite <bold>{$suite}</bold>... ");
             $this->getSuiteConfig($suite);
