@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Tests\Support\CodeTester;
+use Codeception\Attribute\DataProvider as DataProviderAttribute;
 use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
@@ -173,6 +174,27 @@ class DataProviderTest extends Unit
             ['foo', 7],
             ['bar', 8],
         ];
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public static function singleExamplesAttributeProvider(): array
+    {
+        return [
+            'scalar values'         => ['testScalarValues', [['foo', 7]]],
+            'null value'            => ['testNullValue', [['foo', null]]],
+            'named arguments'       => ['testNamedArguments', [['name' => 'foo', 'value' => 7]]],
+            'list of examples'      => ['testListOfExamples', [['foo', 7], ['bar', 8]]],
+            'single array argument' => ['testSingleArrayArgument', [['foo', 7]]],
+        ];
+    }
+
+    #[DataProviderAttribute('singleExamplesAttributeProvider')]
+    public function testSupportsSingleExamplesAttribute(string $methodName, array $expectedResult)
+    {
+        require_once codecept_data_dir('data_provider/SingleExamplesAttributeTest.php');
+        $method = new ReflectionMethod(SingleExamplesAttributeTest::class, $methodName);
+        $result = DataProvider::getDataForMethod($method);
 
         $this->assertSame($expectedResult, $result);
     }
