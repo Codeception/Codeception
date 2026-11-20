@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Test;
 
 use Codeception\Actor;
+use Codeception\Attribute\ExampleRow;
 use Codeception\Exception\InvalidTestException;
 use Codeception\Exception\TestParseException;
 use Codeception\Util\Annotation;
@@ -31,6 +32,10 @@ class DataProvider
             foreach ($rawExamples as $example) {
                 $data[] = $convert ? Annotation::arrayValue($example) : $example;
             }
+        }
+
+        foreach ($method->getAttributes(ExampleRow::class) as $exampleRow) {
+            $data[] = $exampleRow->getArguments();
         }
 
         $providers = array_merge(
