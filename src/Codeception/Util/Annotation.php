@@ -109,13 +109,19 @@ class Annotation
     public function fetchAll(string $annotation): array
     {
         if (($attr = $this->attribute($annotation)) instanceof ReflectionAttribute) {
-            if (!$attr->isRepeated()) {
-                return $attr->getArguments();
-            }
-
             if ($annotation === 'example') {
                 $annotation = 'examples';
             }
+
+            if (!$attr->isRepeated()) {
+                $arguments = $attr->getArguments();
+                if ($annotation !== 'examples' || self::isListOfExamples($arguments)) {
+                    return $arguments;
+                }
+                // A single #[Examples('foo', 7)] attribute describes one example
+                return [$arguments];
+            }
+
             $attrClass = "Codeception\\Attribute\\" . ucfirst($annotation);
             $attrs = array_filter($this->attributes(), static fn($a): bool => $a->getName() === $attrClass);
 
@@ -149,6 +155,15 @@ class Annotation
     public function raw(): string|false
     {
         return $this->currentReflectedItem->getDocComment();
+    }
+
+    /**
+     * Legacy syntax: a single #[Examples([1, 1], [2, 2])] attribute where every argument is one example
+     */
+    private static function isListOfExamples(array $arguments): bool
+    {
+        return array_is_list($arguments)
+            && array_filter($arguments, 'is_array') === $arguments;
     }
 
     /**
