@@ -118,7 +118,7 @@ Acceptance tests that use demo application and `c3` collector, to check that a c
 ## Running tests with Docker
 
 If you don't want to install PHP locally, you can run the tests in a container with [`tests/compose.yaml`](compose.yaml).
-It uses the official `composer` image with Xdebug added, mounts the repository and starts the demo application in the background.
+It uses the official `php` image with Composer and Xdebug added, mounts the repository and starts the demo application in the background.
 The container runs as user and group 1000, set `UID` and `GID` if your ids differ:
 
     export UID GID=$(id -g)
@@ -144,5 +144,11 @@ Open a shell
 Run all suites including the tests which require code coverage (Xdebug is disabled by default, as it slows down the tests)
 
     docker compose -f tests/compose.yaml run --rm -e XDEBUG_MODE=coverage php php codecept run cli,unit,coverage
+
+Run the tests with another PHP version (default: 8.2, the lowest supported version). The dependencies have to be updated when switching the version, as `composer.lock` and `vendor` are shared with the host
+
+    export PHP_VERSION=8.5
+    docker compose -f tests/compose.yaml run --rm php composer update
+    docker compose -f tests/compose.yaml run --rm php
 
 Note: the `Dockerfile` in the root of the repository builds the `codeception/codeception` image for running *your* tests, it is not meant for developing Codeception.
