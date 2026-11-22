@@ -22,10 +22,14 @@ env:
 
 jobs:
   docker:
-    name: Build and push ${{ matrix.flavor }} image
+    name: Build and push PHP ${{ matrix.php }} ${{ matrix.flavor }} image
     runs-on: ubuntu-latest
     strategy:
+      # an image which fails to build must not prevent the others from being published
+      fail-fast: false
       matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+        flavor: [trixie, alpine]
         include:
           - flavor: trixie
             suffix: ''
@@ -48,20 +52,31 @@ jobs:
           mkdir "$RUNNER_TEMP/codeception"
           git archive "$TAG" | tar -x -C "$RUNNER_TEMP/codeception"
 
+      # Every image is tagged with its PHP version, e.g. 5.3.7-php8.4-alpine. The images of the default
+      # PHP version of the Dockerfile are additionally tagged without it, e.g. 5.3.7-alpine.
       # latest is only moved for the highest release version, so backfills and patch releases
       # of older majors don't overwrite it
       - name: Determine image tags
         id: tags
         env:
+          PHP: ${{ matrix.php }}
           SUFFIX: ${{ matrix.suffix }}
         run: |
           LATEST_TAG=$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+          DEFAULT_PHP=$(sed -n 's/^ARG PHP_VERSION=//p' Dockerfile)
+          test -n "$DEFAULT_PHP"
+          VERSIONS=("$TAG")
+          if [[ "$TAG" == "$LATEST_TAG" ]]; then
+            VERSIONS+=(latest)
+          fi
           {
             echo "list<<EOF"
-            echo "$IMAGE:$TAG$SUFFIX"
-            if [[ "$TAG" == "$LATEST_TAG" ]]; then
-              echo "$IMAGE:latest$SUFFIX"
-            fi
+            for VERSION in "${VERSIONS[@]}"; do
+              echo "$IMAGE:$VERSION-php$PHP$SUFFIX"
+              if [[ "$PHP" == "$DEFAULT_PHP" ]]; then
+                echo "$IMAGE:$VERSION$SUFFIX"
+              fi
+            done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -75,12 +90,17 @@ jobs:
           file: Dockerfile
           build-args: |
             flavor=${{ matrix.flavor }}
+            PHP_VERSION=${{ matrix.php }}
             CODECEPTION_VERSION=${{ env.TAG }}
           load: true
           tags: codeception-smoke-test
 
       - name: Smoke test
-        run: docker run --rm codeception-smoke-test --version | grep -F "$TAG"
+        env:
+          PHP: ${{ matrix.php }}
+        run: |
+          docker run --rm codeception-smoke-test --version | grep -F "$TAG"
+          docker run --rm --entrypoint php codeception-smoke-test -r 'echo PHP_MAJOR_VERSION, ".", PHP_MINOR_VERSION;' | grep -Fx "$PHP"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
@@ -96,6 +116,7 @@ jobs:
           file: Dockerfile
           build-args: |
             flavor=${{ matrix.flavor }}
+            PHP_VERSION=${{ matrix.php }}
             CODECEPTION_VERSION=${{ env.TAG }}
           push: true
           tags: ${{ steps.tags.outputs.list }}
