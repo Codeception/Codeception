@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Tests\Support\CodeTester;
+use Codeception\Attribute\DataProvider as DataProviderAttribute;
 use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
@@ -173,6 +174,27 @@ class DataProviderTest extends Unit
             ['foo', 7],
             ['bar', 8],
         ];
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public static function exampleRowAttributeProvider(): array
+    {
+        return [
+            'single row'             => ['testSingleRow', [['foo', 7]]],
+            'multiple rows'          => ['testMultipleRows', [['foo', null], ['bar', 8]]],
+            'named arguments'        => ['testNamedArguments', [['name' => 'foo', 'value' => 7]]],
+            'array values'           => ['testArrayValues', [[['a'], ['b']]]],
+            'combined with examples' => ['testCombinedWithExamples', [['foo', 7], ['bar', 8], ['baz', 9]]],
+        ];
+    }
+
+    #[DataProviderAttribute('exampleRowAttributeProvider')]
+    public function testSupportsExampleRowAttribute(string $methodName, array $expectedResult)
+    {
+        require_once codecept_data_dir('data_provider/ExampleRowAttributeTest.php');
+        $method = new ReflectionMethod(ExampleRowAttributeTest::class, $methodName);
+        $result = DataProvider::getDataForMethod($method);
 
         $this->assertSame($expectedResult, $result);
     }
