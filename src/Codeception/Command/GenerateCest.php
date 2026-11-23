@@ -19,7 +19,7 @@ use function file_exists;
  * * `codecept generate:cest suite Login`
  * * `codecept g:cest suite subdir/subdir/testnameCest.php`
  * * `codecept g:cest suite LoginCest -c path/to/project`
- * * `codecept g:cest "App\Login"`
+ * * `codecept g:cest suite "App\Login"`
  *
  */
 #[AsCommand(

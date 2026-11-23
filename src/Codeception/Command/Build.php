@@ -15,8 +15,8 @@ use Symfony\Component\Console\Output\OutputInterface as SymfonyOutputInterface;
 use function implode;
 
 /**
- * Generates Actor classes (initially Guy classes) from suite configs.
- * Starting from Codeception 2.0 actor classes are auto-generated. Use this command to generate them manually.
+ * Generates Actor classes from suite configs.
+ * Actor classes are auto-generated. Use this command to generate them manually.
  *
  * * `codecept build`
  * * `codecept build path/to/project`

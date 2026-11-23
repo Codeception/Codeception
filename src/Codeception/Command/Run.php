@@ -60,7 +60,7 @@ use function substr_replace;
  *
  * Verbosity modes:
  *
- * * `codecept run -v`:
+ * * `codecept run -v`: print enabled modules of each suite and more detailed results
  * * `codecept run --steps`: print step-by-step execution
  * * `codecept run -vv`: print steps and debug information
  * * `codecept run --debug`: alias for `-vv`
@@ -113,6 +113,7 @@ use function substr_replace;
  *  --coverage-text        Generate CodeCoverage text report in file (default: "coverage.txt")
  *  --coverage-phpunit     Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
  *  --coverage-cobertura   Generate CodeCoverage Cobertura report in file (default: "coverage-cobertura")
+ *  --coverage-crap4j      Generate CodeCoverage report in Crap4J XML format (default: "crap4j.xml")
  *  --no-exit              Don't finish with exit code
  *  --group (-g)           Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)            Skip selected suites (multiple values allowed)
@@ -120,6 +121,11 @@ use function substr_replace;
  *  --env                  Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
  *  --fail-fast (-f)       Stop after nth failure (defaults to 1)
  *  --no-rebuild           Do not rebuild actor classes on start
+ *  --ext (-e)             Run with extension enabled (multiple values allowed)
+ *  --shard                Execute subset of tests to run tests on different machines, e.g. 1/3, 2/3, 3/3
+ *  --filter               Filter tests by name
+ *  --grep                 Filter tests by name (alias to --filter)
+ *  --no-artifacts         Don't report about artifacts
  *  --help (-h)            Display this help message.
  *  --quiet (-q)           Do not output any message. Almost the same as `--silent`
  *  --verbose (-v|vv|vvv)  Increase the verbosity of messages: `v` for normal output, `vv` for steps and debug, `vvv` for Codeception-internal debug
