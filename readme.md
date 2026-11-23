@@ -33,7 +33,7 @@ $I->click('New');
 $I->see('New Page');
 $I->submitForm('form#new_page', ['title' => 'Movie Review']);
 $I->see('page created'); // notice generated
-$I->see('Movie Review','h1'); // head of page of is our title
+$I->see('Movie Review','h1'); // head of page is our title
 $I->seeInCurrentUrl('pages/movie-review'); // slug is generated
 $I->seeInDatabase('pages', ['title' => 'Movie Review']); // data is stored in database
 ```

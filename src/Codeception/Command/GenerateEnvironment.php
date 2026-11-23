@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  *  * `codecept g:env firefox`
  *
- * Required to have `envs` path to be specified in `codeception.yml`
+ * Requires `envs` path to be specified in `codeception.yml`
  */
 #[AsCommand(
     name: 'generate:environment',

@@ -18,7 +18,7 @@ use function codecept_root_dir;
 
 /**
  * Validates and prints Codeception config.
- * Use it do debug Yaml configs
+ * Use it to debug Yaml configs
  *
  * Check config:
  *

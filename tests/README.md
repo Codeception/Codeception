@@ -1,6 +1,6 @@
 # Codeception Internal Tests
 
-In case you submit a pull request, you will be asked for writing a test.
+In case you submit a pull request, you will be asked to write a test.
 
 There are 3 suites for testing
 
@@ -111,7 +111,7 @@ To see the page in the browser, open `http://127.0.0.1:8008/your-route`
 
 ## Coverage
 
-Acceptance tests that use demo application and `c3` collector, to check that a code coverage can be collected remotely. This tests are rarely updated, they should just work )
+Acceptance tests that use demo application and `c3` collector, to check that a code coverage can be collected remotely. These tests are rarely updated, they should just work )
 
 ---
 

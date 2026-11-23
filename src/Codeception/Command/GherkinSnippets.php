@@ -20,7 +20,7 @@ use function count;
  *
  * Usage:
  *
- * * `codecept gherkin:snippets Acceptance` - snippets from all feature of acceptance tests
+ * * `codecept gherkin:snippets Acceptance` - snippets from all features of acceptance tests
  * * `codecept gherkin:snippets Acceptance/feature/users` - snippets from `feature/users` dir of acceptance tests
  * * `codecept gherkin:snippets Acceptance user_account.feature` - snippets from a single feature file
  * * `codecept gherkin:snippets Acceptance/feature/users/user_accout.feature` - snippets from feature file in a dir

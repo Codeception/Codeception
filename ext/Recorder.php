@@ -71,7 +71,7 @@ use function uniqid;
  * * `ignore_steps` (default: []) - array of step names that should not be recorded (given the step passed), * wildcards supported. Meta steps can also be ignored.
  * * `success_color` (default: success) - bootstrap values to be used for color representation for passed tests
  * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
- * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where there's an issue occurred while generating a recording
+ * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where an issue occurred while generating a recording
  * * `delete_orphaned` (default: false) - delete recording folders created via previous runs
  * * `include_microseconds` (default: false) - enable microsecond precision for recorded step time details
  *

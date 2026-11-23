@@ -23,12 +23,12 @@ Check it with `composer cs-prod` and `composer cs-tests` before sending a pull r
 Check the [tests/README.md](tests/README.md) to learn how to run and write internal tests.
 We encourage you to write a test for a patch you are implementing. If this doesn't seem possible, such PRs are still valid and can be accepted.
 
-We also encourage to submit bug reports with a failing test or test environment (3rd party repo with Codeception installation) with demonstration of a failure. That makes easier to us to find the cause and fix it.
+We also encourage you to submit bug reports with a failing test or test environment (3rd party repo with Codeception installation) with demonstration of a failure. That makes it easier for us to find the cause and fix it.
 
 ## Documentation
 
 ### Guides
-If you want to contribute documentation to the guides you are asked to send your changes to website repository: [codeception.github.com](https://github.com/Codeception/codeception.github.com/tree/master/docs)
+If you want to contribute documentation to the guides you are asked to send your changes to the website repository: [codeception.github.com](https://github.com/Codeception/codeception.github.com/tree/master/docs)
 
 ### Modules Documentation
 The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Codeception/Module/*.php in corresponding codeception/module-NAME repository).
