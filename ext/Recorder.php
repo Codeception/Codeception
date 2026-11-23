@@ -67,7 +67,7 @@ use function uniqid;
  * #### Configuration
  *
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
- * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ * * `module` (default: WebDriver) - which module for screenshots to use. The module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
  * * `ignore_steps` (default: []) - array of step names that should not be recorded (given the step passed), * wildcards supported. Meta steps can also be ignored.
  * * `success_color` (default: success) - bootstrap values to be used for color representation for passed tests
  * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
@@ -81,7 +81,6 @@ use function uniqid;
  * extensions:
  *     enabled:
  *         - Codeception\Extension\Recorder:
- *             module: AngularJS # enable for Angular
  *             delete_successful: false # keep screenshots of successful tests
  *             ignore_steps: [have, grab*]
  * ```
