@@ -365,7 +365,7 @@ Summary of all differences from Codeception 4
 * Custom reporters implementing TestListener are no longer supported and must be converted to Extensions
 * Tests of all formats are reported as useless if they perform no assertions and `reports_useless_tests` setting is enabled
 * Added path_coverage setting to enable path and branch coverage #6158 by @s0lus
-* Added optional value to `fail-fast` option (#6275) by #Verest
+* Added optional value to `fail-fast` option (#6275) by @Verest
 * Module after and failed hooks are executed in reverse order (#6062) by WillemHoman
 * Removed `JSON` and `TAP` loggers
 * Removed code coverage blacklist functionality
