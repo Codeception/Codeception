@@ -1,6 +1,6 @@
 <?php
 
-// function not autoloaded in PHP, thus its a good place for them
+// function not autoloaded in PHP, thus it's a good place for them
 use Codeception\Extension\Logger;
 
 function codecept_debug(mixed $data): void
