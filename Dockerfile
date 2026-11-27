@@ -1,8 +1,10 @@
 # syntax=docker/dockerfile:1
 
 ARG flavor=trixie
+# The images are published for every PHP version supported by Codeception, this is the default one
+ARG PHP_VERSION=8.5
 
-FROM php:8.2-cli-${flavor}
+FROM php:${PHP_VERSION}-cli-${flavor}
 
 LABEL maintainer="Tobias Munk <tobias@diemeisterei.de>"
 
