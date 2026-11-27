@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use Tests\Support\CodeTester;
+use Codeception\Attribute\Depends;
 use Codeception\Attribute\Group;
 use Codeception\Test\TestCaseWrapper;
 use Codeception\Test\Unit;
 use Codeception\Test\Descriptor;
+use PHPUnit\Framework\TestCase;
 
 #[Group('testCaseWrapper')]
 final class TestCaseWrapperTest extends Unit
@@ -34,5 +36,29 @@ final class TestCaseWrapperTest extends Unit
         );
 
         $this->assertSame(['testCaseWrapper', 'core'], $test->getMetadata()->getGroups());
+    }
+
+    public function testRepeatedDependsAttributesAreFlattened()
+    {
+        $testCase = new class ('testTarget') extends TestCase {
+            #[Depends('testFirst')]
+            #[Depends('OtherTest:testSecond', 'testThird')]
+            public function testTarget(): void
+            {
+            }
+
+            public function testFirst(): void
+            {
+            }
+
+            public function testThird(): void
+            {
+            }
+        };
+
+        $this->assertSame(
+            [$testCase::class . ':testFirst', 'OtherTest:testSecond', $testCase::class . ':testThird'],
+            (new TestCaseWrapper($testCase))->fetchDependencies()
+        );
     }
 }
