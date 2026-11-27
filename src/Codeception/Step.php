@@ -157,10 +157,12 @@ abstract class Step implements Stringable
                 $argument = $this->getClassName($argument);
             }
         }
-        return (string) json_encode(
+        $json = (string) json_encode(
             $argument,
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
         );
+        // json_encode always escapes backslashes, e.g. in namespaced class names
+        return str_replace('\\\\', '\\', $json);
     }
 
     protected function getClassName(object $argument): string
