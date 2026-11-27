@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Codeception\Step;
 use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Stub;
+use Codeception\Util\Fixtures;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +46,15 @@ class StepTest extends TestCase
         $mock = $this->createMock($this::class);
         $step = $this->getStep(['', [[$mock, 'testGetArguments']]]);
         $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
+
+        $step = $this->getStep(['', [new Fixtures()]]);
+        $this->assertSame('"Codeception\Util\Fixtures"', $step->getArgumentsAsString());
+
+        $step = $this->getStep(['', [[new Fixtures(), 'run']]]);
+        $this->assertSame('["Codeception\Util\Fixtures","run"]', $step->getArgumentsAsString());
+
+        $step = $this->getStep(['', [['C:\path\to\file']]]);
+        $this->assertSame('["C:\path\to\file"]', $step->getArgumentsAsString());
     }
 
     public function testGetHtml()
