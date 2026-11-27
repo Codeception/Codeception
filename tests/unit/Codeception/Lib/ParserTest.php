@@ -177,4 +177,17 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('AnonymousClassWithAttributeCest.php'));
         $this->assertSame([\Tests\Unit\AnonymousClassWithAttributeCest::class], $classes);
     }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/6755
+     */
+    #[Group('core')]
+    public function testParseTestContainingReadonlyAnonymousClass()
+    {
+        if (PHP_VERSION_ID < 80300) {
+            $this->markTestSkipped('Readonly anonymous classes require PHP 8.3');
+        }
+        $classes = Parser::getClassesFromFile(codecept_data_dir('ReadonlyAnonymousClassCest.php'));
+        $this->assertSame([\Tests\Unit\ReadonlyAnonymousClassCest::class], $classes);
+    }
 }
