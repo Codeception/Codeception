@@ -61,4 +61,19 @@ final class GlobalCommandOptionCest
         $I->executeFailCommand('-c no/exists/codeception.yml');
         $I->seeInShellOutput('Your configuration file `no/exists/codeception.yml` could not be found.');
     }
+
+    public function versionOptionListsInstalledModules(CliTester $I)
+    {
+        $I->executeCommand('--version');
+        $I->seeInShellOutput('Codeception ' . \Codeception\Codecept::VERSION);
+        $I->seeInShellOutput('Installed modules:');
+        $I->seeShellOutputMatches('/^  codeception\/module-asserts +\S+$/m');
+    }
+
+    public function commandListDoesNotListInstalledModules(CliTester $I)
+    {
+        $I->executeCommand('list');
+        $I->seeInShellOutput('Available commands:');
+        $I->dontSeeInShellOutput('Installed modules:');
+    }
 }
