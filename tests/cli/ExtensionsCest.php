@@ -54,6 +54,33 @@ final class ExtensionsCest
         $I->seeInShellOutput('[-] FailingTest:testMe');
     }
 
+    public function runIgnoresFailedGroupWithDeletedTests(CliTester $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->writeToFile('tests/_output/failed', 'tests/unit/DeletedTest.php:testMe');
+
+        $I->executeCommand('run unit FailingTest.php -c codeception_extended.yml --no-exit');
+        $I->dontSeeInShellOutput('does not exist');
+        $I->seeInShellOutput('[RunFailed] Removed deleted test from failed group: tests/unit/DeletedTest.php:testMe');
+        $I->seeInShellOutput('[-] FailingTest:testMe');
+    }
+
+    public function reRunFailedTestsSkipsDeletedTests(CliTester $I)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $I->amInPath('tests/data/sandbox');
+        $I->writeToFile(
+            'tests/_output/failed',
+            "tests{$ds}unit{$ds}DeletedTest.php:testMe\ntests{$ds}unit{$ds}FailingTest.php:testMe"
+        );
+
+        $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
+        $I->dontSeeInShellOutput('does not exist');
+        $I->seeInShellOutput('[-] FailingTest:testMe');
+        $I->seeFileFound('failed', 'tests/_output');
+        $I->seeFileContentsEqual("tests{$ds}unit{$ds}FailingTest.php:testMe");
+    }
+
     public function checkIfExtensionsReceiveCorrectOptions(CliTester $I)
     {
         $I->wantTo('check if extensions receive correct options');
