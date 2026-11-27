@@ -36,4 +36,5 @@ curl -fsSL -o box.phar "https://github.com/box-project/box/releases/download/$BO
 php -d phar.readonly=0 box.phar compile --no-interaction
 
 # --no-redirect: otherwise autoload.php runs the copy in ./vendor/codeception instead of the phar
-php codecept.phar --version --no-redirect | grep -F "$TAG"
+# only the first line: the bundled module versions follow it
+php codecept.phar --version --no-redirect | sed -n 1p | grep -F "$TAG"
