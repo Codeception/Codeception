@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
+use Composer\InstalledVersions;
 use Exception;
+use Phar;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\ArgvInput as SymfonyArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -105,6 +107,66 @@ class Application extends BaseApplication
         }
 
         return parent::run($input, $output);
+    }
+
+    /**
+     * Output of --version, includes the installed modules
+     */
+    public function getLongVersion(): string
+    {
+        $longVersion = parent::getLongVersion();
+        $modules = $this->getInstalledModules();
+        if ($modules === []) {
+            return $longVersion;
+        }
+
+        $longVersion .= PHP_EOL . PHP_EOL . ($this->isRunningFromPhar() ? 'Bundled modules:' : 'Installed modules:');
+        $nameLength = max(array_map('strlen', array_keys($modules)));
+        foreach ($modules as $name => $version) {
+            $longVersion .= PHP_EOL . '  ' . str_pad($name, $nameLength) . '  <info>' . $version . '</info>';
+        }
+        return $longVersion;
+    }
+
+    /**
+     * Header of the command list, without the installed modules
+     */
+    public function getHelp(): string
+    {
+        return parent::getLongVersion();
+    }
+
+    /**
+     * @return array<string, string> package name => version
+     */
+    private function getInstalledModules(): array
+    {
+        if (!class_exists(InstalledVersions::class)) {
+            return [];
+        }
+
+        // the phar can also load the project's vendor dir, list only the modules bundled in the phar then
+        $inPhar = $this->isRunningFromPhar();
+        $modules = [];
+        foreach (InstalledVersions::getAllRawData() as $installed) {
+            foreach ($installed['versions'] as $name => $package) {
+                if (!str_starts_with($name, 'codeception/module-') || !isset($package['pretty_version'])) {
+                    continue;
+                }
+                if ($inPhar && !str_starts_with($package['install_path'] ?? '', 'phar://')) {
+                    continue;
+                }
+                $modules[$name] = $package['pretty_version'];
+            }
+        }
+        ksort($modules);
+        return $modules;
+    }
+
+    private function isRunningFromPhar(): bool
+    {
+        // the phar extension is optional when installed with Composer
+        return class_exists(Phar::class, false) && Phar::running() !== '';
     }
 
     /**
