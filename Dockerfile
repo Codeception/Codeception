@@ -31,7 +31,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
-# Version of the Codeception sources in the build context, e.g. 5.3.7.
+# Version of the Codeception sources in the build context, e.g. 5.4.0.
 # Defaults to Codecept::VERSION from the sources, so a plain `docker build .` works.
 ARG CODECEPTION_VERSION
 
