@@ -9,10 +9,15 @@ use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
 
+use function array_diff_key;
+use function array_filter;
 use function array_key_exists;
+use function file;
+use function file_exists;
 use function file_put_contents;
 use function implode;
 use function is_file;
+use function preg_replace;
 use function realpath;
 use function str_replace;
 use function strlen;
@@ -42,6 +47,7 @@ use function unlink;
  * ```
  *
  * On each execution failed tests are logged and saved into `tests/_output/failed` file.
+ * Tests whose files were deleted in the meantime are removed from this file before the next run.
  */
 class RunFailed extends Extension
 {
@@ -60,6 +66,7 @@ class RunFailed extends Extension
         if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']) {
             $this->group = $this->config['fail-group'];
         }
+        $this->removeDeletedTests();
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
         $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
@@ -83,6 +90,39 @@ class RunFailed extends Extension
         }
 
         file_put_contents($file, implode("\n", $output));
+    }
+
+    /**
+     * Removes tests whose files were deleted since the last run, as the group could not be loaded otherwise.
+     */
+    private function removeDeletedTests(): void
+    {
+        $file = $this->getLogDir() . $this->group;
+        if (!is_file($file)) {
+            return;
+        }
+        $tests = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+        $deletedTests = array_filter($tests, fn (string $test): bool => !file_exists($this->getTestFilePath($test)));
+        if ($deletedTests === []) {
+            return;
+        }
+        foreach ($deletedTests as $test) {
+            $this->writeln("[RunFailed] Removed deleted test from {$this->group} group: <info>{$test}</info>");
+        }
+        $tests = array_diff_key($tests, $deletedTests);
+        if ($tests === []) {
+            unlink($file);
+            return;
+        }
+        file_put_contents($file, implode("\n", $tests));
+    }
+
+    private function getTestFilePath(string $test): string
+    {
+        // strip the test name, but keep the drive letter of absolute Windows paths
+        $path = (string) preg_replace('#(?<!^[A-Za-z]):.*$#', '', trim($test));
+        $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        return codecept_is_path_absolute($path) ? $path : $this->getRootDir() . $path;
     }
 
     protected function localizePath(string $path): string
