@@ -179,6 +179,25 @@ final class IncludedCest
         $I->seeInShellOutput('2 tests');
     }
 
+    #[Before('moveToIncluded')]
+    public function runIncludedGroupDefinedAsArray(CliTester $I)
+    {
+        $I->executeCommand('run -g array_group', false);
+        $I->dontSeeInShellOutput('Array to string conversion');
+        $I->dontSeeInShellOutput('No tests executed');
+        $I->seeInShellOutput('2 tests');
+    }
+
+    #[Before('moveToIncluded')]
+    public function runIncludedGroupOverriddenWithAbsolutePaths(CliTester $I)
+    {
+        $testFile = codecept_data_dir('included/jazz/tests/unit/SimpleTest.php');
+        $I->executeCommand("run -g override_group -o \"groups: override_group: [{$testFile}]\"", false);
+        $I->dontSeeInShellOutput('Array to string conversion');
+        $I->dontSeeInShellOutput('No tests executed');
+        $I->seeInShellOutput('2 tests');
+    }
+
     public function includedSuitesAreNotRunTwice(CliTester $I)
     {
         $I->amInPath('tests/data/included_two_config_files');

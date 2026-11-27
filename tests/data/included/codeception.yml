@@ -5,6 +5,7 @@ include:
 
 groups:
   group: group.txt
+  array_group: [jazz/tests/unit/SimpleTest.php]
 
 paths:
   tests: tests
