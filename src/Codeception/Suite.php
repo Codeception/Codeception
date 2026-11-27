@@ -141,12 +141,12 @@ class Suite
         }
 
         $queue = [];
-        $hashes = [];
+        $ids = [];
         foreach ($tests as $test) {
-            if (in_array(spl_object_hash($test), $hashes, true)) {
+            if (in_array(spl_object_id($test), $ids, true)) {
                 continue;
             }
-            $hashes[] = spl_object_hash($test);
+            $ids[] = spl_object_id($test);
             $queue[] = $test;
         }
         $this->tests = $queue;
