@@ -226,6 +226,7 @@ class Codecept
                 $envConfigs[] = $currentEnv;
             }
 
+            $suiteEnvConfig = Configuration::applyOverrides($suiteEnvConfig);
             $suiteEnvConfig['current_environment'] = implode(',', $envConfigs);
 
             $suiteToRun = $suite . (empty($envList) ? '' : ' (' . implode(', ', $envSet) . ')');

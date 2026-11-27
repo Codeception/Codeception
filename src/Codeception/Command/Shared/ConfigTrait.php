@@ -61,7 +61,7 @@ trait ConfigTrait
             }
             $updatedConfig = array_merge_recursive($updatedConfig, $config);
         }
-        return Configuration::append($updatedConfig);
+        return Configuration::override($updatedConfig);
     }
 
     /** @param string[] $extensions */
