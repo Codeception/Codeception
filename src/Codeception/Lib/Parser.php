@@ -11,6 +11,7 @@ use Codeception\Step\Comment;
 use Codeception\Test\Metadata;
 use Exception;
 use ParseError;
+use PhpToken;
 
 class Parser
 {
@@ -99,18 +100,21 @@ class Parser
      */
     public static function getClassesFromFile(string $file): array
     {
-        $sourceCodeTokens = token_get_all(file_get_contents($file), TOKEN_PARSE);
+        $tokens = PhpToken::tokenize(file_get_contents($file), TOKEN_PARSE);
         $classes = [];
         $namespace = '';
 
-        foreach ($sourceCodeTokens as $i => $token) {
-            if ($token[0] === T_NAMESPACE) {
-                $namespace = self::extractNamespace($sourceCodeTokens, $i);
+        foreach ($tokens as $i => $token) {
+            if ($token->is(T_NAMESPACE)) {
+                $name = self::nextSignificantToken($tokens, $i);
+                $namespace = $name?->is([T_STRING, T_NAME_QUALIFIED]) ? $name->text . '\\' : '';
             }
-            if ($token[0] === T_CLASS) {
-                $class = self::extractClass($sourceCodeTokens, $i);
-                if ($class) {
-                    $classes[] = $namespace . $class;
+            // Only a class declaration has a name right after the keyword, unlike
+            // anonymous classes (`new readonly class (...)`), `Foo::class` and named arguments (`class: ...`)
+            if ($token->is(T_CLASS)) {
+                $name = self::nextSignificantToken($tokens, $i);
+                if ($name?->is(T_STRING)) {
+                    $classes[] = $namespace . $name->text;
                 }
             }
         }
@@ -119,48 +123,18 @@ class Parser
         return $classes;
     }
 
-    private static function extractNamespace(array $tokens, int $index): string
+    /**
+     * @param PhpToken[] $tokens
+     */
+    private static function nextSignificantToken(array $tokens, int $index): ?PhpToken
     {
-        $namespace = '';
         $counter = count($tokens);
         for ($j = $index + 1; $j < $counter; ++$j) {
-            if ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                break;
-            }
-            if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
-                $namespace .= $tokens[$j][1] . '\\';
+            if (!$tokens[$j]->isIgnorable()) {
+                return $tokens[$j];
             }
         }
-        return $namespace;
-    }
-
-    private static function extractClass(array $tokens, int $index): ?string
-    {
-        // class at the beginning of file
-        if (!isset($tokens[$index - 2])) {
-            return $tokens[$index + 2][1] ?? null;
-        }
-        // new class
-        if (isset($tokens[$index - 2]) && $tokens[$index - 2][0] === T_NEW) {
-            return null;
-        }
-        // :: class
-        if (isset($tokens[$index - 1]) && $tokens[$index - 1][0] === T_WHITESPACE && isset($tokens[$index - 2]) && $tokens[$index - 2][0] === T_DOUBLE_COLON) {
-            return null;
-        }
-        // ::class
-        if (isset($tokens[$index - 1]) && $tokens[$index - 1][0] === T_DOUBLE_COLON) {
-            return null;
-        }
-        // class{
-        if (isset($tokens[$index + 1]) && $tokens[$index + 1] === '{') {
-            return null;
-        }
-        // class {
-        if (isset($tokens[$index + 2]) && $tokens[$index + 1][0] === T_WHITESPACE && $tokens[$index + 2] === '{') {
-            return null;
-        }
-        return $tokens[$index + 2][1] ?? null;
+        return null;
     }
 
     /*
