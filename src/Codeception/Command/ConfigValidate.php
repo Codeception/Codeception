@@ -34,7 +34,7 @@ use function codecept_root_dir;
  *
  * * `codecept config:validate -o "settings: shuffle: true"`: enable shuffle
  * * `codecept config:validate -o "settings: lint: false"`: disable linting
- * * `codecept config:validate -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
+ * * `codecept config:validate Functional -o "modules: config: Db: dsn: 'mysql:host=localhost;dbname=test'"`: change module config of suite
  *
  */
 #[AsCommand(
@@ -58,6 +58,12 @@ class ConfigValidate extends Command
     {
         $this->addStyles($output);
 
+        // load the config file first, otherwise a missing file is hidden by the overrides
+        $this->getGlobalConfig();
+        if (!empty($input->getOption('override'))) {
+            $this->overrideConfig($input->getOption('override'));
+        }
+
         if ($suite = $input->getArgument('suite')) {
             $output->write("Validating <bold>{$suite}</bold> config... ");
             $config = $this->getSuiteConfig($suite);
@@ -70,9 +76,6 @@ class ConfigValidate extends Command
 
         $output->write("Validating global config... ");
         $config = $this->getGlobalConfig();
-        if (!empty($input->getOption('override'))) {
-            $config = $this->overrideConfig($input->getOption('override'));
-        }
 
         $output->writeln("Ok");
         $suites = Configuration::suites();

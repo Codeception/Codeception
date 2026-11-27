@@ -75,6 +75,9 @@ use function substr_replace;
  *
  * * `codecept run -o "settings: shuffle: true"`: enable shuffle
  * * `codecept run -o "settings: lint: false"`: disable linting
+ * * `codecept run -o "modules: config: Db: dsn: 'mysql:host=localhost;dbname=test'"`: change module config
+ *
+ * Overridden values take precedence over suite and environment config.
  *
  * Run with specific extension
  *

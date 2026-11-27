@@ -597,6 +597,31 @@ EOF
         $I->dontSeeInShellOutput('FAILURES');
     }
 
+    public function overrideTakesPrecedenceOverSuiteConfig(CliTester $I)
+    {
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv -o "modules: config: MessageHelper: message1: MESSAGE1 FROM OVERRIDE."');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM OVERRIDE.');
+        $I->seeInShellOutput('message2: MESSAGE2 FROM SUITE.');
+    }
+
+    public function overrideTakesPrecedenceOverEnvironmentConfig(CliTester $I)
+    {
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env1 -o "modules: config: MessageHelper: message1: MESSAGE1 FROM OVERRIDE."');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM OVERRIDE.');
+        $I->seeInShellOutput('message4: MESSAGE4 FROM SUITE-ENV1.');
+
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env2 -o "modules: config: MessageHelper: message2: MESSAGE2 FROM OVERRIDE."');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM ENV2-DIST.');
+        $I->seeInShellOutput('message2: MESSAGE2 FROM OVERRIDE.');
+    }
+
+    public function overrideEnvironmentConfigOfSuite(CliTester $I)
+    {
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env1 -o "env: env1: modules: config: MessageHelper: message4: MESSAGE4 FROM OVERRIDE."');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM SUITE-ENV1.');
+        $I->seeInShellOutput('message4: MESSAGE4 FROM OVERRIDE.');
+    }
+
     public function runTestWithAnnotationExamplesFromGroupFileTest(CliTester $I)
     {
         $I->executeCommand('run scenario -g groupFileTest1 --steps');

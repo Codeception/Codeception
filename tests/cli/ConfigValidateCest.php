@@ -39,6 +39,21 @@ final class ConfigValidateCest
         $I->seeInShellOutput('foo => bar');
     }
 
+    public function validatesSuiteConfigWithOverrideOption(CliTester $I)
+    {
+        $I->executeCommand('config:validate messages -o "modules: config: MessageHelper: message1: MESSAGE1 FROM OVERRIDE." --no-ansi');
+        $I->seeInShellOutput('message1 => MESSAGE1 FROM OVERRIDE.');
+        $I->seeInShellOutput('message2 => MESSAGE2 FROM SUITE.');
+    }
+
+    public function failsWithOverrideOptionWhenConfigFileIsMissing(CliTester $I)
+    {
+        $I->amInPath(codecept_data_dir());
+        $I->executeCommand('config:validate -o "settings: shuffle: true" --no-ansi 2>&1', false);
+        $I->seeInShellOutput('Configuration file could not be found');
+        $I->dontSeeInShellOutput('Ok');
+    }
+
     public function warnsWhenNoSuitesDefined(CliTester $I)
     {
         $I->amInPath(codecept_data_dir('no_suites'));

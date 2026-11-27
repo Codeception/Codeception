@@ -67,6 +67,10 @@ class Configuration
      * @var array<string, mixed>|null
      */
     protected static ?array $params = null;
+    /**
+     * @var array<string, mixed> Config values passed with the --override option.
+     */
+    protected static array $overrides = [];
 
     /**
      * @var array<string, mixed>
@@ -189,6 +193,7 @@ class Configuration
         }
 
         self::$config = $config;
+        self::$overrides = [];
 
         if (!isset(self::$config['paths']['support']) && isset(self::$config['paths']['helpers'])) {
             self::$config['paths']['support'] = self::$config['paths']['helpers'];
@@ -284,19 +289,14 @@ class Configuration
             throw new ConfigurationException("Suite {$suite} was not loaded");
         }
 
-        $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'support_namespace', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
-            if (isset($config[$key])) {
-                $globalConf[$key] = $config[$key];
-            }
-        }
-        $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
+        $settings = self::mergeConfigs(self::$defaultSuiteSettings, self::inheritedSuiteSettings($config));
 
         $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
         if (isset($config['paths']['envs'])) {
             $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
             $settings = self::mergeConfigs($settings, $envConf);
         }
+        $settings = self::applyOverrides($settings);
         if (!$settings['path']) {
             $settings['path'] = $suite;
         }
@@ -539,6 +539,48 @@ class Configuration
             self::$testsDir = self::$config['paths']['tests'];
         }
         return self::$config;
+    }
+
+    /**
+     * Adds config values passed with the --override option.
+     * Unlike other global config, they take precedence over suite and environment config.
+     *
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    public static function override(array $config): array
+    {
+        self::$overrides = self::mergeConfigs(self::$overrides, $config);
+        return self::append($config);
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     * @return array<string, mixed>
+     */
+    public static function applyOverrides(array $settings): array
+    {
+        if (self::$overrides === []) {
+            return $settings;
+        }
+        return self::mergeConfigs($settings, self::inheritedSuiteSettings(self::$overrides));
+    }
+
+    /**
+     * Returns the part of the global config which is inherited by suites.
+     *
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    private static function inheritedSuiteSettings(array $config): array
+    {
+        $settings = $config['settings'] ?? [];
+        foreach (['modules', 'coverage', 'support_namespace', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
+            if (isset($config[$key])) {
+                $settings[$key] = $config[$key];
+            }
+        }
+        return $settings;
     }
 
     public static function mergeConfigs(array $a1, array $a2): array
