@@ -528,7 +528,11 @@ class Run extends Command
             $config = Configuration::config($currentDir);
 
             if (!empty($defaultConfig['groups'])) {
-                $groups = array_map(fn ($g): string => $absolutePath . $g, $defaultConfig['groups']);
+                $toAbsolute = fn (string $path): string => codecept_is_path_absolute($path) ? $path : $absolutePath . $path;
+                $groups = array_map(
+                    fn (string|array $g): string|array => is_array($g) ? array_map($toAbsolute, $g) : $toAbsolute($g),
+                    $defaultConfig['groups']
+                );
                 Configuration::append(['groups' => $groups]);
             }
 
