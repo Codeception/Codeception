@@ -157,11 +157,10 @@ abstract class Step implements Stringable
                 $argument = $this->getClassName($argument);
             }
         }
-        $arg_str = json_encode(
+        return (string) json_encode(
             $argument,
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
         );
-        return str_replace('"', '"', $arg_str);
     }
 
     protected function getClassName(object $argument): string
@@ -237,6 +236,9 @@ abstract class Step implements Stringable
         return $this->getArgumentsAsString($maxLength);
     }
 
+    /**
+     * @deprecated This method is unused and will be removed in Codeception 6.0.
+     */
     protected function clean(string $text): string
     {
         return str_replace('\/', '', $text);
