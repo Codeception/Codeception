@@ -11,6 +11,7 @@ parameters:
             - src/Codeception/Test/Unit.php
             - src/Codeception/Coverage/Subscriber/Printer.php
             - src/PHPUnit/Wrapper/PhpUnit9/Test.php
+            - src/PHPUnit/Wrapper/PhpUnit9/TestCaseHooks.php
 
     ignoreErrors:
         -

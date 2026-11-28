@@ -63,6 +63,12 @@ class Unit extends TestCase implements
 
     protected function _setUp()
     {
+        if (!$this->metadata instanceof Metadata) {
+            // Direct PHPUnit runs skip SuiteManager metadata and DI setup
+            $this->_before();
+            return;
+        }
+
         $metadata = $this->getMetadata();
         if ($metadata->isBlocked()) {
             if ($skip = $metadata->getSkip()) {

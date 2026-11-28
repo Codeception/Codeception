@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use Tests\Support\CliTester;
 
 final class OrderCest
@@ -146,5 +147,29 @@ final class OrderCest
         $I->executeCommand('run math,order,scenario,skipped :BeforeAfterClassTest');
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeInThisFile('BIBP({[1][2]})');
+    }
+
+    public function checkUnitSetUpTearDownWithoutParent(CliTester $I): void
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order SetUpTearDownWithoutParentTest.php');
+        $I->seeFileFound('order.txt', 'tests/_output');
+
+        // Markers inside BIB([...]): i=_inject, b=_before, <=#[Before], s=setUp, T=test, t=tearDown, >=#[After], a=_after
+        // PHPUnit 9 ignores #[Before] and #[After] attributes, omitting < and >
+        $expected = version_compare(PHPUnitVersion::series(), '10.0', '>=')
+            ? 'BIB([ib<sTt>a])'
+            : 'BIB([ibsTta])';
+        $I->seeFileContentsEqual($expected);
+    }
+
+    public function checkUnitSetUpTearDownWithParent(CliTester $I): void
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order SetUpTearDownWithParentTest.php');
+        $I->seeFileFound('order.txt', 'tests/_output');
+
+        // Calling parent::setUp() and parent::tearDown() must not run i, b, or a twice
+        $I->seeFileContentsEqual('BIB([ibsTta])');
     }
 }
