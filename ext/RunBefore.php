@@ -25,7 +25,7 @@ use function sleep;
  * Can be configured in suite config:
  *
  * ```yaml
- * # acceptance.suite.yml
+ * # Acceptance.suite.yml
  * extensions:
  *     enabled:
  *         - Codeception\Extension\RunBefore:

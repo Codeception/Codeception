@@ -33,7 +33,7 @@ use Codeception\Subscriber\Console as CodeceptConsole;
  * ```
  *
  *
- * Enable this reporter with `--ext option`
+ * Enable this reporter with `--ext` option
  *
  * ```
  * codecept run --ext DotReporter

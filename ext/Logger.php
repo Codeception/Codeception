@@ -30,9 +30,9 @@ use function ucfirst;
  * ```
  *
  * Codeception's core/internal stuff is logged into `tests/_output/codeception.log`.
- * Test suites' steps are logged into `tests/_output/<test_full_name>-<rotation_date>.log`.
+ * Test suites' steps are logged into `tests/_output/<suite_name>-<rotation_date>.log`.
  *
- * To enable this module add to your `codeception.yml`:
+ * To enable this extension add to your `codeception.yml`:
  *
  * ``` yaml
  * extensions:

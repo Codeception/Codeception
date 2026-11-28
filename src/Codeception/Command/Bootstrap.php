@@ -20,8 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * * `codecept bootstrap` - creates `tests` dir and `codeception.yml` in current dir.
  * * `codecept bootstrap --empty` - creates `tests` dir without suites
- * * `codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
- * * `codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
+ * * `codecept bootstrap --namespace Frontend` - creates tests, and uses `Frontend` namespace for actor classes and helpers.
+ * * `codecept bootstrap --actor Wizard` - sets actor suffix to Wizard, to have `AcceptanceWizard`, `FunctionalWizard`, and `UnitWizard` actors in tests.
  * * `codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
  *
  */

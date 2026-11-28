@@ -124,7 +124,7 @@
 * Support symfony 7 by @W0rma in #6723
 * Avoid infinite loop while waiting for all running tests to finish by @MarcelBolten in #6710
 * Add missing "Attribute::IS_REPEATABLE" to DataProvider attribute by @Fahl-Design in #6715
-* Support binary data intest examples by @pongee in #6708
+* Support binary data in test examples by @pongee in #6708
 * Improve rendering of $I->assertThat step by @jtheuerkauf in #6719
 
 #### 5.0.12
@@ -365,7 +365,7 @@ Summary of all differences from Codeception 4
 * Custom reporters implementing TestListener are no longer supported and must be converted to Extensions
 * Tests of all formats are reported as useless if they perform no assertions and `reports_useless_tests` setting is enabled
 * Added path_coverage setting to enable path and branch coverage #6158 by @s0lus
-* Added optional value to `fail-fast` option (#6275) by #Verest
+* Added optional value to `fail-fast` option (#6275) by @Verest
 * Module after and failed hooks are executed in reverse order (#6062) by WillemHoman
 * Removed `JSON` and `TAP` loggers
 * Removed code coverage blacklist functionality

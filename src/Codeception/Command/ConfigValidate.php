@@ -18,12 +18,12 @@ use function codecept_root_dir;
 
 /**
  * Validates and prints Codeception config.
- * Use it do debug Yaml configs
+ * Use it to debug Yaml configs
  *
  * Check config:
  *
- * * `codecept config`: check global config
- * * `codecept config Unit`: check suite config
+ * * `codecept config:validate`: check global config
+ * * `codecept config:validate Unit`: check suite config
  *
  * Load config:
  *
@@ -34,7 +34,6 @@ use function codecept_root_dir;
  *
  * * `codecept config:validate -o "settings: shuffle: true"`: enable shuffle
  * * `codecept config:validate -o "settings: lint: false"`: disable linting
- * * `codecept config:validate -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
  *
  */
 #[AsCommand(

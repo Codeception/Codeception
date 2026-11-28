@@ -24,12 +24,12 @@ abstract class Module
     use Asserts;
 
     /**
-     * By setting it to false module wan't inherit methods of parent class.
+     * By setting it to false module won't inherit methods of parent class.
      */
     public static bool $includeInheritedActions = true;
 
     /**
-     * Allows to explicitly set what methods have this class.
+     * Allows to explicitly set which methods this class has.
      */
     public static array $onlyActions = [];
 
@@ -91,8 +91,8 @@ abstract class Module
      * ```php
      * <?php
      * // cleanup DB only for specific group of tests
-     * public function _before(Test $test) {
-     *     if (in_array('cleanup', $test->getMetadata()->getGroups()) {
+     * public function _before(TestInterface $test) {
+     *     if (in_array('cleanup', $test->getMetadata()->getGroups())) {
      *         $this->getModule('Db')->_reconfigure(['cleanup' => true]);
      *     }
      * }
@@ -249,7 +249,7 @@ abstract class Module
     }
 
     /**
-     * Short text message to an amount of chars
+     * Shortens text message to a given number of chars
      */
     protected function shortenMessage(string $message, int $chars = 150): string
     {

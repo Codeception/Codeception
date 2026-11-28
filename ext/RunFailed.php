@@ -32,7 +32,7 @@ use function unlink;
  * ```
  * --override "extensions: config: Codeception\Extension\RunFailed: fail-group: another_group1"
  * ```
- * Remember: If you run tests and they generated custom-named fail group, to run this group, you should add override too
+ * Remember: If your test run generated a custom-named fail group, add the same override to run this group
  *
  * **This extension is enabled by default.**
  *

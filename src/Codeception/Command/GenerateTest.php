@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
+ * Generates skeleton for Unit Test that extends `Codeception\Test\Unit`.
  *
  * * `codecept g:test Unit User`
  * * `codecept g:test Unit "App\User"`

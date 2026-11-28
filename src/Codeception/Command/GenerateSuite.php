@@ -20,12 +20,11 @@ use function preg_match;
 use function ucfirst;
 
 /**
- * Create new test suite. Requires suite name and actor name
+ * Creates new test suite. Requires suite name, actor name is optional.
  *
- * * ``
- * * `codecept g:suite Api` -> api + ApiTester
- * * `codecept g:suite Integration Code` -> integration + CodeTester
- * * `codecept g:suite Frontend Front` -> frontend + FrontTester
+ * * `codecept g:suite Api` -> Api + ApiTester
+ * * `codecept g:suite Integration Code` -> Integration + Code
+ * * `codecept g:suite Frontend Front` -> Frontend + Front
  *
  */
 #[AsCommand(

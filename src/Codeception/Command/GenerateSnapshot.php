@@ -16,7 +16,7 @@ use function ucfirst;
 
 /**
  * Generates Snapshot.
- * Snapshot can be used to test dynamical data.
+ * Snapshots can be used to test dynamic data.
  * If suite name is provided, an actor class will be included into placeholder
  *
  * * `codecept g:snapshot UserEmails`

@@ -73,7 +73,7 @@ abstract class InitTemplate
     }
 
     /**
-     * Override this class to create customized setup.
+     * Override this method to create customized setup.
      *
      * @return mixed
      */
