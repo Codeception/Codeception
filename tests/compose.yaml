@@ -1,12 +1,14 @@
 # Runs the internal test suite in a container, see tests/README.md
 services:
   php:
+    # one image per PHP version, set PHP_VERSION to run the tests with another version, e.g. PHP_VERSION=8.5
+    image: codeception-tests:php${PHP_VERSION:-8.2}
     build:
-      # Xdebug is required by the coverage suite
+      # Xdebug is required by the coverage suite, git by composer to install the dev versions of the modules
       dockerfile_inline: |
-        FROM composer:2
+        FROM php:${PHP_VERSION:-8.2}-cli-alpine
         COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-        RUN install-php-extensions xdebug
+        RUN apk add --no-cache git && install-php-extensions xdebug zip @composer
     # run as the host user, so that files created in the repository are not owned by root
     user: "${UID:-1000}:${GID:-1000}"
     working_dir: /repo
