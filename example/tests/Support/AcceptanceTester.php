@@ -6,8 +6,8 @@ namespace Tests\Support;
 
 /**
  * Inherited Methods
- * @method void wantToTest($text)
  * @method void wantTo($text)
+ * @method void wantToTest($text)
  * @method void execute($callable)
  * @method void expectTo($prediction)
  * @method void expect($prediction)
