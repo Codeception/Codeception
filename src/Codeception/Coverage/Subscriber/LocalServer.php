@@ -153,11 +153,12 @@ class LocalServer extends SuiteSubscriber
         $this->waitForFile($coverageFile, 5, 500_000);
 
         if (!file_exists($coverageFile)) {
-            throw new RuntimeException(
-                file_exists($errorFile) ? file_get_contents($errorFile) : "Code coverage file {$coverageFile} does not exist"
-            );
+            /*
+            We want LocalServer subscriber to end gracefully even if there isn't any coverage data collected
+            Scenario: we are collecting both Local and LocalServer coverage
+            */
+            return;
         }
-
         if ($coverage = @unserialize(file_get_contents($coverageFile))) {
             $this->preProcessCoverage($coverage)->mergeToPrint($coverage);
         }
